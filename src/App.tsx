@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { SignUp } from "./pages/SignUp";
+import { Home } from "./pages/Home";
+import { Box, Container } from "@mui/material";
+import { SignIn } from "./pages/SignIn";
+import { Footer } from "./components/footer/Footer";
+import { Product } from "./pages/Product";
+import { Navbar } from "./components/navbar/Navbar";
+import { Category } from "./pages/Category";
+import { Cart } from "./pages/Cart";
+import { Checkout } from "./pages/Checkout";
+import { Account } from "./pages/Account";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box>
+      <Navbar />
+      <Container maxWidth="xl">
+        <Routes>
+          <Route path="/login" element={<SignIn />} />
+          <Route path="/register" element={<SignUp />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/products/:id" element={<Product />} />
+          <Route path="/:gender" element={<Category />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/account" element={<Account />} />
+        </Routes>
+      </Container>
+      <Footer />
+    </Box>
   );
 }
 
