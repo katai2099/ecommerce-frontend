@@ -8,7 +8,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { AppBox, TabPanel } from "../styles/common";
+import { AppBox, TabPanel } from "../../styles/common";
 import { Description } from "../components/productDetails/Description";
 import { SyntheticEvent, useState } from "react";
 import { Review } from "../components/productDetails/Review";
@@ -29,7 +29,7 @@ export const Product = () => {
           alignItems="center"
         >
           <Box>
-            <img src="https://bazaar.ui-lib.com/_next/image?url=%2Fassets%2Fimages%2Fproducts%2FFashion%2FClothes%2F21.YellowCasualSweater.png&w=384&q=75"></img>
+            <img src="https://bazaar.ui-lib.com/_next/image?url=%2Fassets%2Fimages%2Fproducts%2FFashion%2FClothes%2F21.YellowCasualSweater.png&w=384&q=75" />
           </Box>
           <Box
             display="flex"

@@ -1,0 +1,44 @@
+import { Box } from "@mui/material";
+import { IImage } from "../../../model/product";
+import { useState } from "react";
+
+interface ImageSectionProps {
+  images: IImage[];
+}
+
+export const ImageSection = ({ images }: ImageSectionProps) => {
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
+  return images.length > 0 ? (
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Box width="100%">
+        <img
+          width="100%"
+          src={images[selectedIndex].imageUrl}
+          className="img-contain"
+        />
+      </Box>
+      <Box display="flex" justifyItems="center" alignItems="center" gap="16px">
+        {images.map((image, idx) => (
+          <Box
+            width="64px"
+            height="64px"
+            border={
+              idx === selectedIndex ? "1px solid #000000" : "1px solid #dfdfdf"
+            }
+            onClick={() => {
+              setSelectedIndex(idx);
+            }}
+          >
+            <img width="auto" src={image.imageUrl} className="img-contain" />
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  ) : null;
+};

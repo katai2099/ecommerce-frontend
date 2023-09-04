@@ -9,7 +9,7 @@ export interface LoginDialogProps {
 export const LoginDialog = ({ open, onClose }: LoginDialogProps) => {
   return (
     <Dialog open={open} onClose={onClose}>
-      <Login />
+      <Login modalClose={onClose} />
     </Dialog>
   );
 };

@@ -1,5 +1,5 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { AppBox } from "../styles/common";
+import { AppBox } from "../../styles/common";
 import {
   ChevronLeft,
   ChevronRight,
@@ -8,7 +8,7 @@ import {
   SignpostOutlined,
 } from "@mui/icons-material";
 import styled from "@emotion/styled";
-import { OrderHistory } from "../admin/components/OrderHistory";
+import { OrderHistory } from "../../admin/components/OrderHistory";
 
 const FlexBox = styled(Box)`
   display: flex;

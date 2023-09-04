@@ -19,10 +19,22 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
-export const Login = () => {
+import { LoginPostData } from "../../../model/authentication";
+import { useAppDispatch } from "../../../store/configureStore";
+import { loginAsync } from "../../../actions/userActions";
+
+export interface LoginProps {
+  modalClose?: () => void;
+}
+
+export const Login = (props: LoginProps) => {
+  const { modalClose } = props;
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const dispatch = useAppDispatch();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -31,6 +43,29 @@ export const Login = () => {
   ) => {
     event.preventDefault();
   };
+
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.currentTarget.value);
+  };
+
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.currentTarget.value);
+  };
+
+  const handleLoginClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const data = new LoginPostData();
+    data.password = password;
+    data.email = email;
+    dispatch(loginAsync(data));
+  };
+
+  const handleSignUpClick = () => {
+    if (modalClose) {
+      modalClose();
+    }
+  };
+
   return (
     <Paper
       elevation={3}
@@ -53,6 +88,8 @@ export const Login = () => {
           <InputLabel>Email address</InputLabel>
           <FormControl>
             <OutlinedInput
+              value={email}
+              onChange={handleEmailChange}
               fullWidth
               error
               required
@@ -65,6 +102,8 @@ export const Login = () => {
           <InputLabel>Password</InputLabel>
           <FormControl>
             <OutlinedInput
+              value={password}
+              onChange={handlePasswordChange}
               fullWidth
               error
               required
@@ -85,7 +124,12 @@ export const Login = () => {
             <FormHelperText error>Password is required</FormHelperText>
           </FormControl>
         </Box>
-        <Button type="submit" fullWidth variant="contained">
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          onClick={handleLoginClick}
+        >
           Log in
         </Button>
       </Box>
@@ -94,7 +138,10 @@ export const Login = () => {
         Continue with Google
       </Button>
       <Box>
-        Don't have account? <Link to="/register">Sign up</Link>
+        Don't have account? &nbsp;
+        <Link to="/register" onClick={handleSignUpClick}>
+          Sign up
+        </Link>
       </Box>
       <Box>
         Forgot your password? <a href="#">Reset It</a>

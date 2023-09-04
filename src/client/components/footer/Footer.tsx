@@ -1,5 +1,5 @@
 import { Box, Container, Typography } from "@mui/material";
-import { AppBox } from "../../styles/common";
+import { AppBox } from "../../../styles/common";
 
 export const Footer = () => {
   return (

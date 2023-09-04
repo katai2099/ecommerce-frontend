@@ -1,15 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { SignUp } from "./pages/SignUp";
-import { Home } from "./pages/Home";
+import { SignUp } from "./client/pages/SignUp";
+import { Home } from "./client/pages/Home";
 import { Box, Container } from "@mui/material";
-import { SignIn } from "./pages/SignIn";
-import { Footer } from "./components/footer/Footer";
-import { Product } from "./pages/Product";
-import { Navbar } from "./components/navbar/Navbar";
-import { Category } from "./pages/Category";
-import { Cart } from "./pages/Cart";
-import { Checkout } from "./pages/Checkout";
-import { Account } from "./pages/Account";
+import { SignIn } from "./client/pages/SignIn";
+import { Footer } from "./client/components/footer/Footer";
+import { Product } from "./client/pages/Product";
+import { Navbar } from "./client/components/navbar/Navbar";
+import { Category } from "./client/pages/Category";
+import { Cart } from "./client/pages/Cart";
+import { Checkout } from "./client/pages/Checkout";
+import { Account } from "./client/pages/Account";
 
 function App() {
   return (

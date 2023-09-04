@@ -1,14 +1,15 @@
 import {
   BarChart,
   ChevronLeft,
-  Copyright,
   DashboardOutlined,
+  Inventory,
   Layers,
   Menu,
   Notifications,
   People,
   ProductionQuantityLimits,
   ShoppingCart,
+  Star,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -18,22 +19,29 @@ import {
   Container,
   Divider,
   Drawer,
-  Grid,
   IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Paper,
   Toolbar,
   Typography,
-  createTheme,
   styled,
 } from "@mui/material";
-import { useState } from "react";
-import { Dashboard } from "./Dashboard";
+import { useEffect, useState } from "react";
+import { fetchAdminSettingsAction } from "../../actions/adminActions";
+import { useAppDispatch } from "../../store/configureStore";
 import { Product } from "./Product";
-import { CreateProduct } from "./CreateProduct";
+import { Dashboard } from "./Dashboard";
+import { SideMenu } from "../components/SideCollapsableMenu";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { ProductList } from "./ProductList";
 
 const drawerWidth: number = 240;
 
@@ -87,7 +95,12 @@ const AdminDrawer = styled(Drawer, {
 
 export const Admin = () => {
   const [open, setOpen] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState<string>("dashboard");
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  useEffect(() => {
+    dispatch(fetchAdminSettingsAction());
+  }, []);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -119,7 +132,7 @@ export const Admin = () => {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Dashboard
+            {location.pathname}
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -146,7 +159,7 @@ export const Admin = () => {
           {/* {mainListItems} */}
           <ListItemButton
             onClick={() => {
-              setSelectedMenu("dashboard");
+              navigate("/admin/");
             }}
           >
             <ListItemIcon>
@@ -166,7 +179,16 @@ export const Admin = () => {
             </ListItemIcon>
             <ListItemText primary="Customers" />
           </ListItemButton>
-          <ListItemButton
+          <SideMenu
+            icon={<Inventory />}
+            sublist={[
+              { title: "List", link: "/admin/product" },
+              { title: "Create", link: "/admin/product/create" },
+            ]}
+            headerTitle="Product"
+          />
+
+          {/* <ListItemButton
             onClick={() => {
               setSelectedMenu("product");
             }}
@@ -175,7 +197,7 @@ export const Admin = () => {
               <ProductionQuantityLimits />
             </ListItemIcon>
             <ListItemText primary="Products" />
-          </ListItemButton>
+          </ListItemButton> */}
           <ListItemButton>
             <ListItemIcon>
               <BarChart />
@@ -205,9 +227,13 @@ export const Admin = () => {
         }}
       >
         <Toolbar />
+
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          {selectedMenu === "dashboard" && <Dashboard />}
-          {selectedMenu === "product" && <CreateProduct />}
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/product" element={<ProductList />} />
+            <Route path="/product/create" element={<Product />} />
+          </Routes>
         </Container>
       </Box>
     </Box>

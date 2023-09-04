@@ -18,7 +18,7 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { AppBox } from "../styles/common";
+import { AppBox } from "../../styles/common";
 import { CheckBox, ExpandMore } from "@mui/icons-material";
 import { ProductItem } from "../components/homepage/productList/ProductItem";
 

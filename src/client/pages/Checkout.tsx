@@ -7,7 +7,7 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { AppBox } from "../styles/common";
+import { AppBox } from "../../styles/common";
 import { OrderDetail } from "../components/order/OrderDetail";
 import { useState } from "react";
 

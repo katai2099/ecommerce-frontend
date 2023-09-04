@@ -1,6 +1,6 @@
 import { MarkEmailReadOutlined } from "@mui/icons-material";
 import { Box, Divider, IconButton, InputBase, Typography } from "@mui/material";
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export const Subscribe = () => {
   const [email, setEmail] = useState<string>("");
