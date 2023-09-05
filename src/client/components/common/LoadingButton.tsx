@@ -6,11 +6,11 @@ export interface LoadingButtonProps {
   onClick: () => void;
 }
 
-export default function LoadingButton({
+export const LoadingButton = ({
   onClick,
   title,
   loading,
-}: LoadingButtonProps) {
+}: LoadingButtonProps) => {
   return (
     <Button
       onClick={onClick}
@@ -30,4 +30,4 @@ export default function LoadingButton({
       )}
     </Button>
   );
-}
+};

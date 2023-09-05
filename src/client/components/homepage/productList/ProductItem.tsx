@@ -1,4 +1,6 @@
 import { Box, Rating, Typography, styled } from "@mui/material";
+import { IProduct } from "../../../../model/product";
+import { useNavigate } from "react-router-dom";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -7,15 +9,34 @@ const FlexBox = styled(Box)`
   align-items: center;
 `;
 
-export const ProductItem = () => {
+interface ProductItemProps {
+  product: IProduct;
+}
+
+export const ProductItem = ({ product }: ProductItemProps) => {
+  const navigate = useNavigate();
+
   return (
     <FlexBox>
       <Box>
-        <img src="https://bazaar.ui-lib.com/_next/image?url=%2Fassets%2Fimages%2Fproducts%2FFashion%2FClothes%2F1.SilverHighNeckSweater.png&w=384&q=75"></img>
+        <img
+          width="auto"
+          src={product.images[0].imageUrl}
+          className="img-contain"
+        />
       </Box>
       <FlexBox>
-        <Typography>High neck Sweater</Typography>
-        <Typography>$210.00 $</Typography>
+        <Typography
+          sx={{
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            navigate(`/products/${product.id}`);
+          }}
+        >
+          {product.name}
+        </Typography>
+        <Typography>{`$ ${product.price}`}</Typography>
         <Box
           sx={{
             display: "flex",
@@ -23,7 +44,7 @@ export const ProductItem = () => {
             alignItems: "center",
           }}
         >
-          <Rating value={2.0} size="small" readOnly />
+          <Rating value={product.rating} size="small" readOnly />
           <Typography>(0 Reviews)</Typography>
         </Box>
       </FlexBox>

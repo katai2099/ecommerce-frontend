@@ -1,8 +1,4 @@
-import {
-  createSlice,
-  PayloadAction,
-  PayloadActionCreator,
-} from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { adminReduxState, IAdminReduxState } from "../model/admin";
 import { IIdName } from "../model/common";
 

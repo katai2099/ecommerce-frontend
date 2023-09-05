@@ -1,4 +1,4 @@
-import { IIdName, IPaginationResponse } from "./common";
+import { IIdName } from "./common";
 
 export class Product implements IProduct {
   constructor(
@@ -9,6 +9,7 @@ export class Product implements IProduct {
     public publish: boolean = true,
     public createdAt: string = "",
     public gender: Gender = Gender.MEN,
+    public rating: number = 0,
     public category: ICategory = new Category(),
     public productSizes: IProductSize[] = [],
     public images: IImage[] = []
@@ -23,13 +24,59 @@ export interface IProduct {
   publish: boolean;
   createdAt: string;
   gender: Gender;
+  rating: number;
   category: ICategory;
   productSizes: IProductSize[];
   images: IImage[];
 }
 
+export const productSortName: string[] = [
+  "Default",
+  "Newest Arrivals",
+  "Price: High to Low",
+  "Price: Low to High",
+];
+
+export const productSort: string[] = [
+  "default",
+  "newest",
+  "highestprice",
+  "lowestprice",
+];
+
 export interface IProductFilter {
-  gender?: Gender;
+  q?: string;
+  sort?: string;
+  category: string[];
+  stock?: string;
+  publish?: string;
+  gender: Gender[];
+  pmin?: number;
+  pmax?: number;
+  rating?: number;
+  page?: number;
+}
+
+export interface IProductFilterParams {
+  q?: string;
+  sort?: string;
+  category?: string;
+  stock?: string;
+  publish?: string;
+  gender?: string;
+  pmin?: number;
+  pmax?: number;
+  rating?: number;
+  page?: number;
+}
+
+export class ProductFilter implements IProductFilter {
+  constructor(
+    public page: number = 1,
+    public sort: string = productSort[1],
+    public category: string[] = [],
+    public gender: Gender[] = []
+  ) {}
 }
 
 export enum Gender {

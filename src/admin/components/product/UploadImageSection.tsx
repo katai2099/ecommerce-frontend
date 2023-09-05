@@ -11,10 +11,8 @@ import { useSelector } from "react-redux";
 import { ImageSection } from "../../../client/components/productDetails/ImageSection";
 import { ProductMode } from "../../../model/product";
 import { RootState } from "../../../reducers/combineReducer";
-import {
-  ProductImagePreview,
-  ProductRemoteImagePreview,
-} from "./ProductImagePreview";
+import { ProductImagePreview } from "./ProductImagePreview";
+import { formatFileSize } from "../../../controllers/utils";
 
 interface UploadImageSectionProps {
   onImageDrop: (file: File) => void;
@@ -77,23 +75,29 @@ export const UploadImageSection = (props: UploadImageSectionProps) => {
         {(mode === ProductMode.CREATE || mode === ProductMode.EDIT) && (
           <>
             {editedProduct.images.map((image, index) => (
-              <ProductRemoteImagePreview
+              <ProductImagePreview
+                key={index}
                 title={editedProduct.name}
-                fileUrl={image.imageUrl}
+                src={image.imageUrl}
                 index={index}
-                onRemoteFileDelete={() => {
+                onDelete={() => {
                   onRemoteImageDelete(index);
                 }}
+                isLocal={false}
               />
             ))}
 
             {files.map((file, index) => (
               <ProductImagePreview
-                file={file}
+                key={index}
                 index={index}
-                onLocalFileDelete={() => {
+                src={URL.createObjectURL(file)}
+                title={file.name}
+                onDelete={() => {
                   onLocalImageDelete(index);
                 }}
+                isLocal={true}
+                size={formatFileSize(file.size)}
               />
             ))}
           </>

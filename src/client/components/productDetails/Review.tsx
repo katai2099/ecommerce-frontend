@@ -3,10 +3,8 @@ import {
   Button,
   FormControl,
   FormHelperText,
-  InputBase,
   OutlinedInput,
   Rating,
-  Stack,
   Typography,
 } from "@mui/material";
 

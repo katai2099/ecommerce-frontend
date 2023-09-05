@@ -1,141 +1,92 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Checkbox,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Pagination,
-  Paper,
-  Rating,
-  Select,
-  Typography,
-} from "@mui/material";
-import { AppBox } from "../../styles/common";
-import { CheckBox, ExpandMore } from "@mui/icons-material";
-import { ProductItem } from "../components/homepage/productList/ProductItem";
+import { Box, Grid } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getProductsAction } from "../../actions/productActions";
+import { fetchProductSetttingsCategoriesAction } from "../../actions/productSettingsActions";
+import { PageNumberSection } from "../../admin/components/PageNumberSection";
+import { IProduct } from "../../model/product";
+import { RootState } from "../../reducers/combineReducer";
+import { setProductFilter } from "../../reducers/productSettingsReducer";
+import { useAppDispatch } from "../../store/configureStore";
+import { CategoryHeader } from "../components/CategoryHeader";
+import { FilterSection } from "../components/FilterSection";
+import { ProductList } from "../components/ProductList";
 
 export const Category = () => {
-  const options: string[] = [
-    "Recommended",
-    "Newest Arrivals",
-    "Price: High to Low",
-    "Price: Low to High",
-  ];
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
+  const filter = useSelector(
+    (state: RootState) => state.productSettings.productFilter
+  );
+  const [page, setPage] = useState<number>(1);
+  const [currentPageTotalItem, setCurrentPageTotalItem] = useState<number>(0);
+  const [totalItem, SetTotalItem] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const dispatch = useAppDispatch();
+
+  const updateFilter = (field: string, value: any) => {
+    const updatedFilter = { ...filter, [field]: value };
+    dispatch(setProductFilter(updatedFilter));
+  };
+
+  useEffect(() => {
+    dispatch(fetchProductSetttingsCategoriesAction());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getProductsAction(filter))
+      .unwrap()
+      .then((res) => {
+        setFirstLoad(false);
+        if (filter.page != 1) {
+          setProducts((prev) => [...prev, ...res.data]);
+        } else {
+          setProducts(res.data);
+        }
+        setPage(res.currentPage);
+        setTotalPage(res.totalPage);
+        SetTotalItem(res.totalItem);
+        setCurrentPageTotalItem(res.data.length);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [
+    filter.page,
+    filter.sort,
+    filter.category,
+    filter.pmax,
+    filter.pmin,
+    filter.rating,
+    filter.gender,
+  ]);
+
+  const handleLoadMoreClick = () => {
+    const page = filter.page!;
+    updateFilter("page", page + 1);
+  };
+
   return (
     <Box minHeight="84vh" margin="80px auto 0">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h5">View All</Typography>
-        <Box display="flex" alignItems="center">
-          <Typography>Sort by</Typography>
-          <FormControl>
-            <InputLabel></InputLabel>
-            <Select defaultValue={options[0]}>
-              <MenuItem value={options[0]}>Recommended</MenuItem>
-              <MenuItem value={options[1]}>Newest Arrivals</MenuItem>
-              <MenuItem value={options[2]}>Price: High to Low</MenuItem>
-              <MenuItem value={options[3]}>Price: Low to High</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-      </Box>
+      <CategoryHeader />
       <Grid container>
         <Grid item xs={0} md={2}>
-          <Paper>
-            <Accordion expanded>
-              <AccordionSummary>
-                <Typography variant="h5" fontWeight="bold">
-                  Categories
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <FormControl>
-                  <InputLabel></InputLabel>
-                  <Select defaultValue={options[0]}>
-                    <MenuItem value={options[0]}>Recommended</MenuItem>
-                    <MenuItem value={options[1]}>T Shirt</MenuItem>
-                    <MenuItem value={options[2]}>Price: High to Low</MenuItem>
-                    <MenuItem value={options[3]}>Price: Low to High</MenuItem>
-                  </Select>
-                </FormControl>
-              </AccordionDetails>
-            </Accordion>
-            <Divider />
-            <Box padding="16px">
-              <Typography variant="h5" fontWeight="bold">
-                Ratings
-              </Typography>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label={<Rating readOnly value={5} size="small" />}
-                />
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label={<Rating readOnly value={4} size="small" />}
-                />
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label={<Rating readOnly value={3} size="small" />}
-                />
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label={<Rating readOnly value={2} size="small" />}
-                />
-                <FormControlLabel
-                  control={<Checkbox />}
-                  label={<Rating readOnly value={1} size="small" />}
-                />
-              </FormGroup>
-            </Box>
-          </Paper>
+          <FilterSection />
         </Grid>
         <Grid item xs={12} md={10}>
-          <Grid container>
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>{" "}
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>{" "}
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>{" "}
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>
-            <Grid item md={3}>
-              <ProductItem />
-            </Grid>
-          </Grid>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mt="32px"
-          >
-            <Typography>Showing 1-20 of 2000 products</Typography>
-            <Pagination count={10} variant="outlined" color="primary" />
-          </Box>
+          <ProductList
+            products={products}
+            firstLoad={firstLoad}
+            totalItem={totalItem}
+          />
+          <PageNumberSection
+            currentPageTotalItem={currentPageTotalItem}
+            totalPage={totalPage}
+            totalItem={totalItem}
+            page={page}
+            handleLoadMoreClick={handleLoadMoreClick}
+            firstLoad={firstLoad}
+          />
         </Grid>
       </Grid>
     </Box>

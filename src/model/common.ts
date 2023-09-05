@@ -1,12 +1,19 @@
 import { IAdminReduxState, adminReduxState } from "./admin";
+import { GuiReduxState, IGuiReduxState } from "./gui";
 import { IProductReduxState, ProductReduxState } from "./product";
+import {
+  IProductSettingsReduxState,
+  ProductSettingsReduxState,
+} from "./productSettings";
 import { IUserReduxState, UserReduxtState } from "./user";
 
 export class MainState implements IMainState {
   constructor(
     public product: IProductReduxState = new ProductReduxState(),
     public user: IUserReduxState = new UserReduxtState(),
-    public admin: IAdminReduxState = new adminReduxState()
+    public admin: IAdminReduxState = new adminReduxState(),
+    public gui: IGuiReduxState = new GuiReduxState(),
+    public productSettings: IProductSettingsReduxState = new ProductSettingsReduxState()
   ) {}
 }
 
@@ -14,11 +21,17 @@ export interface IMainState {
   product: IProductReduxState;
   user: IUserReduxState;
   admin: IAdminReduxState;
+  gui: IGuiReduxState;
+  productSettings: IProductSettingsReduxState;
 }
 
 export interface IIdName {
   id: number;
   name: string;
+}
+
+export interface StringKeyValue {
+  [key: string]: string;
 }
 
 export interface IPaginationResponse<T> {

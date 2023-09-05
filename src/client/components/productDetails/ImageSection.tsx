@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import { IImage } from "../../../model/product";
 import { useState } from "react";
+import { IImage } from "../../../model/product";
 
 interface ImageSectionProps {
   images: IImage[];
@@ -16,13 +16,11 @@ export const ImageSection = ({ images }: ImageSectionProps) => {
       justifyContent="center"
       alignItems="center"
     >
-      <Box width="100%">
-        <img
-          width="100%"
-          src={images[selectedIndex].imageUrl}
-          className="img-contain"
-        />
-      </Box>
+      <img
+        width="100%"
+        src={images[selectedIndex].imageUrl}
+        className="img-contain"
+      />
       <Box display="flex" justifyItems="center" alignItems="center" gap="16px">
         {images.map((image, idx) => (
           <Box

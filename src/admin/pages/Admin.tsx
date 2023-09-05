@@ -7,9 +7,7 @@ import {
   Menu,
   Notifications,
   People,
-  ProductionQuantityLimits,
   ShoppingCart,
-  Star,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -29,18 +27,12 @@ import {
   styled,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { fetchAdminSettingsAction } from "../../actions/adminActions";
 import { useAppDispatch } from "../../store/configureStore";
-import { Product } from "./Product";
-import { Dashboard } from "./Dashboard";
 import { SideMenu } from "../components/SideCollapsableMenu";
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Dashboard } from "./Dashboard";
+import { Product } from "./Product";
 import { ProductList } from "./ProductList";
 
 const drawerWidth: number = 240;

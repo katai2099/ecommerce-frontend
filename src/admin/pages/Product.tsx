@@ -22,7 +22,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProductAction } from "../../actions/productActions";
-import LoadingButton from "../../client/components/Common";
+import { LoadingButton } from "../../client/components/common/LoadingButton";
 import { addNewProduct, setProductSizes } from "../../controllers/product";
 import { Gender, IProduct, ProductMode } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
@@ -81,7 +81,7 @@ export const Product = () => {
 
   const onRemoteImageDeleteHandle = (idx: number) => {
     const images = editedProduct.images.filter((_, index) => index !== idx);
-    const product: IProduct = { ...editedProduct, ["images"]: images };
+    const product: IProduct = { ...editedProduct, images: images };
     dispatch(setEditedProduct(product));
   };
 
@@ -146,7 +146,6 @@ export const Product = () => {
                         placeholder="Name"
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                           updateProduct("name", event.currentTarget.value);
-                          // setTest(event.currentTarget.value);
                         }}
                       />
                       {/* <FormHelperText>required</FormHelperText> */}
