@@ -16,7 +16,7 @@ const values: number[] = [4, 3, 2, 1, 0];
 
 export const RatingFilter = () => {
   const currentFilter = useSelector(
-    (state: RootState) => state.productSettings.productFilter
+    (state: RootState) => state.productSettings.filter
   );
   const dispatch = useDispatch();
 

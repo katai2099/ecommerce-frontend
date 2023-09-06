@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IIdName } from "../model/common";
-import { IProductFilter } from "../model/product";
+import { Filter, Gender, IProductFilter } from "../model/product";
 import {
   IProductSettingsReduxState,
   ProductSettingsReduxState,
@@ -17,10 +17,16 @@ const productSettingsSlice = createSlice({
       return { ...state, categories: payload.payload };
     },
     setProductFilter(state, payload: PayloadAction<IProductFilter>) {
-      return { ...state, productFilter: payload.payload };
+      return { ...state, filter: payload.payload };
+    },
+    setGenderFilter(state, payload: PayloadAction<Gender>) {
+      const newFilter: IProductFilter = new Filter();
+      newFilter.gender = [payload.payload];
+      return { ...state, filter: newFilter };
     },
   },
 });
 
-export const { setCategories, setProductFilter } = productSettingsSlice.actions;
+export const { setCategories, setProductFilter, setGenderFilter } =
+  productSettingsSlice.actions;
 export default productSettingsSlice.reducer;

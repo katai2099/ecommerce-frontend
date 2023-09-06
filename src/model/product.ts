@@ -70,7 +70,7 @@ export interface IProductFilterParams {
   page?: number;
 }
 
-export class ProductFilter implements IProductFilter {
+export class Filter implements IProductFilter {
   constructor(
     public page: number = 1,
     public sort: string = productSort[1],

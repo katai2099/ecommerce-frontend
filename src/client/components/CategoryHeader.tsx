@@ -16,7 +16,7 @@ import { useAppDispatch } from "../../store/configureStore";
 
 export const CategoryHeader = () => {
   const filter = useSelector(
-    (state: RootState) => state.productSettings.productFilter
+    (state: RootState) => state.productSettings.filter
   );
   const dispatch = useAppDispatch();
 
@@ -34,7 +34,7 @@ export const CategoryHeader = () => {
         padding="12px 36px"
       >
         <Typography variant="h5">
-          {filter.category ? filter.category[0] : "All"}
+          {filter.category.length > 0 ? filter.category[0] : "All"}
         </Typography>
         <Box display="flex" alignItems="center" gap="8px">
           <Typography>Sort by:</Typography>

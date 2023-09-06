@@ -1,5 +1,4 @@
 import {
-  Adb,
   PersonOutline,
   SearchOutlined,
   ShoppingBagOutlined,
@@ -7,23 +6,22 @@ import {
 import {
   AppBar,
   Badge,
-  Box,
-  Button,
   Container,
   IconButton,
-  Menu,
-  MenuItem,
   Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { LoginDialog } from "../login/LoginDialog";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Gender } from "../../../model/product";
 import { CartMenu } from "../cart/CartMenu";
+import { LoginDialog } from "../login/LoginDialog";
 
 export const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
   const [openCartDrawer, setOpenCartDrawer] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleProfileButtonClick = () => {
     setOpenLoginModal(!openLoginModal);
@@ -31,6 +29,10 @@ export const Navbar = () => {
 
   const handleToggleCartDrawer = (open: boolean) => {
     setOpenCartDrawer(open);
+  };
+
+  const handleSectionClick = (gender: Gender) => {
+    navigate(`/${gender.toLowerCase()}`);
   };
 
   return (
@@ -52,17 +54,31 @@ export const Navbar = () => {
               sx={{
                 mr: 2,
                 display: { md: "flex" },
-                // fontFamily: "monospace",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
-                // color: "inherit",
                 textDecoration: "none",
               }}
             >
               ECOMMERCE
             </Typography>
-            <Typography color="primary">Men</Typography>
-            <Typography color="primary">Women</Typography>
+            <Link
+              className="nav-item"
+              to="/men"
+              onClick={() => {
+                handleSectionClick(Gender.MEN);
+              }}
+            >
+              <Typography color="primary">Men</Typography>
+            </Link>
+            <Link
+              className="nav-item"
+              to={"/women"}
+              onClick={() => {
+                handleSectionClick(Gender.WOMEN);
+              }}
+            >
+              <Typography color="primary">Women</Typography>
+            </Link>
           </Stack>
           <Stack spacing={2} direction="row">
             <IconButton>

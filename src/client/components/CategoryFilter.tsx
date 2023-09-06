@@ -21,7 +21,7 @@ export const CategoryFilter = ({ isSearch = false }: FilterSectionProps) => {
     (state: RootState) => state.productSettings
   );
   const categories = productSettings.categories;
-  const filter = productSettings.productFilter;
+  const filter = productSettings.filter;
   const displayCategories: IIdName[] = [{ id: 0, name: "All" }, ...categories];
   const dispatch = useDispatch();
   const [categoryName, setCategoryName] = useState<string[]>([]);
@@ -79,9 +79,9 @@ export const CategoryFilter = ({ isSearch = false }: FilterSectionProps) => {
           <>
             <Select
               value={
-                productSettings.productFilter.category &&
-                productSettings.productFilter.category.length > 0
-                  ? productSettings.productFilter.category[0]
+                productSettings.filter.category &&
+                productSettings.filter.category.length > 0
+                  ? productSettings.filter.category[0]
                   : displayCategories[0].name
               }
               onChange={updateCategory}

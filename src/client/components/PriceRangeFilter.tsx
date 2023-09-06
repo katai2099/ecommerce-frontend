@@ -14,11 +14,14 @@ const FlexBox = styled(Box)`
 `;
 
 export const PriceRangeFilter = () => {
-  const [value, setValue] = useState<number[]>([0, 100]);
-
   const currentFilter = useSelector(
-    (state: RootState) => state.productSettings.productFilter
+    (state: RootState) => state.productSettings.filter
   );
+  const [value, setValue] = useState<number[]>([
+    0,
+    currentFilter.pmax ? currentFilter.pmax : 100,
+  ]);
+
   const dispatch = useAppDispatch();
 
   const handleChange = (event: Event, newValue: number | number[]) => {

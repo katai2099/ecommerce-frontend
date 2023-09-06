@@ -10,7 +10,7 @@ export const GenderFilter = () => {
   const [checked, setChecked] = useState<boolean[]>([false, false]);
   const genderValues = Object.values(Gender);
   const currentFilter = useSelector(
-    (state: RootState) => state.productSettings.productFilter
+    (state: RootState) => state.productSettings.filter
   );
   const dispatch = useDispatch();
 
