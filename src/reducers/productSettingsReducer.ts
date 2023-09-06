@@ -19,14 +19,15 @@ const productSettingsSlice = createSlice({
     setProductFilter(state, payload: PayloadAction<IProductFilter>) {
       return { ...state, filter: payload.payload };
     },
-    setGenderFilter(state, payload: PayloadAction<Gender>) {
+    startNewFilter(state, payload: PayloadAction<{ key: string; value: any }>) {
+      const { key, value } = payload.payload;
       const newFilter: IProductFilter = new Filter();
-      newFilter.gender = [payload.payload];
-      return { ...state, filter: newFilter };
+      const updatedFilter = { ...newFilter, [key]: value };
+      return { ...state, filter: updatedFilter };
     },
   },
 });
 
-export const { setCategories, setProductFilter, setGenderFilter } =
+export const { setCategories, setProductFilter, startNewFilter } =
   productSettingsSlice.actions;
 export default productSettingsSlice.reducer;

@@ -60,6 +60,7 @@ export const ProductDetail = () => {
               <Box display="flex" gap="8px">
                 {product.productSizes.map((productSize, idx) => (
                   <Button
+                    key={idx}
                     variant={
                       selectedColorIndex === idx ? "contained" : "outlined"
                     }

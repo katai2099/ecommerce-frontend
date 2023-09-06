@@ -1,12 +1,7 @@
-import {
-  AnyAction,
-  Middleware,
-  configureStore,
-  getDefaultMiddleware,
-} from "@reduxjs/toolkit";
+import { Middleware, configureStore } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 import { IMainState } from "../model/common";
 import { rootReducer } from "../reducers/combineReducer";
-import { useDispatch } from "react-redux";
 
 export const BASE_NAME = "storedState_";
 
@@ -48,7 +43,9 @@ export const configureAppStore = (initState: IMainState) => {
   const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(saveStateToLocalStore),
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }).concat(saveStateToLocalStore),
     preloadedState: initState,
   });
   if ((module as any).hot) {

@@ -13,8 +13,16 @@ import { productSort, productSortName } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import { setProductFilter } from "../../reducers/productSettingsReducer";
 import { useAppDispatch } from "../../store/configureStore";
+import { FilterSectionProps } from "./FilterSection";
 
-export const CategoryHeader = () => {
+interface SearchProps {
+  totalItems?: number;
+}
+
+export const CategoryHeader = ({
+  isSearch = false,
+  totalItems = 0,
+}: FilterSectionProps & SearchProps) => {
   const filter = useSelector(
     (state: RootState) => state.productSettings.filter
   );
@@ -33,9 +41,18 @@ export const CategoryHeader = () => {
         alignItems="center"
         padding="12px 36px"
       >
-        <Typography variant="h5">
-          {filter.category.length > 0 ? filter.category[0] : "All"}
-        </Typography>
+        {isSearch ? (
+          <Box>
+            <Typography variant="h3">Searching for " {filter.q}"</Typography>
+            <Typography variant="h4" fontWeight="300">
+              {totalItems} results found
+            </Typography>
+          </Box>
+        ) : (
+          <Typography variant="h5">
+            {filter.category.length > 0 ? filter.category[0] : "All"}
+          </Typography>
+        )}
         <Box display="flex" alignItems="center" gap="8px">
           <Typography>Sort by:</Typography>
           <FormControl>

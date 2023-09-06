@@ -24,6 +24,7 @@ export const ImageSection = ({ images }: ImageSectionProps) => {
       <Box display="flex" justifyItems="center" alignItems="center" gap="16px">
         {images.map((image, idx) => (
           <Box
+            key={idx}
             width="64px"
             height="64px"
             border={

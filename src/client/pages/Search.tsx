@@ -1,67 +1,56 @@
-import { Box, Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { SearchRounded } from "@mui/icons-material";
+import {
+  Box,
+  FormControl,
+  Grid,
+  InputAdornment,
+  OutlinedInput,
+} from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getProductsAction } from "../../actions/productActions";
 import { fetchProductSetttingsCategoriesAction } from "../../actions/productSettingsActions";
 import { PageNumberSection } from "../../admin/components/PageNumberSection";
-import { Gender, IProduct } from "../../model/product";
+import { IProduct } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
   setProductFilter,
   startNewFilter,
 } from "../../reducers/productSettingsReducer";
 import { useAppDispatch } from "../../store/configureStore";
-import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
 import { ProductList } from "../components/ProductList";
+import { CategoryHeader } from "../components/CategoryHeader";
 
-export const Category = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [firstLoad, setFirstLoad] = useState<boolean>(true);
+export const Search = () => {
+  const { q } = useParams();
+  const dispatch = useAppDispatch();
   const filter = useSelector(
     (state: RootState) => state.productSettings.filter
   );
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [currentPageTotalItem, setCurrentPageTotalItem] = useState<number>(0);
   const [totalItem, SetTotalItem] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
-  const dispatch = useAppDispatch();
-  const { gender } = useParams();
-
-  const updateFilter = (field: string, value: any) => {
-    const updatedFilter = { ...filter, [field]: value };
-    dispatch(setProductFilter(updatedFilter));
-  };
-
-  const getGender = (key: string | undefined): Gender | null => {
-    if (!key) {
-      return null;
-    }
-    const gender = key.toUpperCase() as unknown as Gender;
-    return Gender[gender] || null;
-  };
+  const [products, setProducts] = useState<IProduct[]>([]);
 
   useEffect(() => {
-    const genderEnum = getGender(gender);
-    if (genderEnum) {
-      dispatch(startNewFilter({ key: "gender", value: [genderEnum] }));
-    } else {
-      //TODO: not found page
-    }
-  }, [gender]);
+    dispatch(startNewFilter({ key: "q", value: q }));
+  }, [q]);
 
   useEffect(() => {
     dispatch(fetchProductSetttingsCategoriesAction());
   }, []);
 
   useEffect(() => {
-    if (filter.gender.length > 0) {
+    if (filter.q) {
       dispatch(getProductsAction(filter))
         .unwrap()
         .then((res) => {
           setFirstLoad(false);
-          if (res.currentPage != 1) {
+          if (filter.page != 1) {
             setProducts((prev) => [...prev, ...res.data]);
           } else {
             setProducts(res.data);
@@ -83,7 +72,13 @@ export const Category = () => {
     filter.pmin,
     filter.rating,
     filter.gender,
+    filter.q,
   ]);
+
+  const updateFilter = (field: string, value: any) => {
+    const updatedFilter = { ...filter, [field]: value };
+    dispatch(setProductFilter(updatedFilter));
+  };
 
   const handleLoadMoreClick = () => {
     const page = filter.page!;
@@ -92,12 +87,12 @@ export const Category = () => {
 
   return (
     <Box minHeight="84vh" margin="80px auto 0">
-      <CategoryHeader />
+      <CategoryHeader isSearch={true} totalItems={totalItem} />
       <Grid container>
-        <Grid item xs={0} md={2}>
-          <FilterSection />
+        <Grid item md={2}>
+          <FilterSection isSearch={true} />
         </Grid>
-        <Grid item xs={12} md={10}>
+        <Grid item md={10}>
           <ProductList
             products={products}
             firstLoad={firstLoad}

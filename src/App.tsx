@@ -11,6 +11,7 @@ import { Home } from "./client/pages/Home";
 import { ProductDetail } from "./client/pages/ProductDetail";
 import { SignIn } from "./client/pages/SignIn";
 import { SignUp } from "./client/pages/SignUp";
+import { Search } from "./client/pages/Search";
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
           <Route path="/register" element={<SignUp />} />
           <Route path="/" element={<Home />} />
           <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/search">
+            <Route path="/search/:q" element={<Search />} />
+            <Route path="" element={<Search />} />
+          </Route>
           <Route path="/:gender" element={<Category />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />

@@ -1,18 +1,8 @@
-import {
-  Box,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  FormGroup,
-  Paper,
-  Rating,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import { CategoryFilter } from "./CategoryFilter";
+import { GenderFilter } from "./GenderFilter";
 import { PriceRangeFilter } from "./PriceRangeFilter";
 import { RatingFilter } from "./RatingFilter";
-import { GenderFilter } from "./GenderFilter";
 
 export interface FilterSectionProps {
   isSearch?: boolean;
@@ -23,7 +13,7 @@ export const FilterSection = ({ isSearch = false }: FilterSectionProps) => {
     <Paper sx={{ p: "32px" }}>
       <Stack spacing={4}>
         {isSearch && <GenderFilter />}
-        <CategoryFilter />
+        <CategoryFilter isSearch={isSearch} />
         <PriceRangeFilter />
         <RatingFilter />
       </Stack>

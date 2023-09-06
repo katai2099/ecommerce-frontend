@@ -21,8 +21,8 @@ export const ProductList = ({
     <Grid container>
       {!firstLoad && totalItem != 0 && (
         <>
-          {products.map((product) => (
-            <Grid item md={3}>
+          {products.map((product, idx) => (
+            <Grid item md={3} key={idx}>
               <ProductItem product={product} />
             </Grid>
           ))}
