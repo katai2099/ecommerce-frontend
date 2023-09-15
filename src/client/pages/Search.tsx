@@ -50,7 +50,7 @@ export const Search = () => {
         .unwrap()
         .then((res) => {
           setFirstLoad(false);
-          if (filter.page != 1) {
+          if (filter.page !== 1) {
             setProducts((prev) => [...prev, ...res.data]);
           } else {
             setProducts(res.data);

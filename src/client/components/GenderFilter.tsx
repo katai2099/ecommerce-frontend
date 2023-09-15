@@ -1,5 +1,5 @@
 import { Box, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Gender } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
@@ -14,6 +14,12 @@ export const GenderFilter = () => {
   );
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (currentFilter.gender.length === 0) {
+      setChecked([false, false]);
+    }
+  }, [currentFilter.gender]);
+
   const handleCheck = (index: number, event: ChangeEvent<HTMLInputElement>) => {
     const updatedChecked = checked.map((item, i) =>
       i === index ? event.target.checked : item
@@ -25,6 +31,7 @@ export const GenderFilter = () => {
     dispatch(setProductFilter(newFilter));
     setChecked(updatedChecked);
   };
+
   return (
     <Box>
       <FilterHeader title={"Gender"} />

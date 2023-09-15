@@ -12,6 +12,13 @@ code {
     monospace;
 }
 
+.img-wrapper{
+  position: relative;
+  padding-bottom: 100%;
+  border-radius: 8px;
+  background-color: transparent;
+}
+
 .img-contain{
   object-fit: contain;
   width:100%;

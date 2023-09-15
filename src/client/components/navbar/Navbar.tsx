@@ -115,7 +115,7 @@ export const Navbar = () => {
                       setSearchValue(event.target.value);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") {
+                      if (e.key === "Enter" && searchValue.length !== 0) {
                         navigate(`/search/${searchValue}`);
                       }
                     }}

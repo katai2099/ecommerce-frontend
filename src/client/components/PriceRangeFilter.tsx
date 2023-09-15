@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Box, Button, Slider } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/combineReducer";
 import { setProductFilter } from "../../reducers/productSettingsReducer";
@@ -14,13 +14,16 @@ const FlexBox = styled(Box)`
 `;
 
 export const PriceRangeFilter = () => {
-  const currentFilter = useSelector(
+  const filter = useSelector(
     (state: RootState) => state.productSettings.filter
   );
-  const [value, setValue] = useState<number[]>([
-    0,
-    currentFilter.pmax ? currentFilter.pmax : 100,
-  ]);
+  const [value, setValue] = useState<number[]>([0, 100]);
+
+  useEffect(() => {
+    if (!filter.pmin && !filter.pmax) {
+      setValue([0, 100]);
+    }
+  }, [filter.pmin, filter.pmax]);
 
   const dispatch = useAppDispatch();
 
@@ -30,7 +33,7 @@ export const PriceRangeFilter = () => {
 
   const setPriceRange = () => {
     const newFilter = {
-      ...currentFilter,
+      ...filter,
       pmin: value[0],
       pmax: value[1],
       page: 1,

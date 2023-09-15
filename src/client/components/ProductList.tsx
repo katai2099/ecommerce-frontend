@@ -19,7 +19,7 @@ export const ProductList = ({
 }: ProductListProps & ListLoadProps) => {
   return (
     <Grid container>
-      {!firstLoad && totalItem != 0 && (
+      {!firstLoad && totalItem !== 0 && (
         <>
           {products.map((product, idx) => (
             <Grid item md={3} key={idx}>

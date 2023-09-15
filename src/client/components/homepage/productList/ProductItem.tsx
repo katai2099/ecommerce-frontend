@@ -1,6 +1,6 @@
 import { Box, Rating, Typography, styled } from "@mui/material";
 import { IProduct } from "../../../../model/product";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -14,28 +14,17 @@ interface ProductItemProps {
 }
 
 export const ProductItem = ({ product }: ProductItemProps) => {
-  const navigate = useNavigate();
-
   return (
     <FlexBox>
-      <Box>
-        <img
-          width="auto"
-          src={product.images[0].imageUrl}
-          className="img-contain"
-        />
-      </Box>
+      <Link to={`/products/${product.id}`}>
+        <FlexBox>
+          <img className="img-contain" src={product.images[0].imageUrl} />
+        </FlexBox>
+      </Link>
       <FlexBox>
-        <Typography
-          sx={{
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            navigate(`/products/${product.id}`);
-          }}
-        >
-          {product.name}
-        </Typography>
+        <Link to={`/products/${product.id}`} className="nav-item">
+          <Typography color="primary">{product.name}</Typography>
+        </Link>
         <Typography>{`$ ${product.price}`}</Typography>
         <Box
           sx={{
