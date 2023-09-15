@@ -1,14 +1,15 @@
 import { Box, Typography } from "@mui/material";
 
-export const Description = () => {
+interface DescriptionProps {
+  description: string;
+}
+
+export const Description = ({ description }: DescriptionProps) => {
   return (
     <Box>
       <Typography fontWeight="bold">Description</Typography>
-      <Typography variant="h5">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque,
-        quos blanditiis beatae fugiat obcaecati necessitatibus, soluta vero
-        atque ratione ullam illum, minus eius facere magni neque impedit odio
-        perspiciatis earum.
+      <Typography pt="8px" color="gray" fontSize="16px">
+        {description}
       </Typography>
     </Box>
   );

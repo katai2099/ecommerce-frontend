@@ -6,6 +6,7 @@ interface PageNumberSectionProps {
   totalPage: number;
   totalItem: number;
   page: number;
+  itemName: string;
   handleLoadMoreClick: () => void;
 }
 
@@ -15,6 +16,7 @@ export const PageNumberSection = ({
   totalItem,
   page,
   firstLoad,
+  itemName,
   handleLoadMoreClick,
 }: PageNumberSectionProps & ListLoadProps) => {
   const currentPageItem =
@@ -34,7 +36,7 @@ export const PageNumberSection = ({
     >
       <Box>
         <Typography fontSize="18px" mb="12px">
-          Showing {currentPageItem} of {totalItem} products
+          Showing {currentPageItem} of {totalItem} {itemName}
         </Typography>
         <LinearProgress
           variant="determinate"

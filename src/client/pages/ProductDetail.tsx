@@ -20,18 +20,20 @@ import { Review } from "../components/productDetails/Review";
 export const ProductDetail = () => {
   const [value, setValue] = useState<number>(0);
   const [product, setProduct] = useState<IProduct>(new Product());
-  const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
+  const [selectedSizeIndex, setSelectedSizeIndex] = useState<number>(0);
   const handleChange = (event: SyntheticEvent, value: any) => {
     setValue(value);
   };
   const dispatch = useAppDispatch();
   const { id } = useParams();
   useEffect(() => {
+    //TODO: 404 and undefined id
     dispatch(getProductAction(id!))
       .unwrap()
       .then((data) => setProduct(data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [id]);
+
   return (
     <AppBox>
       <Grid container>
@@ -47,33 +49,38 @@ export const ProductDetail = () => {
         <Grid item lg={8} pl="24px">
           <Box>
             <Box>
-              <Typography variant="h4">{product.name}</Typography>
-              <Typography variant="h5">{product.description}</Typography>
+              <Typography variant="h2">{product.name}</Typography>
+              <Typography pt="8px" fontSize="16px" color="GrayText">
+                {product.description}
+              </Typography>
             </Box>
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" pt="16px">
               <Typography>Rated: </Typography>
-              <Rating value={4} readOnly size="small" />
-              <Typography>(50)</Typography>
+              <Rating value={product.rating} readOnly size="small" />
+              <Typography ml="4px">({product.totalReview})</Typography>
             </Box>
-            <Box>
-              <Typography>Sizes</Typography>
+            <Box pt="16px">
+              <Typography pb="8px">Sizes</Typography>
               <Box display="flex" gap="8px">
                 {product.productSizes.map((productSize, idx) => (
                   <Button
                     key={idx}
                     variant={
-                      selectedColorIndex === idx ? "contained" : "outlined"
+                      selectedSizeIndex === idx ? "contained" : "outlined"
                     }
-                    color={selectedColorIndex === idx ? "primary" : "info"}
+                    color={selectedSizeIndex === idx ? "primary" : "info"}
+                    onClick={() => {
+                      setSelectedSizeIndex(idx);
+                    }}
                   >
                     {productSize.size.name}
                   </Button>
                 ))}
               </Box>
             </Box>
-            <Box>
-              <Typography variant="h4" color="primary">
-                $233.00
+            <Box py="16px">
+              <Typography variant="h3" color="primary">
+                {`$${product.price.toFixed(2)}`}
               </Typography>
             </Box>
             <Button variant="contained">Add to cart</Button>
@@ -89,7 +96,7 @@ export const ProductDetail = () => {
         </Box>
 
         <TabPanel index={0} value={value}>
-          <Description />
+          <Description description={product.description} />
         </TabPanel>
         <TabPanel index={1} value={value}>
           <Review />

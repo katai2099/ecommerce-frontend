@@ -1,14 +1,13 @@
+import { ThemeProvider } from "@emotion/react";
+import { CssBaseline } from "@mui/material";
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
-import { CssBaseline } from "@mui/material";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import { Admin } from "./admin/pages/Admin";
-import { ThemeProvider } from "@emotion/react";
-import { theme } from "./styles/theme";
 import { Provider } from "react-redux";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import App from "./App";
+import "./index.css";
 import { store } from "./store/configureStore";
+import { theme } from "./styles/theme";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -30,7 +29,6 @@ root.render(
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-            <Route path="/admin/*" element={<Admin />} />
             <Route path="/*" element={<App />} />
           </Routes>
         </BrowserRouter>

@@ -10,6 +10,7 @@ export class Product implements IProduct {
     public createdAt: string = "",
     public gender: Gender = Gender.MEN,
     public rating: number = 0,
+    public totalReview: number = 0,
     public category: ICategory = new Category(),
     public productSizes: IProductSize[] = [],
     public images: IImage[] = []
@@ -25,6 +26,7 @@ export interface IProduct {
   createdAt: string;
   gender: Gender;
   rating: number;
+  totalReview: number;
   category: ICategory;
   productSizes: IProductSize[];
   images: IImage[];

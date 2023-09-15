@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 export const AppBox = styled(Box)`
   max-width: 1280px;
   min-height: 84vh;
-  padding: 0px 24px;
+  padding: 40px 24px;
   margin: 80px auto 0;
 `;
 

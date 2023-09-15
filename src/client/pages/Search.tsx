@@ -103,6 +103,7 @@ export const Search = () => {
             totalPage={totalPage}
             totalItem={totalItem}
             page={page}
+            itemName="products"
             handleLoadMoreClick={handleLoadMoreClick}
             firstLoad={firstLoad}
           />

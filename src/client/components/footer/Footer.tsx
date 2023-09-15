@@ -4,7 +4,7 @@ import { AppBox } from "../../../styles/common";
 export const Footer = () => {
   return (
     <Box sx={{ bgcolor: "#222935" }}>
-      <AppBox mt="70px" p="40px 0">
+      <AppBox p="40px 0">
         <Box
           width="80%"
           margin="auto"
