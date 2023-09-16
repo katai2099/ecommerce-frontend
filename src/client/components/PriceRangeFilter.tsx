@@ -51,8 +51,8 @@ export const PriceRangeFilter = () => {
           borderRadius="4px"
           padding="2px 8px"
         >
-          <Box>Min $</Box>
-          <Box>{value[0]}</Box>
+          <Box color="GrayText">Min $</Box>
+          <Box fontWeight="bold">{value[0]}</Box>
         </FlexBox>
         <FlexBox
           flex="1"
@@ -60,8 +60,8 @@ export const PriceRangeFilter = () => {
           borderRadius="4px"
           padding="2px 8px"
         >
-          <Box>Max $</Box>
-          <Box>{value[1]}</Box>
+          <Box color="GrayText">Max $</Box>
+          <Box fontWeight="bold">{value[1]}</Box>
         </FlexBox>
       </FlexBox>
       <Box display="flex" mt="12px">
