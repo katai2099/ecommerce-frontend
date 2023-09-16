@@ -21,8 +21,8 @@ export const GenderFilter = () => {
   }, [currentFilter.gender]);
 
   const handleCheck = (index: number, event: ChangeEvent<HTMLInputElement>) => {
-    const updatedChecked = checked.map((item, i) =>
-      i === index ? event.target.checked : item
+    const updatedChecked = checked.map((item, idx) =>
+      idx === index ? event.target.checked : item
     );
     const genders = updatedChecked
       .map((check, idx) => (check ? genderValues[idx] : null))

@@ -8,7 +8,9 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { CartProduct } from "./CartProduct";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../reducers/combineReducer";
+import { CartItem } from "./CartItem";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -18,10 +20,16 @@ const FlexBox = styled(Box)`
 
 export interface CartMenuProps {
   open: boolean;
+  totalItems?: number;
   toggleDrawer: (open: boolean) => void;
 }
 
-export const CartMenu = ({ open, toggleDrawer }: CartMenuProps) => {
+export const CartMenu = ({ open, toggleDrawer, totalItems }: CartMenuProps) => {
+  const cartItems = useSelector((state: RootState) => state.cart.carts);
+  const total = cartItems.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.product.price * currentValue.quantity;
+  }, 0);
+
   return (
     <Drawer
       anchor="right"
@@ -39,7 +47,7 @@ export const CartMenu = ({ open, toggleDrawer }: CartMenuProps) => {
         >
           <Box overflow="auto" height="calc(100vh - 140px)" padding="30px">
             <FlexBox mb="15px">
-              <Typography variant="h4">Shopping Bag (4)</Typography>
+              <Typography variant="h3">Shopping Bag ({totalItems})</Typography>
               <IconButton
                 onClick={() => {
                   toggleDrawer(false);
@@ -50,16 +58,13 @@ export const CartMenu = ({ open, toggleDrawer }: CartMenuProps) => {
             </FlexBox>
             <Divider />
             <Box mt="4px">
-              <CartProduct />
-              <CartProduct />
-              <CartProduct />
-              <CartProduct />
-              <CartProduct />
-              <CartProduct />
+              {cartItems.map((cartItem, idx) => (
+                <CartItem key={idx} cartItem={cartItem} />
+              ))}
             </Box>
           </Box>
           <Box display="flex" flexDirection="column">
-            <Button>Checkout Now (79$)</Button>
+            <Button>Checkout Now (${total.toFixed(2)})</Button>
             <Button>View Cart</Button>
           </Box>
         </Box>

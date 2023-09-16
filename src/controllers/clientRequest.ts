@@ -71,7 +71,9 @@ export function postRequest<T>(
 ): Promise<T> {
   return axiosRequest<T>(url, "POST", postData, options)
     .then((res) => Promise.resolve(res))
-    .catch((err: AxiosError) => Promise.reject(err));
+    .catch((err: AxiosError) => {
+      return Promise.reject(err);
+    });
 }
 
 export function putRequest<T>(

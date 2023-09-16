@@ -1,16 +1,7 @@
 import { CloseOutlined } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  IconButton,
-  Typography,
-} from "@mui/material";
-import { CartProduct } from "../cart/CartProduct";
-import { CartDetailProduct } from "../cart/CartDetailProduct";
-import { OrderDetailProduct } from "./OrderDetailProduct";
+import { Box, Divider, Drawer, IconButton, Typography } from "@mui/material";
 import { CartMenuProps } from "../cart/CartMenu";
+import { OrderDetailProduct } from "./OrderDetailProduct";
 
 export const OrderDetail = ({ open, toggleDrawer }: CartMenuProps) => {
   return (

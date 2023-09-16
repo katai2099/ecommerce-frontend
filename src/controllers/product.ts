@@ -1,4 +1,6 @@
+import { addToCartAction } from "../actions/cartActions";
 import { addProductAction } from "../actions/productActions";
+import { IAddToCartRequest } from "../model/cart";
 import { IIdName } from "../model/common";
 import {
   Gender,
@@ -9,6 +11,7 @@ import {
   IProductSize,
   ProductMode,
 } from "../model/product";
+import { addToCartState } from "../reducers/cartReducer";
 import {
   setEditedProduct,
   setProductMode,
@@ -16,6 +19,26 @@ import {
   setSelectedProduct,
 } from "../reducers/productReducer";
 import { store } from "../store/configureStore";
+
+export function addToCart(
+  product: IProduct,
+  selectedSizeIndex: number
+): Promise<string> {
+  const addToCartRequest: IAddToCartRequest = {
+    productId: product.id,
+    size: product.productSizes[selectedSizeIndex].size.name,
+  };
+  return store
+    .dispatch(addToCartAction(addToCartRequest))
+    .unwrap()
+    .then((res) => {
+      store.dispatch(
+        addToCartState({ product: product, sizeIndex: selectedSizeIndex })
+      );
+      return Promise.resolve(res);
+    })
+    .catch((err) => Promise.reject(err));
+}
 
 export function addNewProduct(product: IProduct, files: File[]) {
   store.dispatch(setProductSubmitData(true));

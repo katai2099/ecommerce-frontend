@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
 import { AppBox } from "../../styles/common";
-import { CartProduct } from "../components/cart/CartProduct";
+import { CartItem } from "../components/cart/CartItem";
 import { CartDetailProduct } from "../components/cart/CartDetailProduct";
 
 export const Cart = () => {

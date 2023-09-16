@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { AppBox } from "../../../styles/common";
 
 export const Footer = () => {

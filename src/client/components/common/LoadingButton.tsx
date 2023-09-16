@@ -14,9 +14,17 @@ export const LoadingButton = ({
   return (
     <Button
       onClick={onClick}
-      variant={loading ? "outlined" : "contained"}
+      variant={"contained"}
       disabled={loading}
-      sx={{ position: "relative", padding: "8px 15px" }}
+      sx={{
+        position: "relative",
+        padding: "10px 15px",
+        color: "primary",
+        "&.Mui-disabled": {
+          color: "white",
+          backgroundColor: "black",
+        },
+      }}
     >
       <span style={{ visibility: loading ? "hidden" : "visible" }}>
         {title}

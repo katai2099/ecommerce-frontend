@@ -5,6 +5,7 @@ import userReducer from "./userReducer";
 import adminReducer from "./adminReducer";
 import guiReducer from "./guiReducer";
 import productSettingsReducer from "./productSettingsReducer";
+import cartReducer from "./cartReducer";
 
 const appReducer = combineReducers<IMainState>({
   product: productReducer,
@@ -12,6 +13,7 @@ const appReducer = combineReducers<IMainState>({
   admin: adminReducer,
   gui: guiReducer,
   productSettings: productSettingsReducer,
+  cart: cartReducer,
 });
 
 export const rootReducer = appReducer;

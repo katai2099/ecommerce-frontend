@@ -10,15 +10,18 @@ import {
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductAction } from "../../actions/productActions";
+import { addToCart } from "../../controllers/product";
 import { IProduct, Product } from "../../model/product";
 import { useAppDispatch } from "../../store/configureStore";
 import { AppBox, TabPanel } from "../../styles/common";
+import { LoadingButton } from "../components/common/LoadingButton";
 import { Description } from "../components/productDetails/Description";
 import { ImageSection } from "../components/productDetails/ImageSection";
 import { Review } from "../components/productDetails/Review";
 
 export const ProductDetail = () => {
   const [value, setValue] = useState<number>(0);
+  const [isAddTocart, setIsAddToCart] = useState<boolean>(false);
   const [product, setProduct] = useState<IProduct>(new Product());
   const [selectedSizeIndex, setSelectedSizeIndex] = useState<number>(0);
   const handleChange = (event: SyntheticEvent, value: any) => {
@@ -33,6 +36,20 @@ export const ProductDetail = () => {
       .then((data) => setProduct(data))
       .catch((err) => console.log(err));
   }, [id]);
+
+  const handleAddToCart = () => {
+    setIsAddToCart(true);
+    addToCart(product, selectedSizeIndex)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsAddToCart(false);
+      });
+  };
 
   return (
     <AppBox>
@@ -60,7 +77,12 @@ export const ProductDetail = () => {
               <Typography ml="4px">({product.totalReview})</Typography>
             </Box>
             <Box pt="16px">
-              <Typography pb="8px">Sizes</Typography>
+              <Typography variant="h3" color="primary">
+                {`$${product.price.toFixed(2)}`}
+              </Typography>
+            </Box>
+            <Box pt="16px" pb="4px">
+              <Typography pb="4px">Sizes</Typography>
               <Box display="flex" gap="8px">
                 {product.productSizes.map((productSize, idx) => (
                   <Button
@@ -70,6 +92,7 @@ export const ProductDetail = () => {
                     }
                     color={selectedSizeIndex === idx ? "primary" : "info"}
                     onClick={() => {
+                      console.log(product);
                       setSelectedSizeIndex(idx);
                     }}
                   >
@@ -78,12 +101,27 @@ export const ProductDetail = () => {
                 ))}
               </Box>
             </Box>
-            <Box py="16px">
-              <Typography variant="h3" color="primary">
-                {`$${product.price.toFixed(2)}`}
-              </Typography>
-            </Box>
-            <Button variant="contained">Add to cart</Button>
+            {product.productSizes.length > 0 && (
+              <Box pb="16px" display="flex">
+                <Typography>Availability: &nbsp;</Typography>
+                <Typography
+                  color={
+                    product.productSizes[selectedSizeIndex].stockCount === 0
+                      ? "error"
+                      : "green"
+                  }
+                >
+                  {product.productSizes[selectedSizeIndex].stockCount === 0
+                    ? "Out of stock"
+                    : `${product.productSizes[selectedSizeIndex].stockCount} in stock`}
+                </Typography>
+              </Box>
+            )}
+            <LoadingButton
+              title="add to cart"
+              loading={isAddTocart}
+              onClick={handleAddToCart}
+            />
           </Box>
         </Grid>
       </Grid>

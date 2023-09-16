@@ -24,10 +24,16 @@ import { CartMenu } from "../cart/CartMenu";
 import { LoginDialog } from "../login/LoginDialog";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../reducers/combineReducer";
+import { useAppDispatch } from "../../../store/configureStore";
+import { setOpen } from "../../../reducers/cartReducer";
 
 export const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
-  const [openCartDrawer, setOpenCartDrawer] = useState<boolean>(false);
+  const cart = useSelector((state: RootState) => state.cart);
+  const totalItems = cart.carts.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.quantity;
+  }, 0);
+  const dispatch = useAppDispatch();
   const filter = useSelector(
     (state: RootState) => state.productSettings.filter
   );
@@ -43,11 +49,7 @@ export const Navbar = () => {
   };
 
   const handleToggleCartDrawer = (open: boolean) => {
-    setOpenCartDrawer(open);
-  };
-
-  const handleSectionClick = (gender: Gender) => {
-    navigate(`/${gender.toLowerCase()}`);
+    dispatch(setOpen(open));
   };
 
   return (
@@ -77,22 +79,10 @@ export const Navbar = () => {
               >
                 ECOMMERCE
               </Typography>
-              <Link
-                className="nav-item"
-                to="/men"
-                onClick={() => {
-                  handleSectionClick(Gender.MEN);
-                }}
-              >
+              <Link className="nav-item" to="/men">
                 <Typography color="primary">Men</Typography>
               </Link>
-              <Link
-                className="nav-item"
-                to={"/women"}
-                onClick={() => {
-                  handleSectionClick(Gender.WOMEN);
-                }}
-              >
+              <Link className="nav-item" to={"/women"}>
                 <Typography color="primary">Women</Typography>
               </Link>
             </Stack>
@@ -135,7 +125,7 @@ export const Navbar = () => {
                   handleToggleCartDrawer(true);
                 }}
               >
-                <Badge badgeContent={4} color="secondary">
+                <Badge badgeContent={totalItems} color="secondary">
                   <ShoppingBagOutlined />
                 </Badge>
               </IconButton>
@@ -146,8 +136,9 @@ export const Navbar = () => {
             open={openLoginModal}
           />
           <CartMenu
-            open={openCartDrawer}
+            open={cart.open}
             toggleDrawer={handleToggleCartDrawer}
+            totalItems={totalItems}
           />
         </Toolbar>
       </Container>
