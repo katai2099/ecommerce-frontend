@@ -5,8 +5,11 @@ interface PageNumberSectionProps {
   currentPageTotalItem: number;
   totalPage: number;
   totalItem: number;
+  itemPerPage: number;
   page: number;
   itemName: string;
+  showbar?: boolean;
+  buttonTitle?: string;
   handleLoadMoreClick: () => void;
 }
 
@@ -14,9 +17,12 @@ export const PageNumberSection = ({
   currentPageTotalItem,
   totalPage,
   totalItem,
+  itemPerPage,
   page,
   firstLoad,
   itemName,
+  showbar = true,
+  buttonTitle = "Load more",
   handleLoadMoreClick,
 }: PageNumberSectionProps & ListLoadProps) => {
   const currentPageItem =
@@ -34,22 +40,24 @@ export const PageNumberSection = ({
       mt="32px"
       gap="16px"
     >
-      <Box>
-        <Typography fontSize="18px" mb="12px">
-          Showing {currentPageItem} of {totalItem} {itemName}
-        </Typography>
-        <LinearProgress
-          variant="determinate"
-          value={Math.min((page * 20 * 100) / totalItem, 100)}
-        />
-      </Box>
-      {page !== totalPage && (
+      {showbar && (
+        <Box>
+          <Typography fontSize="18px" mb="12px">
+            Showing {currentPageItem} of {totalItem} {itemName}
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={Math.min((page * itemPerPage * 100) / totalItem, 100)}
+          />
+        </Box>
+      )}
+      {page !== totalPage && totalPage !== 0 && (
         <Button
           variant="contained"
           sx={{ minWidth: "15%" }}
           onClick={handleLoadMoreClick}
         >
-          Load more
+          {buttonTitle}
         </Button>
       )}
     </Box>

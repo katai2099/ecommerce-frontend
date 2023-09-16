@@ -1,6 +1,6 @@
 import { Box, Rating, Typography, styled } from "@mui/material";
+import { Link } from "react-router-dom";
 import { IProduct } from "../../../../model/product";
-import { Link, useNavigate } from "react-router-dom";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -34,7 +34,7 @@ export const ProductItem = ({ product }: ProductItemProps) => {
           }}
         >
           <Rating value={product.rating} size="small" readOnly />
-          <Typography>(0 Reviews)</Typography>
+          <Typography>&nbsp;({product.totalReview} reviews)</Typography>
         </Box>
       </FlexBox>
     </FlexBox>

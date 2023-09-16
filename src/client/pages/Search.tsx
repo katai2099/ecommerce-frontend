@@ -1,12 +1,5 @@
-import { SearchRounded } from "@mui/icons-material";
-import {
-  Box,
-  FormControl,
-  Grid,
-  InputAdornment,
-  OutlinedInput,
-} from "@mui/material";
-import { ChangeEvent, useEffect, useState } from "react";
+import { Box, Grid } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getProductsAction } from "../../actions/productActions";
@@ -19,9 +12,9 @@ import {
   startNewFilter,
 } from "../../reducers/productSettingsReducer";
 import { useAppDispatch } from "../../store/configureStore";
+import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
 import { ProductList } from "../components/ProductList";
-import { CategoryHeader } from "../components/CategoryHeader";
 
 export const Search = () => {
   const { q } = useParams();
@@ -102,6 +95,7 @@ export const Search = () => {
             currentPageTotalItem={currentPageTotalItem}
             totalPage={totalPage}
             totalItem={totalItem}
+            itemPerPage={20}
             page={page}
             itemName="products"
             handleLoadMoreClick={handleLoadMoreClick}

@@ -9,15 +9,23 @@ import {
 } from "@mui/material";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductAction } from "../../actions/productActions";
+import {
+  getProductAction,
+  getProductReviewsAction,
+} from "../../actions/productActions";
 import { addToCart } from "../../controllers/product";
+import {
+  IPaginationFilterData,
+  PaginationFilterData,
+} from "../../model/common";
 import { IProduct, Product } from "../../model/product";
+import { IReview, Review } from "../../model/review";
 import { useAppDispatch } from "../../store/configureStore";
 import { AppBox, TabPanel } from "../../styles/common";
 import { LoadingButton } from "../components/common/LoadingButton";
 import { Description } from "../components/productDetails/Description";
 import { ImageSection } from "../components/productDetails/ImageSection";
-import { Review } from "../components/productDetails/Review";
+import { Reviews } from "../components/productDetails/Reviews";
 
 export const ProductDetail = () => {
   const [value, setValue] = useState<number>(0);
@@ -27,6 +35,15 @@ export const ProductDetail = () => {
   const handleChange = (event: SyntheticEvent, value: any) => {
     setValue(value);
   };
+
+  //product review data
+  const [ownerReview, setOwnerReview] = useState<IReview>(new Review());
+  const [otherReviews, setOtherReviews] = useState<IReview[]>([]);
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
+  const [paginationFilterData, setPaginationFilterData] =
+    useState<IPaginationFilterData>(new PaginationFilterData());
+  const [filterPage, setFilterPage] = useState<number>(1);
+
   const dispatch = useAppDispatch();
   const { id } = useParams();
   useEffect(() => {
@@ -51,6 +68,40 @@ export const ProductDetail = () => {
       });
   };
 
+  useEffect(() => {
+    dispatch(
+      getProductReviewsAction({ page: filterPage, productId: Number(id!) })
+    )
+      .unwrap()
+      .then((res) => {
+        setFirstLoad(false);
+        if (res.othersReview.currentPage !== 1) {
+          setOtherReviews((prev) => [...prev, ...res.othersReview.data]);
+        } else {
+          setOtherReviews(res.othersReview.data);
+          setOwnerReview(res.ownerReview);
+        }
+        const updatedPaginationData: IPaginationFilterData = {
+          page: res.othersReview.currentPage,
+          totalPage: res.othersReview.totalPage,
+          totalItem: res.othersReview.totalItem,
+          currentPageTotalItem: res.othersReview.data.length,
+        };
+        setPaginationFilterData(updatedPaginationData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [filterPage]);
+
+  const handleLoadMoreClick = () => {
+    setFilterPage((prev) => prev + 1);
+  };
+
+  const handleUpdateOwnerReview = (review: IReview) => {
+    setOwnerReview(review);
+  };
+
   return (
     <AppBox>
       <Grid container>
@@ -72,9 +123,12 @@ export const ProductDetail = () => {
               </Typography>
             </Box>
             <Box display="flex" alignItems="center" pt="16px">
-              <Typography>Rated: </Typography>
+              <Typography>Rating: &nbsp;</Typography>
               <Rating value={product.rating} readOnly size="small" />
-              <Typography ml="4px">({product.totalReview})</Typography>
+              <Typography fontWeight="bold">
+                &nbsp;{product.rating.toFixed(1)}
+              </Typography>
+              <Typography ml="4px">({product.totalReview} reviews)</Typography>
             </Box>
             <Box pt="16px">
               <Typography variant="h3" color="primary">
@@ -82,7 +136,7 @@ export const ProductDetail = () => {
               </Typography>
             </Box>
             <Box pt="16px" pb="4px">
-              <Typography pb="4px">Sizes</Typography>
+              <Typography pb="4px">Sizes:</Typography>
               <Box display="flex" gap="8px">
                 {product.productSizes.map((productSize, idx) => (
                   <Button
@@ -92,7 +146,7 @@ export const ProductDetail = () => {
                     }
                     color={selectedSizeIndex === idx ? "primary" : "info"}
                     onClick={() => {
-                      console.log(product);
+                      console.log(paginationFilterData);
                       setSelectedSizeIndex(idx);
                     }}
                   >
@@ -137,7 +191,16 @@ export const ProductDetail = () => {
           <Description description={product.description} />
         </TabPanel>
         <TabPanel index={1} value={value}>
-          <Review />
+          <Reviews
+            productId={Number(id!)}
+            ownerReview={ownerReview}
+            otherReviews={otherReviews}
+            firstLoad={firstLoad}
+            paginationFilterData={paginationFilterData}
+            filterPage={filterPage}
+            handleLoadMoreClick={handleLoadMoreClick}
+            updateOwnerReview={handleUpdateOwnerReview}
+          />
         </TabPanel>
       </Box>
     </AppBox>

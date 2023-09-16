@@ -107,6 +107,7 @@ export const Category = () => {
             currentPageTotalItem={currentPageTotalItem}
             totalPage={totalPage}
             totalItem={totalItem}
+            itemPerPage={20}
             page={page}
             itemName="products"
             handleLoadMoreClick={handleLoadMoreClick}

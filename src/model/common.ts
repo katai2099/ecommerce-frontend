@@ -43,3 +43,19 @@ export interface IPaginationResponse<T> {
   totalPage: number;
   data: T[];
 }
+
+export interface IPaginationFilterData {
+  currentPageTotalItem: number;
+  totalItem: number;
+  totalPage: number;
+  page: number;
+}
+
+export class PaginationFilterData implements IPaginationFilterData {
+  constructor(
+    public currentPageTotalItem = 0,
+    public totalItem = 0,
+    public totalPage = 0,
+    public page = 1
+  ) {}
+}
