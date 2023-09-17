@@ -15,17 +15,15 @@ export const cartSlice = createSlice({
     },
     addToCartState(
       state,
-      payload: PayloadAction<{ product: IProduct; sizeIndex: number }>
+      payload: PayloadAction<{
+        product: IProduct;
+        cartItemId: number;
+        sizeIndex: number;
+      }>
     ) {
       const newCartItem = payload.payload.product;
       const existingCartItemIndex = state.carts.findIndex(
-        (item) =>
-          item.product.id === newCartItem.id &&
-          item.product.productSizes.some(
-            (size) =>
-              size.size.name ===
-              newCartItem.productSizes[payload.payload.sizeIndex].size.name
-          )
+        (cartItem) => cartItem.id === payload.payload.cartItemId
       );
       if (existingCartItemIndex !== -1) {
         const updatedCarts = state.carts.map((item, idx) =>
@@ -37,7 +35,7 @@ export const cartSlice = createSlice({
       }
       const newCarts = clone(state.carts);
       const newItem: ICartItem = {
-        id: -1,
+        id: payload.payload.cartItemId,
         quantity: 1,
         product: {
           ...newCartItem,

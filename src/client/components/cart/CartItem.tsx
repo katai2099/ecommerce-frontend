@@ -39,7 +39,7 @@ export const CartItem = ({ cartItem }: CartItemProps) => {
           />
         </Box>
       </Link>
-      <Box flex="1 1 60%">
+      <Box flex="1 1 60%" ml="12px">
         <FlexBox>
           <Link
             to={`/products/${cartItem.product.id}`}

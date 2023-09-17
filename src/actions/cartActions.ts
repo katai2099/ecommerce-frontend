@@ -23,7 +23,7 @@ function getCartWorker(): Promise<ICartItem[]> {
     .catch((err) => Promise.reject(err));
 }
 
-export const addToCartAction = createAsyncThunk<string, IAddToCartRequest>(
+export const addToCartAction = createAsyncThunk<number, IAddToCartRequest>(
   "add_to_cart",
   (data, thunkApi) => {
     return addToCartWorker(data)
@@ -35,7 +35,7 @@ export const addToCartAction = createAsyncThunk<string, IAddToCartRequest>(
 );
 
 function addToCartWorker(addToCartPostData: IAddToCartRequest) {
-  return postRequest<string>(`/carts/add-to-cart`, addToCartPostData, {
+  return postRequest<number>(`/carts/add-to-cart`, addToCartPostData, {
     auth: true,
   })
     .then((res) => Promise.resolve(res))

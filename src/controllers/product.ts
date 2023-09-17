@@ -23,7 +23,7 @@ import { store } from "../store/configureStore";
 export function addToCart(
   product: IProduct,
   selectedSizeIndex: number
-): Promise<string> {
+): Promise<number> {
   const addToCartRequest: IAddToCartRequest = {
     productId: product.id,
     size: product.productSizes[selectedSizeIndex].size.name,
@@ -33,7 +33,11 @@ export function addToCart(
     .unwrap()
     .then((res) => {
       store.dispatch(
-        addToCartState({ product: product, sizeIndex: selectedSizeIndex })
+        addToCartState({
+          product: product,
+          cartItemId: res,
+          sizeIndex: selectedSizeIndex,
+        })
       );
       return Promise.resolve(res);
     })
