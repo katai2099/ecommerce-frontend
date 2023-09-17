@@ -132,7 +132,9 @@ export const ProductDetail = () => {
             </Box>
             <Box pt="16px">
               <Typography variant="h3" color="primary">
-                {`$${product.price.toFixed(2)}`}
+                {`$${product.price.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                })}`}
               </Typography>
             </Box>
             <Box pt="16px" pb="4px">

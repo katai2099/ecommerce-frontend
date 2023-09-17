@@ -1,8 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getRequest, postRequest } from "../controllers/clientRequest";
-import { IAddToCartRequest, ICartItem } from "../model/cart";
+import {
+  getRequest,
+  postRequest,
+  putRequest,
+} from "../controllers/clientRequest";
+import {
+  IAddToCartRequest,
+  ICartItem,
+  IUpdateCartRequest,
+} from "../model/cart";
+import { setLoading } from "../reducers/guiReducer";
 
-export const getCartAction = createAsyncThunk<ICartItem[]>("getCart", () => {
+export const getCartAction = createAsyncThunk<ICartItem[]>("get_cart", () => {
   return getCartWorker()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
@@ -15,7 +24,7 @@ function getCartWorker(): Promise<ICartItem[]> {
 }
 
 export const addToCartAction = createAsyncThunk<string, IAddToCartRequest>(
-  "addToCart",
+  "add_to_cart",
   (data, thunkApi) => {
     return addToCartWorker(data)
       .then((res) => {
@@ -29,6 +38,27 @@ function addToCartWorker(addToCartPostData: IAddToCartRequest) {
   return postRequest<string>(`/carts/add-to-cart`, addToCartPostData, {
     auth: true,
   })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const updateCartAction = createAsyncThunk<string, IUpdateCartRequest>(
+  "update_cart",
+  (data, thunkApi) => {
+    thunkApi.dispatch(setLoading(true));
+    return updateCartWorker(data)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err))
+      .finally(() => thunkApi.dispatch(setLoading(false)));
+  }
+);
+
+function updateCartWorker(updateCartRequest: IUpdateCartRequest) {
+  return putRequest<string>(
+    `/carts/${updateCartRequest.cartItemId}`,
+    updateCartRequest,
+    { auth: true }
+  )
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }

@@ -10,6 +10,7 @@ export class CartReduxState implements ICartReduxState {
 }
 
 export interface ICartItem {
+  id: number;
   quantity: number;
   product: IProduct;
 }
@@ -17,4 +18,9 @@ export interface ICartItem {
 export interface IAddToCartRequest {
   productId: number;
   size: string;
+}
+
+export interface IUpdateCartRequest {
+  cartItemId: number;
+  quantity: number;
 }

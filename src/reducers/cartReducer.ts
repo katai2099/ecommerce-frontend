@@ -37,6 +37,7 @@ export const cartSlice = createSlice({
       }
       const newCarts = clone(state.carts);
       const newItem: ICartItem = {
+        id: -1,
         quantity: 1,
         product: {
           ...newCartItem,
@@ -50,6 +51,9 @@ export const cartSlice = createSlice({
       newCarts.push(newItem);
       return { ...state, carts: newCarts };
     },
+    updateCarts(state, payload: PayloadAction<ICartItem[]>) {
+      return { ...state, carts: payload.payload };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCartAction.fulfilled, (state, action) => {
@@ -58,5 +62,5 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { setOpen, addToCartState } = cartSlice.actions;
+export const { setOpen, addToCartState, updateCarts } = cartSlice.actions;
 export default cartSlice.reducer;

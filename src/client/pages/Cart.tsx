@@ -1,24 +1,25 @@
 import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "../../reducers/combineReducer";
 import { AppBox } from "../../styles/common";
-import { CartItem } from "../components/cart/CartItem";
-import { CartDetailProduct } from "../components/cart/CartDetailProduct";
+import { CartItemDetail } from "../components/cart/CartItemDetail";
 
 export const Cart = () => {
+  const carts = useSelector((state: RootState) => state.cart.carts);
+  const totalPrice = carts.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.quantity * currentValue.product.price;
+  }, 0);
   return (
     <AppBox>
-      <Typography pt="32px" textAlign="center" variant="h3" fontWeight="bold">
+      <Typography textAlign="center" fontSize="26px" fontWeight="bold">
         Shopping bag
       </Typography>
       <Grid container mt="32px" gap="32px">
         <Grid item md={7}>
           <Paper sx={{ width: "100%", padding: "32px" }}>
-            <CartDetailProduct />
-            <CartDetailProduct />
-            <CartDetailProduct />
-            <CartDetailProduct />
-            <CartDetailProduct />
-            <CartDetailProduct />
-            <CartDetailProduct />
+            {carts.map((cartItem, idx) => (
+              <CartItemDetail key={idx} cartItem={cartItem} index={idx} />
+            ))}
           </Paper>
         </Grid>
 
@@ -31,7 +32,12 @@ export const Cart = () => {
               mb="32px"
             >
               <Typography>Total</Typography>
-              <Typography>$460.00</Typography>
+              <Typography fontWeight="bold">
+                $
+                {totalPrice.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                })}
+              </Typography>
             </Box>
             <Divider />
             <Button fullWidth sx={{ mt: "32px" }} variant="contained">

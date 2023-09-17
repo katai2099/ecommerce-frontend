@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { CloseOutlined } from "@mui/icons-material";
+import { CloseOutlined, ShoppingBagOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../reducers/combineReducer";
 import { CartItem } from "./CartItem";
 
@@ -30,6 +31,8 @@ export const CartMenu = ({ open, toggleDrawer, totalItems }: CartMenuProps) => {
     return accumulator + currentValue.product.price * currentValue.quantity;
   }, 0);
 
+  const navigate = useNavigate();
+
   return (
     <Drawer
       anchor="right"
@@ -40,14 +43,19 @@ export const CartMenu = ({ open, toggleDrawer, totalItems }: CartMenuProps) => {
     >
       <Box sx={{ width: "max(400px)" }} role="presentation">
         <Box
-          // height="100%"
           display="flex"
           flexDirection="column"
           overflow="hidden"
+          height="100%"
         >
-          <Box overflow="auto" height="calc(100vh - 140px)" padding="30px">
+          <Box overflow="auto" height="85vh" padding="30px">
             <FlexBox mb="15px">
-              <Typography variant="h3">Shopping Bag ({totalItems})</Typography>
+              <Box display="flex" alignItems="center" gap="8px">
+                <ShoppingBagOutlined />
+                <Typography variant="h3">
+                  Shopping Bag ({totalItems})
+                </Typography>
+              </Box>
               <IconButton
                 onClick={() => {
                   toggleDrawer(false);
@@ -63,9 +71,32 @@ export const CartMenu = ({ open, toggleDrawer, totalItems }: CartMenuProps) => {
               ))}
             </Box>
           </Box>
-          <Box display="flex" flexDirection="column">
-            <Button>Checkout Now (${total.toFixed(2)})</Button>
-            <Button>View Cart</Button>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            height="15vh"
+            padding="0 32px"
+            gap="12px"
+          >
+            <Button fullWidth variant="contained">
+              Checkout Now &nbsp;($
+              {total.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })}
+              )
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => {
+                toggleDrawer(false);
+                navigate("/cart");
+              }}
+            >
+              View Cart
+            </Button>
           </Box>
         </Box>
       </Box>

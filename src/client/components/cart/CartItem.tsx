@@ -1,9 +1,9 @@
 import { Add, CloseOutlined, Remove } from "@mui/icons-material";
 import { Box, IconButton, Typography, styled } from "@mui/material";
-import { ICartItem } from "../../../model/cart";
 import { Link } from "react-router-dom";
-import { useAppDispatch } from "../../../store/configureStore";
+import { ICartItem } from "../../../model/cart";
 import { setOpen } from "../../../reducers/cartReducer";
+import { useAppDispatch } from "../../../store/configureStore";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -29,14 +29,16 @@ export const CartItem = ({ cartItem }: CartItemProps) => {
       justifyContent="space-between"
       alignItems="center"
     >
-      <Box flex="1 1 40%">
-        <img
-          width="120px"
-          height="140px"
-          alt=""
-          src={cartItem.product.images[0].imageUrl}
-        />
-      </Box>
+      <Link to={`/products/${cartItem.product.id}`} onClick={handleItemClick}>
+        <Box flex="1 1 40%">
+          <img
+            width="120px"
+            height="140px"
+            alt=""
+            src={cartItem.product.images[0].imageUrl}
+          />
+        </Box>
+      </Link>
       <Box flex="1 1 60%">
         <FlexBox>
           <Link
@@ -52,17 +54,20 @@ export const CartItem = ({ cartItem }: CartItemProps) => {
             <CloseOutlined />
           </IconButton>
         </FlexBox>
-        <Typography fontWeight="bold">{`$ ${cartItem.product.price.toFixed(
-          2
+        <Typography fontWeight="bold">{`$ ${cartItem.product.price.toLocaleString(
+          undefined,
+          {
+            minimumFractionDigits: 2,
+          }
         )}`}</Typography>
         <Typography color="GrayText">{`Size: ${cartItem.product.productSizes[0].size.name}`}</Typography>
         <FlexBox m="15px 0">
           <Box display="flex" alignItems="center">
-            <IconButton>
+            <IconButton color="primary">
               <Remove />
             </IconButton>
             <Typography>{cartItem.quantity}</Typography>
-            <IconButton>
+            <IconButton color="primary">
               <Add />
             </IconButton>
           </Box>
