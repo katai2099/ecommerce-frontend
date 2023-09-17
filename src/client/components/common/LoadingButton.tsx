@@ -4,25 +4,29 @@ export interface LoadingButtonProps {
   loading: boolean;
   title: string;
   onClick: () => void;
+  disabled?: boolean;
 }
 
 export const LoadingButton = ({
   onClick,
   title,
   loading,
+  disabled = false,
 }: LoadingButtonProps) => {
   return (
     <Button
       onClick={onClick}
       variant={"contained"}
-      disabled={loading}
+      disabled={loading || disabled}
       sx={{
         position: "relative",
         padding: "10px 15px",
         color: "primary",
         "&.Mui-disabled": {
-          color: "white",
-          backgroundColor: "black",
+          color: disabled ? "#4b4b4b" : "white",
+          backgroundColor: disabled ? "diabled" : "black",
+          cursor: disabled ? "not-allowed" : "default",
+          pointerEvents: "all !important",
         },
       }}
     >

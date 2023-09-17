@@ -174,6 +174,10 @@ export const ProductDetail = () => {
               </Box>
             )}
             <LoadingButton
+              disabled={
+                product.productSizes.length > 0 &&
+                product.productSizes[selectedSizeIndex].stockCount === 0
+              }
               title="add to cart"
               loading={isAddTocart}
               onClick={handleAddToCart}

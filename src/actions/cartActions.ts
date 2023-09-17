@@ -9,7 +9,6 @@ import {
   ICartItem,
   IUpdateCartRequest,
 } from "../model/cart";
-import { setLoading } from "../reducers/guiReducer";
 
 export const getCartAction = createAsyncThunk<ICartItem[]>("get_cart", () => {
   return getCartWorker()
@@ -45,11 +44,9 @@ function addToCartWorker(addToCartPostData: IAddToCartRequest) {
 export const updateCartAction = createAsyncThunk<string, IUpdateCartRequest>(
   "update_cart",
   (data, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
     return updateCartWorker(data)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
-      .finally(() => thunkApi.dispatch(setLoading(false)));
+      .catch((err) => Promise.reject(err));
   }
 );
 

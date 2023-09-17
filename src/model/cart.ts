@@ -3,10 +3,15 @@ import { IProduct } from "./product";
 export interface ICartReduxState {
   carts: ICartItem[];
   open: boolean;
+  isUpdate: boolean;
 }
 
 export class CartReduxState implements ICartReduxState {
-  constructor(public carts: ICartItem[] = [], public open: boolean = false) {}
+  constructor(
+    public carts: ICartItem[] = [],
+    public open: boolean = false,
+    public isUpdate = false
+  ) {}
 }
 
 export interface ICartItem {

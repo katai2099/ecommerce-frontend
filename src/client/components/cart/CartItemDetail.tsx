@@ -6,9 +6,10 @@ import { updateCartAction } from "../../../actions/cartActions";
 import { ICartItem } from "../../../model/cart";
 import { updateCarts } from "../../../reducers/cartReducer";
 import { RootState } from "../../../reducers/combineReducer";
+import { setLoading } from "../../../reducers/guiReducer";
 import { useAppDispatch } from "../../../store/configureStore";
 
-interface CartItemDetailProps {
+export interface CartItemDetailProps {
   cartItem: ICartItem;
   index: number;
 }
@@ -18,17 +19,22 @@ export const CartItemDetail = ({ cartItem, index }: CartItemDetailProps) => {
   const dispatch = useAppDispatch();
 
   const handleRemoveCartItem = () => {
+    dispatch(setLoading(true));
     dispatch(updateCartAction({ quantity: 0, cartItemId: cartItem.id }))
       .unwrap()
       .then(() => {
         const updatedCarts = carts.filter((_, idx) => idx !== index);
         dispatch(updateCarts(updatedCarts));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
 
   const handleUpdateCartItemQuantity = (quantityChange: number) => {
     const quantity = cartItem.quantity + quantityChange;
+    dispatch(setLoading(true));
     dispatch(updateCartAction({ quantity, cartItemId: cartItem.id }))
       .unwrap()
       .then(() => {
@@ -37,7 +43,10 @@ export const CartItemDetail = ({ cartItem, index }: CartItemDetailProps) => {
         );
         dispatch(updateCarts(updatedCarts));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
 
   return (

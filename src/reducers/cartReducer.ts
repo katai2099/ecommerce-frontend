@@ -52,6 +52,9 @@ export const cartSlice = createSlice({
     updateCarts(state, payload: PayloadAction<ICartItem[]>) {
       return { ...state, carts: payload.payload };
     },
+    setIsUpdate(state, payload: PayloadAction<boolean>) {
+      return { ...state, isUpdate: payload.payload };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCartAction.fulfilled, (state, action) => {
@@ -60,5 +63,6 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { setOpen, addToCartState, updateCarts } = cartSlice.actions;
+export const { setOpen, addToCartState, updateCarts, setIsUpdate } =
+  cartSlice.actions;
 export default cartSlice.reducer;
