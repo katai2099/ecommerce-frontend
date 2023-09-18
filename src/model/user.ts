@@ -68,3 +68,12 @@ export class Address implements IAddress {
     public isDefault = false
   ) {}
 }
+
+export interface IUserDetailsRequest {
+  firstname: string;
+  lastname: string;
+}
+
+export interface IUpdatePasswordRequest {
+  password: string;
+}

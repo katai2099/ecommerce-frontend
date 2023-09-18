@@ -1,11 +1,17 @@
-import { combineReducers } from "@reduxjs/toolkit";
-import { IMainState } from "../model/common";
-import productReducer from "./productReducer";
-import userReducer from "./userReducer";
+import {
+  AnyAction,
+  Reducer,
+  combineReducers,
+  createAction,
+  createSlice,
+} from "@reduxjs/toolkit";
+import { IMainState, MainState } from "../model/common";
 import adminReducer from "./adminReducer";
-import guiReducer from "./guiReducer";
-import productSettingsReducer from "./productSettingsReducer";
 import cartReducer from "./cartReducer";
+import guiReducer from "./guiReducer";
+import productReducer from "./productReducer";
+import productSettingsReducer from "./productSettingsReducer";
+import userReducer from "./userReducer";
 
 const appReducer = combineReducers<IMainState>({
   product: productReducer,
@@ -16,5 +22,36 @@ const appReducer = combineReducers<IMainState>({
   cart: cartReducer,
 });
 
-export const rootReducer = appReducer;
+const initialState: IMainState = new MainState();
+
+export const rootSlice = createSlice({
+  name: "root",
+  reducers: {
+    appReducer,
+  },
+  initialState,
+});
+
+// export const rootReducer = appReducer;
+
+export const setInitialState = createAction<{ state: IMainState }>(
+  "SET_INITIAL_STATE"
+);
+
+export const rootReducer: Reducer<IMainState> = (
+  state: IMainState | undefined,
+  action: AnyAction
+) => {
+  switch (action.type) {
+    case "SET_INITIAL_STATE": {
+      return action.payload.state;
+    }
+    //   if (logout.async.done.match(action)) {
+    //     state = clone(new MainState());
+    // }
+    default:
+      return appReducer(state, action);
+  }
+};
+
 export type RootState = ReturnType<typeof rootReducer>;

@@ -1,14 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { loginAsync, registerAsync } from "../actions/userActions";
 import { IAuthenticationResponse } from "../model/authentication";
-import { IUserReduxState, UserReduxtState } from "../model/user";
+import {
+  IUserDetailsRequest,
+  IUserReduxState,
+  UserReduxtState,
+} from "../model/user";
 
 const initialState: IUserReduxState = new UserReduxtState();
 
 export const userSlice = createSlice({
   name: "user",
-  reducers: {},
+  reducers: {
+    updateUserDetails: (state, payload: PayloadAction<IUserDetailsRequest>) => {
+      return { ...state, ...payload.payload };
+    },
+  },
   initialState,
   extraReducers: (builder) => {
     builder
@@ -26,4 +34,5 @@ export const userSlice = createSlice({
   },
 });
 
+export const { updateUserDetails } = userSlice.actions;
 export default userSlice.reducer;

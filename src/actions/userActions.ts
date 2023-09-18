@@ -10,8 +10,55 @@ import {
   LoginPostData,
   SignUpPostData,
 } from "../model/authentication";
-import { IAddress } from "../model/user";
+import {
+  IAddress,
+  IUpdatePasswordRequest,
+  IUserDetailsRequest,
+} from "../model/user";
 import { setLoading } from "../reducers/guiReducer";
+import { updateUserDetails } from "../reducers/userReducer";
+
+export const updatePasswordAction = createAsyncThunk<string, string>(
+  "update_password",
+  (password, thunkApi) => {
+    thunkApi.dispatch(setLoading(true));
+    const encodedUpdatePasswordRequest: IUpdatePasswordRequest = {
+      password: btoa(password),
+    };
+    return updatePasswordWorker(encodedUpdatePasswordRequest)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err))
+      .finally(() => thunkApi.dispatch(setLoading(false)));
+  }
+);
+
+function updatePasswordWorker(password: IUpdatePasswordRequest) {
+  return postRequest<string>("/users/update-password", password, { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const updateUserDetailsAction = createAsyncThunk<
+  string,
+  IUserDetailsRequest
+>("update_user_details", (user, thunkApi) => {
+  thunkApi.dispatch(setLoading(true));
+  return updateUserDetailsWorker(user)
+    .then((res) => {
+      thunkApi.dispatch(updateUserDetails(user));
+      return Promise.resolve(res);
+    })
+    .catch((err) => Promise.reject(err))
+    .finally(() => {
+      thunkApi.dispatch(setLoading(false));
+    });
+});
+
+function updateUserDetailsWorker(userDetails: IUserDetailsRequest) {
+  return putRequest<string>("/users/details", userDetails, { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
 
 export const getAddressesAction = createAsyncThunk<IAddress[]>(
   "get_address",

@@ -8,35 +8,28 @@ export const BASE_NAME = "storedState_";
 const saveStateToLocalStore: Middleware = ({ getState }) => {
   return (next) => (action) => {
     const returnValue = next(action);
-    let deployDate = "";
-    const deployDateFromLocalStorage = getLocalDeployDate();
-    if (deployDateFromLocalStorage) {
-      deployDate = deployDateFromLocalStorage;
-      window.localStorage.setItem(
-        `${BASE_NAME}${deployDate}`,
-        JSON.stringify(getState())
-      );
+    let deployKey = "";
+    const deployKeyFromLocalStorage = getLocalDeployKey();
+    if (deployKeyFromLocalStorage) {
+      deployKey = deployKeyFromLocalStorage;
+      window.localStorage.setItem(`${deployKey}`, JSON.stringify(getState()));
       return returnValue;
     } else {
-      const date = new Date();
-      window.localStorage.setItem(
-        `${BASE_NAME}${date.getFullYear()}`,
-        JSON.stringify(getState())
-      );
+      window.localStorage.setItem(`${BASE_NAME}`, JSON.stringify(getState()));
       return returnValue;
     }
   };
 };
 
-function getLocalDeployDate(): string | undefined {
-  let deployDate: string | undefined;
+function getLocalDeployKey(): string | undefined {
+  let store_key: string | undefined;
   for (let i = 0, length = window.localStorage.length; i < length; ++i) {
     const key = window.localStorage.key(i);
     if (key !== null && key.includes(BASE_NAME)) {
-      deployDate = key.slice(BASE_NAME.length);
+      store_key = key;
     }
   }
-  return deployDate;
+  return store_key;
 }
 
 export const configureAppStore = (initState: IMainState) => {

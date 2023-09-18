@@ -5,6 +5,7 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { OrderHistory } from "../../admin/components/OrderHistory";
 import { AppBox } from "../../styles/common";
 import { AddressBook } from "../components/AddressBook";
+import { UserDetail } from "../components/UserDetail";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -44,10 +45,12 @@ export const Account = () => {
             </Link>
           </AccountPaper>
           <AccountPaper elevation={3}>
-            <FlexBox mb="8px">
-              <Typography>Profile info</Typography>
-              <ChevronRight />
-            </FlexBox>
+            <Link to="/account/details" className="nav-item">
+              <FlexBox mb="8px" color="black">
+                <Typography>Profile info</Typography>
+                <ChevronRight />
+              </FlexBox>
+            </Link>
             <Link to="/account/address" className="nav-item">
               <FlexBox mb="8px" color="black">
                 <Typography>Address</Typography>
@@ -71,6 +74,7 @@ export const Account = () => {
             <Route path="/" element={<OrderHistory />} />
             <Route path="/orders" element={<OrderHistory />} />
             <Route path="/address" element={<AddressBook />} />
+            <Route path="/details" element={<UserDetail />} />
           </Routes>
         </Grid>
       </Grid>

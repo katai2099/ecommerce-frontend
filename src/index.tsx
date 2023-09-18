@@ -6,7 +6,10 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import App from "./App";
 import "./index.css";
-import { store } from "./store/configureStore";
+import { IMainState } from "./model/common";
+import { Filter } from "./model/product";
+import { setInitialState } from "./reducers/combineReducer";
+import { BASE_NAME, store } from "./store/configureStore";
 import { theme } from "./styles/theme";
 
 const root = ReactDOM.createRoot(
@@ -21,18 +24,36 @@ const ScrollToTop = () => {
   return null;
 };
 
-root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Provider store={store}>
-        <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/*" element={<App />} />
-          </Routes>
-        </BrowserRouter>
-      </Provider>
-    </ThemeProvider>
-  </React.StrictMode>
-);
+window.onload = () => {
+  const storedState = window.localStorage.getItem(BASE_NAME);
+  if (storedState) {
+    const initialState: IMainState = JSON.parse(storedState);
+    const updatedInitialState: IMainState = {
+      ...initialState,
+      gui: { loading: false },
+      productSettings: {
+        ...initialState.productSettings,
+        filter: new Filter(),
+      },
+    };
+    store.dispatch(setInitialState({ state: updatedInitialState }));
+    console.log(initialState);
+  } else {
+    window.localStorage.removeItem("jwt");
+  }
+  root.render(
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Provider store={store}>
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/*" element={<App />} />
+            </Routes>
+          </BrowserRouter>
+        </Provider>
+      </ThemeProvider>
+    </React.StrictMode>
+  );
+};
