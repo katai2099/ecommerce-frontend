@@ -85,3 +85,15 @@ export function putRequest<T>(
     .then((res) => Promise.resolve(res))
     .catch((err: AxiosError) => Promise.reject(err));
 }
+
+export function deleteRequest<T>(
+  url: string,
+  options: RequestOptions = {}
+): Promise<T> {
+  return axiosRequest<T>(url, "DELETE", undefined, options)
+    .then((res) => Promise.resolve(res))
+    .catch((err: AxiosError) => {
+      console.log(err.response);
+      return Promise.reject(err);
+    });
+}

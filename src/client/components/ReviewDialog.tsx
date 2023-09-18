@@ -15,11 +15,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { INewReview, IReview } from "../../model/review";
+import { DialogProps } from "./AddressDialog";
 
 interface ReviewDialogProps {
   ownerReview: IReview;
-  open: boolean;
-  handleModalState: (isOpen: boolean) => void;
   handleReviewChange: (key: string, value: any) => void;
   handleSubmitButtonClick: (newReview: INewReview) => void;
   newReview: INewReview;
@@ -28,23 +27,23 @@ interface ReviewDialogProps {
 export const ReviewDialog = ({
   ownerReview,
   open,
-  handleModalState,
+  handleDialogState,
   handleReviewChange,
   handleSubmitButtonClick,
   newReview,
-}: ReviewDialogProps) => {
+}: ReviewDialogProps & DialogProps) => {
   return (
     <Dialog
       open={open}
       onClose={() => {
-        handleModalState(false);
+        handleDialogState(false);
       }}
       fullWidth
     >
       <DialogTitle>{ownerReview ? "Update " : "Write a"} review</DialogTitle>
       <IconButton
         onClick={() => {
-          handleModalState(false);
+          handleDialogState(false);
         }}
         sx={{
           position: "absolute",
@@ -132,7 +131,7 @@ export const ReviewDialog = ({
         <Button
           variant="outlined"
           onClick={() => {
-            handleModalState(false);
+            handleDialogState(false);
           }}
         >
           Cancel

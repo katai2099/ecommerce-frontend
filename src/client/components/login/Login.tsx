@@ -1,6 +1,4 @@
 import {
-  Adb,
-  ShoppingBag,
   ShoppingBagOutlined,
   Visibility,
   VisibilityOff,
@@ -9,7 +7,6 @@ import {
   Avatar,
   Box,
   Button,
-  CssBaseline,
   FormControl,
   FormHelperText,
   IconButton,
@@ -21,9 +18,9 @@ import {
 } from "@mui/material";
 import { ChangeEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { loginAsync } from "../../../actions/userActions";
 import { LoginPostData } from "../../../model/authentication";
 import { useAppDispatch } from "../../../store/configureStore";
-import { loginAsync } from "../../../actions/userActions";
 
 export interface LoginProps {
   modalClose?: () => void;
@@ -91,7 +88,7 @@ export const Login = (props: LoginProps) => {
               value={email}
               onChange={handleEmailChange}
               fullWidth
-              error
+              // error
               required
               placeholder="example@mail.com"
             />

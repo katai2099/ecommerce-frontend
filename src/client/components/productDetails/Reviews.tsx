@@ -136,7 +136,7 @@ export const Reviews = (props: ReviewsProps) => {
       <ReviewDialog
         ownerReview={ownerReview}
         open={isReviewDialogOpen}
-        handleModalState={setModalState}
+        handleDialogState={setModalState}
         handleReviewChange={handleReviewChange}
         handleSubmitButtonClick={handleModalSubmitButtonClick}
         newReview={newReview}

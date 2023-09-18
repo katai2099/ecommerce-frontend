@@ -40,3 +40,31 @@ export interface IUserReduxState {
   token: string;
   role: Role;
 }
+
+export interface IAddress {
+  id: number;
+  firstname: string;
+  lastname: string;
+  phoneNumber: string;
+  street: string;
+  houseNumber: string;
+  city: string;
+  country: string;
+  zipCode: string;
+  isDefault: boolean;
+}
+
+export class Address implements IAddress {
+  constructor(
+    public id = 0,
+    public firstname = "",
+    public lastname = "",
+    public phoneNumber = "",
+    public street = "",
+    public houseNumber = "",
+    public city = "",
+    public country = "",
+    public zipCode = "",
+    public isDefault = false
+  ) {}
+}

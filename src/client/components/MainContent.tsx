@@ -37,7 +37,7 @@ export const MainContent = () => {
           <Route path="/:gender" element={<Category />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/account" element={<Account />} />
+          <Route path="/account/*" element={<Account />} />
         </Routes>
       </Container>
       <Footer />

@@ -1,10 +1,108 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  deleteRequest,
+  getRequest,
+  postRequest,
+  putRequest,
+} from "../controllers/clientRequest";
+import {
   IAuthenticationResponse,
   LoginPostData,
   SignUpPostData,
 } from "../model/authentication";
-import { postRequest } from "../controllers/clientRequest";
+import { IAddress } from "../model/user";
+import { setLoading } from "../reducers/guiReducer";
+
+export const getAddressesAction = createAsyncThunk<IAddress[]>(
+  "get_address",
+  (_, thunkApi) => {
+    thunkApi.dispatch(setLoading(true));
+    return getAddressesWorker()
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err))
+      .finally(() => {
+        thunkApi.dispatch(setLoading(false));
+      });
+  }
+);
+
+function getAddressesWorker(): Promise<IAddress[]> {
+  return getRequest<IAddress[]>("/users/address", { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const addAddressAction = createAsyncThunk<number, IAddress>(
+  "add_address",
+  (address, thunkApi) => {
+    thunkApi.dispatch(setLoading(true));
+    return addAddressWorker(address)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err))
+      .finally(() => thunkApi.dispatch(setLoading(false)));
+  }
+);
+
+function addAddressWorker(address: IAddress): Promise<number> {
+  return postRequest<number>("/users/address", address, { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const setDefaultAddressAction = createAsyncThunk<string, number>(
+  "set_default_address",
+  (addressId, thunkApi) => {
+    thunkApi.dispatch(setLoading(true));
+    return setDefaultAddress(addressId)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err))
+      .finally(() => thunkApi.dispatch(setLoading(false)));
+  }
+);
+
+function setDefaultAddress(addressId: number): Promise<string> {
+  return getRequest<string>(`/users/address/set-default/${addressId}`, {
+    auth: true,
+  })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const updateAddressAction = createAsyncThunk<string, IAddress>(
+  "update_address",
+  (address, thunkApi) => {
+    thunkApi.dispatch(setLoading(true));
+    return updateAddressWorker(address)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err))
+      .finally(() => thunkApi.dispatch(setLoading(false)));
+  }
+);
+
+function updateAddressWorker(address: IAddress): Promise<string> {
+  return putRequest<string>(`/users/address/${address.id}`, address, {
+    auth: true,
+  })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const deleteAddressAction = createAsyncThunk<string, number>(
+  "delete_address",
+  (addressId, thunkApi) => {
+    thunkApi.dispatch(setLoading(true));
+    return deleteAddressWorker(addressId)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err))
+      .finally(() => thunkApi.dispatch(setLoading(false)));
+  }
+);
+
+function deleteAddressWorker(addressId: number): Promise<string> {
+  return deleteRequest<string>(`/users/address/${addressId}`, { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
 
 export const loginAsync = createAsyncThunk<
   IAuthenticationResponse,
