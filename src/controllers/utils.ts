@@ -48,3 +48,7 @@ export function formatFileSize(bytes: number, decimalPoint: number = 2) {
     i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
+
+export function formatPrice(price: number): string {
+  return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+}

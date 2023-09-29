@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { formatPrice } from "../../../controllers/utils";
 import { RootState } from "../../../reducers/combineReducer";
 import { CartSidebarItem } from "./CartSidebarItem";
 
@@ -21,13 +22,17 @@ const FlexBox = styled(Box)`
   align-items: center;
 `;
 
-export interface CartMenuProps {
+export interface CartSidebarProps {
   open: boolean;
   totalItems?: number;
   toggleDrawer: (open: boolean) => void;
 }
 
-export const CartMenu = ({ open, toggleDrawer, totalItems }: CartMenuProps) => {
+export const CartSidebar = ({
+  open,
+  toggleDrawer,
+  totalItems,
+}: CartSidebarProps) => {
   const cart = useSelector((state: RootState) => state.cart);
   const cartItems = cart.carts;
   const total = cartItems.reduce((accumulator, currentValue) => {
@@ -100,7 +105,6 @@ export const CartMenu = ({ open, toggleDrawer, totalItems }: CartMenuProps) => {
                 <Typography variant="h3" pb="8px">
                   Shopping bag is Empty!
                 </Typography>
-                <Typography color="GrayText">Start shopping</Typography>
               </Box>
             )}
           </Box>
@@ -114,12 +118,16 @@ export const CartMenu = ({ open, toggleDrawer, totalItems }: CartMenuProps) => {
               padding="0 32px"
               gap="12px"
             >
-              <Button fullWidth variant="contained">
-                Checkout Now &nbsp;($
-                {total.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                })}
-                )
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  toggleDrawer(false);
+
+                  navigate("/checkout");
+                }}
+              >
+                {`Checkout Now ${formatPrice(total)}`}
               </Button>
               <Button
                 fullWidth

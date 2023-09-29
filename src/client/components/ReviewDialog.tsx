@@ -15,7 +15,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { INewReview, IReview } from "../../model/review";
-import { DialogProps } from "./AddressDialog";
+import { DialogProps } from "./NewAddressDialog";
 
 interface ReviewDialogProps {
   ownerReview: IReview;

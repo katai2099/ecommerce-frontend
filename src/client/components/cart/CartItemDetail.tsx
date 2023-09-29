@@ -3,6 +3,7 @@ import { Box, IconButton, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { updateCartAction } from "../../../actions/cartActions";
+import { formatPrice } from "../../../controllers/utils";
 import { ICartItem } from "../../../model/cart";
 import { updateCarts } from "../../../reducers/cartReducer";
 import { RootState } from "../../../reducers/combineReducer";
@@ -82,12 +83,9 @@ export const CartItemDetail = ({ cartItem, index }: CartItemDetailProps) => {
               <CloseOutlined />
             </IconButton>
           </Box>
-          <Typography color="GrayText">{`$${cartItem.product.price.toLocaleString(
-            undefined,
-            {
-              minimumFractionDigits: 2,
-            }
-          )}`}</Typography>
+          <Typography color="GrayText">
+            {formatPrice(cartItem.product.price)}
+          </Typography>
           <Box>
             <Typography color="GrayText">
               Size: {cartItem.product.productSizes[0].size.name}
@@ -122,15 +120,7 @@ export const CartItemDetail = ({ cartItem, index }: CartItemDetailProps) => {
             <Box mr="8px">
               <Typography>
                 Total: &nbsp;
-                <b>
-                  $
-                  {(cartItem.quantity * cartItem.product.price).toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                    }
-                  )}
-                </b>
+                <b>{formatPrice(cartItem.quantity * cartItem.product.price)}</b>
               </Typography>
             </Box>
           </Box>

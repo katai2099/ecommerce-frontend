@@ -8,6 +8,7 @@ import {
 import { IMainState, MainState } from "../model/common";
 import adminReducer from "./adminReducer";
 import cartReducer from "./cartReducer";
+import checkoutReducer from "./checkoutReducer";
 import guiReducer from "./guiReducer";
 import productReducer from "./productReducer";
 import productSettingsReducer from "./productSettingsReducer";
@@ -20,6 +21,7 @@ const appReducer = combineReducers<IMainState>({
   gui: guiReducer,
   productSettings: productSettingsReducer,
   cart: cartReducer,
+  checkout: checkoutReducer,
 });
 
 const initialState: IMainState = new MainState();

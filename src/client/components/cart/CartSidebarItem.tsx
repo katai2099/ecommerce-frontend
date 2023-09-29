@@ -3,6 +3,7 @@ import { Box, IconButton, Typography, styled } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { updateCartAction } from "../../../actions/cartActions";
+import { formatPrice } from "../../../controllers/utils";
 import {
   setIsUpdate,
   setOpen,
@@ -89,12 +90,9 @@ export const CartSidebarItem = ({ cartItem, index }: CartItemDetailProps) => {
             <CloseOutlined />
           </IconButton>
         </FlexBox>
-        <Typography fontWeight="bold">{`$ ${cartItem.product.price.toLocaleString(
-          undefined,
-          {
-            minimumFractionDigits: 2,
-          }
-        )}`}</Typography>
+        <Typography fontWeight="bold">
+          {formatPrice(cartItem.product.price)}
+        </Typography>
         <Typography color="GrayText">{`Size: ${cartItem.product.productSizes[0].size.name}`}</Typography>
         <FlexBox m="15px 0">
           <Box display="flex" alignItems="center">

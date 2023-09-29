@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import App from "./App";
 import "./index.css";
+import { CheckoutReduxState } from "./model/checkout";
 import { IMainState } from "./model/common";
 import { Filter } from "./model/product";
 import { setInitialState } from "./reducers/combineReducer";
@@ -35,6 +36,7 @@ window.onload = () => {
         ...initialState.productSettings,
         filter: new Filter(),
       },
+      checkout: new CheckoutReduxState(),
     };
     store.dispatch(setInitialState({ state: updatedInitialState }));
     console.log(initialState);

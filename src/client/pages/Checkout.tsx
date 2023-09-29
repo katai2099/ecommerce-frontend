@@ -1,119 +1,51 @@
-import {
-  Accordion,
-  Box,
-  Button,
-  Divider,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { useEffect, useState } from "react";
+import { getCheckoutData } from "../../controllers/checkout";
+import { getUserAddresses } from "../../controllers/user";
+import { setAddresses } from "../../reducers/checkoutReducer";
+import { useAppDispatch } from "../../store/configureStore";
 import { AppBox } from "../../styles/common";
-import { OrderDetail } from "../components/order/OrderDetail";
-import { useState } from "react";
+import { STRIPE_PUBLISHABLE_KEY } from "../../utils/constant";
+import { CheckoutForm } from "../components/CheckoutForm";
+
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 export const Checkout = () => {
-  const [openOrderDetailDrawer, setOpenOrderDetailDrawer] =
-    useState<boolean>(false);
-  const handleToggleOrderDetailDrawer = (open: boolean) => {
-    setOpenOrderDetailDrawer(open);
-  };
+  const [total, setTotal] = useState<number>(0);
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
+  const [emptyCart, setEmptyCart] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    getCheckoutData()
+      .then((res) => {
+        setTotal(res.total);
+        setEmptyCart(res.carts.length === 0);
+        return getUserAddresses();
+      })
+      .then((addresses) => dispatch(setAddresses(addresses)))
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setFirstLoad(false));
+  }, []);
 
   return (
     <AppBox>
-      <Typography pt="32px" textAlign="center" variant="h3" fontWeight="bold">
-        Checkout
-      </Typography>
-      <Grid container mt="32px" gap="32px">
-        <Grid item md={8}>
-          <Paper>
-            <Box>
-              {/* <Accordion></Accordion> */}
-              <Typography>My information</Typography>
-            </Box>
-          </Paper>
-          <Paper>
-            <Box>
-              <Typography>Billing Address</Typography>
-            </Box>
-          </Paper>
-          <Paper>
-            <Box>
-              <Typography>Shipping Address</Typography>
-            </Box>
-          </Paper>
-          <Paper>
-            <Box>
-              <Typography>Payment Details</Typography>
-              <Button>Place Order</Button>
-            </Box>
-          </Paper>
-          <Box>
-            <Typography>View order details 4 items</Typography>
-            <Grid
-              container
-              onClick={() => {
-                handleToggleOrderDetailDrawer(true);
-              }}
-            >
-              <Grid item md={4}>
-                <img
-                  alt=""
-                  src="https://lp2.hm.com/hmgoepprod?set=source[/c8/0b/c80b4c77270f065e00e02f6513cab2f85eb2a861.jpg],origin[dam],category[],type[DESCRIPTIVESTILLLIFE],res[q],hmver[2]&call=url[file:/product/miniature]"
-                />
-              </Grid>
-              <Grid item md={4}>
-                <img
-                  alt=""
-                  src="https://lp2.hm.com/hmgoepprod?set=source[/c8/0b/c80b4c77270f065e00e02f6513cab2f85eb2a861.jpg],origin[dam],category[],type[DESCRIPTIVESTILLLIFE],res[q],hmver[2]&call=url[file:/product/miniature]"
-                />
-              </Grid>
-              <Grid item md={4}>
-                <img
-                  alt=""
-                  src="https://lp2.hm.com/hmgoepprod?set=source[/c8/0b/c80b4c77270f065e00e02f6513cab2f85eb2a861.jpg],origin[dam],category[],type[DESCRIPTIVESTILLLIFE],res[q],hmver[2]&call=url[file:/product/miniature]"
-                />
-              </Grid>
-              <Grid item md={4}>
-                <img
-                  alt=""
-                  src="https://lp2.hm.com/hmgoepprod?set=source[/c8/0b/c80b4c77270f065e00e02f6513cab2f85eb2a861.jpg],origin[dam],category[],type[DESCRIPTIVESTILLLIFE],res[q],hmver[2]&call=url[file:/product/miniature]"
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </Grid>
-        <Grid item md={4}>
-          <Paper>
-            <Box>
-              <Box display="flex" justifyContent="space-between">
-                <Typography>Subtotal:</Typography>
-                <Typography>$2,611.00</Typography>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Typography>Shipping</Typography>
-                <Typography>-</Typography>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Typography>Tax</Typography>
-                <Typography>-</Typography>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Typography>Discount</Typography>
-                <Typography>-</Typography>
-              </Box>
-            </Box>
-            <Divider />
-            <Box display="flex" justifyContent="space-between">
-              <Typography>Total</Typography>
-              <Typography>$2,611.00</Typography>
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
-      <OrderDetail
-        open={openOrderDetailDrawer}
-        toggleDrawer={handleToggleOrderDetailDrawer}
-      />
+      {!firstLoad && !emptyCart && (
+        <Elements
+          stripe={stripePromise}
+          options={{
+            mode: "payment",
+            amount: total,
+            currency: "eur",
+            paymentMethodCreation: "manual",
+          }}
+        >
+          <CheckoutForm />
+        </Elements>
+      )}
     </AppBox>
   );
 };

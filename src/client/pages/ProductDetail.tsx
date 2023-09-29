@@ -14,6 +14,7 @@ import {
   getProductReviewsAction,
 } from "../../actions/productActions";
 import { addToCart } from "../../controllers/product";
+import { formatPrice } from "../../controllers/utils";
 import {
   IPaginationFilterData,
   PaginationFilterData,
@@ -132,9 +133,7 @@ export const ProductDetail = () => {
             </Box>
             <Box pt="16px">
               <Typography variant="h3" color="primary">
-                {`$${product.price.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                })}`}
+                {formatPrice(product.price)}
               </Typography>
             </Box>
             <Box pt="16px" pb="4px">

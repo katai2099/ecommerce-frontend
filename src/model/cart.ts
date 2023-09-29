@@ -1,4 +1,5 @@
 import { IProduct } from "./product";
+import { IAddress } from "./user";
 
 export interface ICartReduxState {
   carts: ICartItem[];
@@ -28,4 +29,19 @@ export interface IAddToCartRequest {
 export interface IUpdateCartRequest {
   cartItemId: number;
   quantity: number;
+}
+
+export interface CreatePaymentResponse {
+  clientSecret: string;
+}
+
+export interface IPlaceOrderRequest {
+  deliveryAddress: IAddress;
+  billingAddress: IAddress;
+  stripePaymentIntentId: string;
+}
+
+export interface ICheckoutResponse {
+  carts: ICartItem[];
+  total: number;
 }

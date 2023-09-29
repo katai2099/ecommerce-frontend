@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getCartAction } from "../actions/cartActions";
+import { checkoutAction, getCartAction } from "../actions/cartActions";
 import { clone } from "../controllers/utils";
 import { CartReduxState, ICartItem, ICartReduxState } from "../model/cart";
 import { IProduct } from "../model/product";
@@ -55,14 +55,20 @@ export const cartSlice = createSlice({
     setIsUpdate(state, payload: PayloadAction<boolean>) {
       return { ...state, isUpdate: payload.payload };
     },
+    resetCart() {
+      return new CartReduxState();
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCartAction.fulfilled, (state, action) => {
       return { ...state, carts: action.payload };
     });
+    builder.addCase(checkoutAction.fulfilled, (state, action) => {
+      return { ...state, carts: action.payload.carts };
+    });
   },
 });
 
-export const { setOpen, addToCartState, updateCarts, setIsUpdate } =
+export const { setOpen, addToCartState, updateCarts, setIsUpdate, resetCart } =
   cartSlice.actions;
 export default cartSlice.reducer;

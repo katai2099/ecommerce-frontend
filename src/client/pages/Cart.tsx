@@ -1,6 +1,8 @@
 import { ShoppingBagOutlined } from "@mui/icons-material";
 import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { formatPrice } from "../../controllers/utils";
 import { RootState } from "../../reducers/combineReducer";
 import { AppBox } from "../../styles/common";
 import { CartItemDetail } from "../components/cart/CartItemDetail";
@@ -10,6 +12,7 @@ export const Cart = () => {
   const totalPrice = carts.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.quantity * currentValue.product.price;
   }, 0);
+  const navigate = useNavigate();
   return (
     <AppBox>
       <Typography textAlign="center" fontSize="26px" fontWeight="bold">
@@ -51,10 +54,7 @@ export const Cart = () => {
             >
               <Typography variant="h3">Total</Typography>
               <Typography fontWeight="bold">
-                $
-                {totalPrice.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                })}
+                {formatPrice(totalPrice)}
               </Typography>
             </Box>
             <Divider />
@@ -70,6 +70,9 @@ export const Cart = () => {
               }}
               variant="contained"
               disabled={carts.length === 0}
+              onClick={() => {
+                navigate("/checkout");
+              }}
             >
               Proceed To Checkout
             </Button>

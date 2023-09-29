@@ -12,7 +12,7 @@ import { clone } from "../../controllers/utils";
 import { Address, IAddress } from "../../model/user";
 import { useAppDispatch } from "../../store/configureStore";
 import { AddressComponent } from "./AddressComponent";
-import { AddressDialog } from "./AddressDialog";
+import { NewAddressDialog } from "./NewAddressDialog";
 
 export const AddressBook = () => {
   const [addresses, setAddresses] = useState<IAddress[]>([]);
@@ -162,7 +162,7 @@ export const AddressBook = () => {
           Add new Address
         </Button>
       </Box>
-      <AddressDialog
+      <NewAddressDialog
         open={isAddressDialogOpen}
         isEdit={isEdit}
         selectedAddress={selectedAddress}

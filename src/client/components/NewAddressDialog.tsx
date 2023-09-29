@@ -14,7 +14,7 @@ import {
 import { ChangeEvent, SyntheticEvent } from "react";
 import { IAddress } from "../../model/user";
 
-interface AddressDialogProps {
+interface NewAddressDialogProps {
   isEdit?: boolean;
   selectedAddress: IAddress;
   disableDefault: boolean;
@@ -27,7 +27,7 @@ export interface DialogProps {
   handleDialogState: (open: boolean) => void;
 }
 
-export const AddressDialog = ({
+export const NewAddressDialog = ({
   open,
   isEdit = false,
   selectedAddress,
@@ -35,7 +35,7 @@ export const AddressDialog = ({
   handleDialogState,
   onAddressChange,
   onSubmit,
-}: AddressDialogProps & DialogProps) => {
+}: NewAddressDialogProps & DialogProps) => {
   const handleAddressUpdate = (field: string, value: any) => {
     onAddressChange(field, value);
   };
@@ -47,7 +47,6 @@ export const AddressDialog = ({
   return (
     <Dialog
       open={open}
-      maxWidth="sm"
       onClose={() => {
         handleDialogState(false);
       }}

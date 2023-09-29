@@ -62,14 +62,10 @@ function updateUserDetailsWorker(userDetails: IUserDetailsRequest) {
 
 export const getAddressesAction = createAsyncThunk<IAddress[]>(
   "get_address",
-  (_, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
+  () => {
     return getAddressesWorker()
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
-      .finally(() => {
-        thunkApi.dispatch(setLoading(false));
-      });
+      .catch((err) => Promise.reject(err));
   }
 );
 

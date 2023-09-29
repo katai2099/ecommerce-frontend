@@ -7,8 +7,11 @@ import {
 import {
   IAddToCartRequest,
   ICartItem,
+  ICheckoutResponse,
+  IPlaceOrderRequest,
   IUpdateCartRequest,
 } from "../model/cart";
+import { setLoading } from "../reducers/guiReducer";
 
 export const getCartAction = createAsyncThunk<ICartItem[]>("get_cart", () => {
   return getCartWorker()
@@ -56,6 +59,37 @@ function updateCartWorker(updateCartRequest: IUpdateCartRequest) {
     updateCartRequest,
     { auth: true }
   )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const checkoutAction = createAsyncThunk("checkout", (_, thunkApi) => {
+  thunkApi.dispatch(setLoading(true));
+  return checkoutWorker()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err))
+    .finally(() => thunkApi.dispatch(setLoading(false)));
+});
+
+function checkoutWorker() {
+  return postRequest<ICheckoutResponse>("/carts/checkout", {}, { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const placeOrderAction = createAsyncThunk<string, IPlaceOrderRequest>(
+  "place_order",
+  (placeOrderRequest) => {
+    return placeOrderWorker(placeOrderRequest)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err));
+  }
+);
+
+function placeOrderWorker(placeOrderRequest: IPlaceOrderRequest) {
+  return postRequest<string>("/carts/place-order", placeOrderRequest, {
+    auth: true,
+  })
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }

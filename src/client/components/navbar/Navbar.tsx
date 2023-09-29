@@ -18,14 +18,13 @@ import {
   Typography,
 } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Gender } from "../../../model/product";
-import { CartMenu } from "../cart/CartMenu";
-import { LoginDialog } from "../login/LoginDialog";
 import { useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { setOpen } from "../../../reducers/cartReducer";
 import { RootState } from "../../../reducers/combineReducer";
 import { useAppDispatch } from "../../../store/configureStore";
-import { setOpen } from "../../../reducers/cartReducer";
+import { CartSidebar } from "../cart/CartSidebar";
+import { LoginDialog } from "../login/LoginDialog";
 
 export const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
@@ -39,6 +38,7 @@ export const Navbar = () => {
   );
   const [searchValue, setSearchValue] = useState<string>("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setSearchValue(filter.q ? filter.q : "");
@@ -79,63 +79,72 @@ export const Navbar = () => {
               >
                 ECOMMERCE
               </Typography>
-              <Link className="nav-item" to="/men">
-                <Typography color="primary">Men</Typography>
-              </Link>
-              <Link className="nav-item" to={"/women"}>
-                <Typography color="primary">Women</Typography>
-              </Link>
+              {!location.pathname.includes("checkout") && (
+                <>
+                  <Link className="nav-item" to="/men">
+                    <Typography color="primary">Men</Typography>
+                  </Link>
+                  <Link className="nav-item" to={"/women"}>
+                    <Typography color="primary">Women</Typography>
+                  </Link>
+                </>
+              )}
             </Stack>
-            <Stack flex="1 1 0">
-              <Box display="flex" alignItems="center" padding="8px 48px">
-                <FormControl fullWidth>
-                  <OutlinedInput
-                    size="medium"
-                    sx={{ borderRadius: "32px" }}
-                    value={searchValue}
-                    startAdornment={
-                      <InputAdornment
-                        position="start"
-                        sx={{ cursor: "pointer" }}
-                      >
-                        <SearchRounded />
-                      </InputAdornment>
-                    }
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                      setSearchValue(event.target.value);
+            {!location.pathname.includes("checkout") && (
+              <>
+                <Stack flex="1 1 0">
+                  <Box display="flex" alignItems="center" padding="8px 48px">
+                    <FormControl fullWidth>
+                      <OutlinedInput
+                        size="medium"
+                        sx={{ borderRadius: "32px" }}
+                        value={searchValue}
+                        startAdornment={
+                          <InputAdornment
+                            position="start"
+                            sx={{ cursor: "pointer" }}
+                          >
+                            <SearchRounded />
+                          </InputAdornment>
+                        }
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                          setSearchValue(event.target.value);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && searchValue.length !== 0) {
+                            navigate(`/search/${searchValue}`);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                  </Box>
+                </Stack>
+                <Stack spacing={2} direction="row">
+                  <IconButton sx={{ display: { sm: "flex", md: "none" } }}>
+                    <SearchOutlined />
+                  </IconButton>
+                  <IconButton onClick={handleProfileButtonClick}>
+                    <PersonOutline />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      handleToggleCartDrawer(true);
                     }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && searchValue.length !== 0) {
-                        navigate(`/search/${searchValue}`);
-                      }
-                    }}
-                  />
-                </FormControl>
-              </Box>
-            </Stack>
-            <Stack spacing={2} direction="row">
-              <IconButton sx={{ display: { sm: "flex", md: "none" } }}>
-                <SearchOutlined />
-              </IconButton>
-              <IconButton onClick={handleProfileButtonClick}>
-                <PersonOutline />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  handleToggleCartDrawer(true);
-                }}
-              >
-                <Badge badgeContent={totalItems} color="secondary">
-                  <ShoppingBagOutlined />
-                </Badge>
-              </IconButton>
-            </Stack>
+                  >
+                    <Badge badgeContent={totalItems} color="secondary">
+                      <ShoppingBagOutlined />
+                    </Badge>
+                  </IconButton>
+                </Stack>
+              </>
+            )}
           </Stack>
+
           <LoginDialog
             onClose={handleProfileButtonClick}
             open={openLoginModal}
           />
-          <CartMenu
+          <CartSidebar
             open={cart.open}
             toggleDrawer={handleToggleCartDrawer}
             totalItems={totalItems}
