@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
-import { loginAsync } from "../../../actions/userActions";
+import { loginAction } from "../../../actions/userActions";
 import { LoginPostData } from "../../../model/authentication";
 import { useAppDispatch } from "../../../store/configureStore";
 
@@ -52,9 +52,9 @@ export const Login = (props: LoginProps) => {
   const handleLoginClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const data = new LoginPostData();
-    data.password = password;
-    data.email = email;
-    dispatch(loginAsync(data));
+    data.password = btoa(password);
+    data.email = btoa(email);
+    dispatch(loginAction(data));
   };
 
   const handleSignUpClick = () => {

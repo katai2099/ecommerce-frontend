@@ -1,6 +1,7 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getCheckoutData } from "../../controllers/checkout";
 import { getUserAddresses } from "../../controllers/user";
 import { setAddresses } from "../../reducers/checkoutReducer";
@@ -16,11 +17,15 @@ export const Checkout = () => {
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [emptyCart, setEmptyCart] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCheckoutData()
       .then((res) => {
         setTotal(res.total);
+        if (res.carts.length === 0) {
+          navigate("/cart");
+        }
         setEmptyCart(res.carts.length === 0);
         return getUserAddresses();
       })

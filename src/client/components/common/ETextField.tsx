@@ -6,31 +6,35 @@ interface ETextFieldProps {
   name: string;
   value: string;
   placeholder?: string;
-  onChange: (field: string, value: any) => void;
+  error?: string;
+  fullWidth?: boolean;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ETextField = ({
   label,
   placeholder = "",
+  error = "",
   onChange,
   name,
   value,
+  fullWidth = true,
 }: ETextFieldProps) => {
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.name, event.target.value);
+    onChange(event);
   };
   return (
     <Box mb="16px" width="100%">
       <TextField
-        // error
+        error={!!error}
         variant="outlined"
-        helperText="please enter"
+        helperText={error}
         label={label}
         name={name}
         placeholder={placeholder}
         value={value}
         required
-        fullWidth
+        fullWidth={fullWidth}
         onChange={handleOnChange}
       />
     </Box>

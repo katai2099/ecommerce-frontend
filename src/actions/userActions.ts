@@ -147,11 +147,11 @@ function deleteAddressWorker(addressId: number): Promise<string> {
     .catch((err) => Promise.reject(err));
 }
 
-export const loginAsync = createAsyncThunk<
+export const loginAction = createAsyncThunk<
   IAuthenticationResponse,
   LoginPostData
 >("auth/login", (data, thunkApi) => {
-  return login(data)
+  return loginWorker(data)
     .then((res) => {
       window.localStorage.setItem("jwt", res.token);
       return Promise.resolve(res);
@@ -164,11 +164,11 @@ export const loginAsync = createAsyncThunk<
 
 export const logout = createAction("auth/logout");
 
-export const registerAsync = createAsyncThunk<
+export const registerAction = createAsyncThunk<
   IAuthenticationResponse,
   SignUpPostData
 >("auth/register", (data, thunkApi) => {
-  return register(data)
+  return registerWorker(data)
     .then((res) => {
       window.localStorage.setItem("jwt", res.token);
       return Promise.resolve(res);
@@ -179,7 +179,7 @@ export const registerAsync = createAsyncThunk<
     });
 });
 
-export function login(
+export function loginWorker(
   loginData: LoginPostData
 ): Promise<IAuthenticationResponse> {
   return postRequest<IAuthenticationResponse>("/auth/login", loginData)
@@ -187,7 +187,7 @@ export function login(
     .catch((err) => Promise.reject(err));
 }
 
-export function register(
+export function registerWorker(
   signUpData: SignUpPostData
 ): Promise<IAuthenticationResponse> {
   return postRequest<IAuthenticationResponse>("/auth/register", signUpData)

@@ -112,6 +112,7 @@ export const AddressBookDialog = ({
         <Box minWidth={{ lg: "450px" }}>
           {addresses.map((address, idx) => (
             <AddressSelect
+              key={address.id}
               address={address}
               idx={idx}
               selectedIndex={

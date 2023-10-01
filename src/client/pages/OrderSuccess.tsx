@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getOrderAction } from "../../actions/orderActions";
 import { formatPrice } from "../../controllers/utils";
 import { IOrderDetail, OrderDetail } from "../../model/order";
+import { resetCheckoutState } from "../../reducers/checkoutReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { AppBox } from "../../styles/common";
 import { AddressDetails } from "../components/AddressDetails";
@@ -30,6 +31,7 @@ export const OrderSuccess = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const orderId = query.get("order");
+    dispatch(resetCheckoutState());
     dispatch(getOrderAction(orderId!))
       .unwrap()
       .then((res) => {
@@ -59,7 +61,7 @@ export const OrderSuccess = () => {
           Order Details - {orderDetail.order.id}
         </Typography>
         <Grid container mt="20px">
-          <Grid item md={6}>
+          <Grid item md={5}>
             <Box mb="16px">
               <SubHeader>Fullname</SubHeader>
               <Typography color="GrayText">{`${orderDetail.user.firstname} ${orderDetail.user.lastname}`}</Typography>
@@ -73,13 +75,21 @@ export const OrderSuccess = () => {
               {orderDetail.order.orderDate}
             </Typography>
           </Grid>
-          <Grid item md={6}>
-            <Box mb="8px">
-              <SubHeader>Delivery Address</SubHeader>
-              <AddressDetails address={orderDetail.order.deliveryAddress} />
-            </Box>
-            <SubHeader>Billing Address</SubHeader>
-            <AddressDetails address={orderDetail.order.billingAddress} />
+          <Grid item md={7}>
+            <Grid container>
+              <Grid item md={4}>
+                <Box mb="8px">
+                  <SubHeader>Delivery Address</SubHeader>
+                  <AddressDetails address={orderDetail.order.deliveryAddress} />
+                </Box>
+              </Grid>
+              <Grid item md={8}>
+                <Box>
+                  <SubHeader>Billing Address</SubHeader>
+                  <AddressDetails address={orderDetail.order.billingAddress} />
+                </Box>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Box>

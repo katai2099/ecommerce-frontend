@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { loginAsync, registerAsync } from "../actions/userActions";
+import { loginAction, registerAction } from "../actions/userActions";
 import { IAuthenticationResponse } from "../model/authentication";
 import {
   IUserDetailsRequest,
@@ -20,14 +20,14 @@ export const userSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(loginAsync.fulfilled, (state, action) => {
+      .addCase(loginAction.fulfilled, (state, action) => {
         const userInfo: IAuthenticationResponse = action.payload;
         return {
           ...state,
           ...userInfo,
         };
       })
-      .addCase(registerAsync.fulfilled, (state, action) => {
+      .addCase(registerAction.fulfilled, (state, action) => {
         const userInfo: IAuthenticationResponse = action.payload;
         return { ...state, ...userInfo };
       });

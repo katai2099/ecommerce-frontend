@@ -1,15 +1,18 @@
-import { Box, TextField } from "@mui/material";
+import { Box } from "@mui/material";
 import { ChangeEvent } from "react";
-import { IAddress } from "../../model/user";
+import { IAddress, initializeAddressError } from "../../model/user";
+import { ETextField } from "./common/ETextField";
 
 interface AddressFormProps {
   selectedAddress: IAddress;
+  error?: Record<keyof IAddress, string>;
   onAddressChange: (field: string, value: any) => void;
 }
 
 export const AddressForm = ({
   selectedAddress,
   onAddressChange,
+  error = initializeAddressError(),
 }: AddressFormProps) => {
   const handleAddressChange = (event: ChangeEvent<HTMLInputElement>) => {
     onAddressChange(event.currentTarget.name, event.currentTarget.value);
@@ -17,106 +20,69 @@ export const AddressForm = ({
 
   return (
     <form>
-      <Box mb="16px">
-        <TextField
-          // error
-          variant="outlined"
-          helperText="please enter"
-          label="First Name"
-          name="firstname"
-          value={selectedAddress.firstname}
-          required
-          fullWidth
-          onChange={handleAddressChange}
-        />
+      <ETextField
+        label="First Name"
+        name="firstname"
+        error={error.firstname}
+        value={selectedAddress.firstname}
+        onChange={handleAddressChange}
+      />
+      <ETextField
+        label="Last Name"
+        name="lastname"
+        error={error.lastname}
+        value={selectedAddress.lastname}
+        onChange={handleAddressChange}
+      />
+      <ETextField
+        label="Phone Number"
+        name="phoneNumber"
+        error={error.phoneNumber}
+        value={selectedAddress.phoneNumber}
+        onChange={handleAddressChange}
+      />
+      <Box display="flex">
+        <Box width="100%">
+          <ETextField
+            label="Steet name"
+            name="street"
+            error={error.street}
+            value={selectedAddress.street}
+            onChange={handleAddressChange}
+          />
+        </Box>
+        <Box>
+          <ETextField
+            label="House no"
+            name="houseNumber"
+            error={error.houseNumber}
+            fullWidth={false}
+            value={selectedAddress.houseNumber}
+            onChange={handleAddressChange}
+          />
+        </Box>
       </Box>
-      <Box mb="16px">
-        <TextField
-          // error
-          variant="outlined"
-          helperText="please enter"
-          label="Last Name"
-          name="lastname"
-          value={selectedAddress.lastname}
-          required
-          fullWidth
-          onChange={handleAddressChange}
-        />
-      </Box>
-      <Box mb="16px">
-        <TextField
-          // error
-          variant="outlined"
-          helperText="please enter"
-          label="Phone Number"
-          name="phoneNumber"
-          value={selectedAddress.phoneNumber}
-          required
-          fullWidth
-          onChange={handleAddressChange}
-        />
-      </Box>
-      <Box mb="16px" display="flex">
-        <TextField
-          // error
-          variant="outlined"
-          helperText="please enter"
-          label="Steet name"
-          name="street"
-          value={selectedAddress.street}
-          required
-          fullWidth
-          onChange={handleAddressChange}
-        />
-        <TextField
-          variant="outlined"
-          label="House no"
-          name="houseNumber"
-          value={selectedAddress.houseNumber}
-          required
-          onChange={handleAddressChange}
-        />
-      </Box>
-      <Box mb="16px">
-        <TextField
-          // error
-          variant="outlined"
-          helperText="please enter"
-          label="Zip Code"
-          name="zipCode"
-          value={selectedAddress.zipCode}
-          required
-          fullWidth
-          onChange={handleAddressChange}
-        />
-      </Box>
-      <Box mb="16px">
-        <TextField
-          // error
-          variant="outlined"
-          helperText="please enter"
-          label="City"
-          name="city"
-          value={selectedAddress.city}
-          required
-          fullWidth
-          onChange={handleAddressChange}
-        />
-      </Box>
-
-      <Box mb="16px">
-        <TextField
-          // error
-          variant="outlined"
-          helperText="please enter"
-          label="Country"
-          name="country"
-          value={selectedAddress.country}
-          required
-          fullWidth
-          onChange={handleAddressChange}
-        />
-      </Box>
+      <ETextField
+        label="Zip Code"
+        name="zipCode"
+        error={error.zipCode}
+        value={selectedAddress.zipCode}
+        onChange={handleAddressChange}
+      />
+      <ETextField
+        label="City"
+        name="city"
+        error={error.city}
+        value={selectedAddress.city}
+        onChange={handleAddressChange}
+      />
+      <ETextField
+        label="Country"
+        name="country"
+        error={error.country}
+        value={selectedAddress.country}
+        onChange={handleAddressChange}
+      />
     </form>
   );
 };

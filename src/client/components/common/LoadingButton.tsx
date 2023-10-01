@@ -1,9 +1,11 @@
 import { Button, CircularProgress } from "@mui/material";
+import { MouseEvent } from "react";
 
 export interface LoadingButtonProps {
   loading: boolean;
+  fullWidth?: boolean;
   title: string;
-  onClick: () => void;
+  onClick: (event: MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
 }
 
@@ -12,11 +14,13 @@ export const LoadingButton = ({
   title,
   loading,
   disabled = false,
+  fullWidth = false,
 }: LoadingButtonProps) => {
   return (
     <Button
       onClick={onClick}
-      variant={"contained"}
+      fullWidth={fullWidth}
+      variant="contained"
       disabled={loading || disabled}
       sx={{
         position: "relative",

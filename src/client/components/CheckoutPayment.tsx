@@ -2,7 +2,10 @@ import { Box, Paper, TextField, Typography } from "@mui/material";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { ChangeEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { setNameOnCard } from "../../reducers/checkoutReducer";
+import {
+  setNameOnCard,
+  setNameOnCardError,
+} from "../../reducers/checkoutReducer";
 import { RootState } from "../../reducers/combineReducer";
 import { useAppDispatch } from "../../store/configureStore";
 
@@ -12,13 +15,20 @@ export const CheckoutPayment = () => {
   const nameOnCard = useSelector(
     (state: RootState) => state.checkout.nameOnCard
   );
+  const nameOnCardError = useSelector(
+    (state: RootState) => state.checkout.nameOnCardError
+  );
 
+  const checkoutPaymentError = useSelector(
+    (state: RootState) => state.checkout.checkoutPaymentError
+  );
   useEffect(() => {
     dispatch(setNameOnCard(`${user.firstname} ${user.lastname}`));
   }, []);
 
   const dispatch = useAppDispatch();
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(setNameOnCardError(""));
     dispatch(setNameOnCard(event.target.value));
   };
   return (
@@ -35,11 +45,18 @@ export const CheckoutPayment = () => {
           sx={{ mb: "8px" }}
           fullWidth
           onChange={handleNameChange}
-          value={nameOnCard.trim()}
+          value={nameOnCard}
+          error={!!nameOnCardError}
+          helperText={nameOnCardError}
         />
         <form id="payment-form">
           <PaymentElement options={{ layout: "tabs" }} />
         </form>
+        {!!checkoutPaymentError && (
+          <Typography mt="8px" color="error" fontSize="12px">
+            {checkoutPaymentError}
+          </Typography>
+        )}
       </Paper>
     </Box>
   );

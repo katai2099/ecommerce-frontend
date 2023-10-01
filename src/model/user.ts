@@ -77,3 +77,18 @@ export interface IUserDetailsRequest {
 export interface IUpdatePasswordRequest {
   password: string;
 }
+
+export const initializeAddressError = (): Record<keyof IAddress, string> => {
+  return {
+    id: "",
+    firstname: "",
+    lastname: "",
+    phoneNumber: "",
+    street: "",
+    houseNumber: "",
+    city: "",
+    country: "",
+    zipCode: "",
+    isDefault: "",
+  };
+};

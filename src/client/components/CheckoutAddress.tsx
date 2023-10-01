@@ -11,9 +11,14 @@ import { SyntheticEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { IAddress } from "../../model/user";
 import {
+  resetBillingAddressError,
+  resetDeliveryAddressError,
   setAddressBookDialogOpen,
   setBillingAddress,
+  setBillingAddressError,
   setDeliveryAddress,
+  setDeliveryAddressError,
+  setFirstLoadToFalse,
   setIsBillingSameAsDelivery,
   setIsNewBillingAddress,
   setIsNewDeliveryAddress,
@@ -44,29 +49,42 @@ export const CheckoutAddress = () => {
     useState<boolean>(true);
 
   useEffect(() => {
-    const defaultAddressIdx = userAddresess.findIndex(
-      (address) => address.isDefault
-    );
-    dispatch(setSelectedDeliveryAddressIndex(defaultAddressIdx));
-    dispatch(setSelectedBillingAddressIndex(defaultAddressIdx));
-  }, []);
+    if (checkoutInfo.firstLoad) {
+      const defaultAddressIdx = userAddresess.findIndex(
+        (address) => address.isDefault
+      );
+      dispatch(setSelectedDeliveryAddressIndex(defaultAddressIdx));
+      dispatch(setSelectedBillingAddressIndex(defaultAddressIdx));
+      dispatch(setFirstLoadToFalse());
+    }
+  }, [checkoutInfo.firstLoad]);
 
   const handleIsBillingSameAsDeliveryUpdate = (value: boolean) => {
     dispatch(setIsBillingSameAsDelivery(value));
   };
   const handleDeliveryAddressChange = (field: string, value: any) => {
+    const updateDeliveryAddressError: Record<keyof IAddress, string> = {
+      ...checkoutInfo.deliveryAddressError,
+      [field]: "",
+    };
     const updatedDeliveryAddress: IAddress = {
       ...deliveryAddress,
       [field]: value,
     };
+    dispatch(setDeliveryAddressError(updateDeliveryAddressError));
     dispatch(setDeliveryAddress(updatedDeliveryAddress));
   };
 
   const handleBillingAddressChange = (field: string, value: any) => {
+    const updateBillingAddressError: Record<keyof IAddress, string> = {
+      ...checkoutInfo.billingAddressError,
+      [field]: "",
+    };
     const updatedBillingAddress: IAddress = {
       ...billingAddress,
       [field]: value,
     };
+    dispatch(setBillingAddressError(updateBillingAddressError));
     dispatch(setBillingAddress(updatedBillingAddress));
   };
 
@@ -117,6 +135,7 @@ export const CheckoutAddress = () => {
               <Button
                 variant="outlined"
                 onClick={() => {
+                  dispatch(resetDeliveryAddressError());
                   dispatch(setIsNewDeliveryAddress(true));
                 }}
               >
@@ -138,6 +157,7 @@ export const CheckoutAddress = () => {
           <AddressForm
             selectedAddress={deliveryAddress}
             onAddressChange={handleDeliveryAddressChange}
+            error={checkoutInfo.deliveryAddressError}
           />
         )}
       </Paper>
@@ -194,6 +214,7 @@ export const CheckoutAddress = () => {
                   variant="outlined"
                   onClick={() => {
                     setIsDeliveryAddressSelect(false);
+                    dispatch(resetBillingAddressError());
                     dispatch(setIsNewBillingAddress(true));
                   }}
                 >
@@ -216,6 +237,7 @@ export const CheckoutAddress = () => {
           <AddressForm
             selectedAddress={billingAddress}
             onAddressChange={handleBillingAddressChange}
+            error={checkoutInfo.billingAddressError}
           />
         )}
         <AddressBookDialog

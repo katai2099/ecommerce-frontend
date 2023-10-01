@@ -1,4 +1,4 @@
-import { Address, IAddress } from "./user";
+import { Address, IAddress, initializeAddressError } from "./user";
 
 export interface ICheckoutReduxState {
   addresses: IAddress[];
@@ -7,11 +7,17 @@ export interface ICheckoutReduxState {
   selectedBillingAddressIndex: number;
   deliveryAddress: IAddress;
   billingAddress: IAddress;
+  deliveryAddressError: Record<keyof IAddress, string>;
+  billingAddressError: Record<keyof IAddress, string>;
   isBillingSameAsDelivery: boolean;
   nameOnCard: string;
+  nameOnCardError: string;
   addressBookDialogOpen: boolean;
   isNewDeliveryAddress: boolean;
   isNewBillingAddress: boolean;
+  firstLoad: boolean;
+  checkoutPaymentError: string;
+  placeOrderError: string;
 }
 
 export class CheckoutReduxState implements ICheckoutReduxState {
@@ -22,10 +28,16 @@ export class CheckoutReduxState implements ICheckoutReduxState {
     public selectedBillingAddressIndex = 0,
     public deliveryAddress = new Address(),
     public billingAddress = new Address(),
+    public deliveryAddressError = initializeAddressError(),
+    public billingAddressError = initializeAddressError(),
     public isBillingSameAsDelivery = true,
     public nameOnCard = "",
+    public nameOnCardError = "",
     public addressBookDialogOpen = false,
     public isNewDeliveryAddress = false,
-    public isNewBillingAddress = false
+    public isNewBillingAddress = false,
+    public firstLoad = true,
+    public checkoutPaymentError = "",
+    public placeOrderError = ""
   ) {}
 }

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { CheckoutReduxState, ICheckoutReduxState } from "../model/checkout";
-import { IAddress } from "../model/user";
+import { IAddress, initializeAddressError } from "../model/user";
 
 const initialState: ICheckoutReduxState = new CheckoutReduxState();
 
@@ -41,6 +41,36 @@ const checkoutSlice = createSlice({
     setIsNewBillingAddress(state, action: PayloadAction<boolean>) {
       return { ...state, isNewBillingAddress: action.payload };
     },
+    setDeliveryAddressError(
+      state,
+      action: PayloadAction<Record<keyof IAddress, string>>
+    ) {
+      return { ...state, deliveryAddressError: action.payload };
+    },
+    resetDeliveryAddressError(state) {
+      return { ...state, deliveryAddressError: initializeAddressError() };
+    },
+    resetBillingAddressError(state) {
+      return { ...state, billingAddressError: initializeAddressError() };
+    },
+    setBillingAddressError(
+      state,
+      action: PayloadAction<Record<keyof IAddress, string>>
+    ) {
+      return { ...state, billingAddressError: action.payload };
+    },
+    setFirstLoadToFalse(state) {
+      return { ...state, firstLoad: false };
+    },
+    setNameOnCardError(state, action: PayloadAction<string>) {
+      return { ...state, nameOnCardError: action.payload };
+    },
+    setCheckoutPaymentError(state, action: PayloadAction<string>) {
+      return { ...state, checkoutPaymentError: action.payload };
+    },
+    setPlaceOrderError(state, action: PayloadAction<string>) {
+      return { ...state, placeOrderError: action.payload };
+    },
     resetCheckoutState() {
       return new CheckoutReduxState();
     },
@@ -60,5 +90,13 @@ export const {
   setAddressBookDialogOpen,
   setIsNewDeliveryAddress,
   setIsNewBillingAddress,
+  setDeliveryAddressError,
+  setBillingAddressError,
+  setFirstLoadToFalse,
+  setCheckoutPaymentError,
+  setNameOnCardError,
+  setPlaceOrderError,
+  resetDeliveryAddressError,
+  resetBillingAddressError,
 } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

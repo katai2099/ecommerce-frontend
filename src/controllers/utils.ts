@@ -52,3 +52,18 @@ export function formatFileSize(bytes: number, decimalPoint: number = 2) {
 export function formatPrice(price: number): string {
   return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 }
+
+export function isRecordValueEmpty<T>(
+  obj: Record<string, T>,
+  skipKeys: string[] = []
+): boolean {
+  for (const key in obj) {
+    if (!skipKeys.includes(key) && obj.hasOwnProperty(key)) {
+      const value = obj[key];
+      if (value !== "") {
+        return false;
+      }
+    }
+  }
+  return true;
+}
