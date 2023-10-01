@@ -45,3 +45,8 @@ export interface ICheckoutResponse {
   carts: ICartItem[];
   total: number;
 }
+
+export interface IStockCountCheck {
+  cartItemId: number;
+  stockCount: number;
+}

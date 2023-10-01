@@ -10,10 +10,15 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { formatPrice } from "../../../controllers/utils";
+import { stockCheck } from "../../../controllers/cart";
+import { formatPrice, showSnackBar } from "../../../controllers/utils";
+import { IStockCountCheck } from "../../../model/cart";
 import { RootState } from "../../../reducers/combineReducer";
+import { OUT_OF_STOCK_MESSAGE } from "../../../utils/constant";
+import { LoadingButton } from "../common/LoadingButton";
 import { CartSidebarItem } from "./CartSidebarItem";
 
 const FlexBox = styled(Box)`
@@ -39,8 +44,32 @@ export const CartSidebar = ({
     return accumulator + currentValue.product.price * currentValue.quantity;
   }, 0);
   const isUpdate = cart.isUpdate;
+  const [checkStock, setCheckStock] = useState<boolean>(false);
+  const [stockCheckResponse, setStockCheckResponse] = useState<
+    IStockCountCheck[]
+  >([]);
 
   const navigate = useNavigate();
+
+  function handleProceedClick(
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void {
+    setCheckStock(true);
+    stockCheck()
+      .then((res) => {
+        setStockCheckResponse(res);
+        if (res.length === 0) {
+          toggleDrawer(false);
+          navigate("/checkout");
+        } else {
+          showSnackBar(OUT_OF_STOCK_MESSAGE);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setCheckStock(false));
+  }
 
   return (
     <Drawer
@@ -88,7 +117,12 @@ export const CartSidebar = ({
             <Divider />
             <Box mt="4px">
               {cartItems.map((cartItem, idx) => (
-                <CartSidebarItem key={idx} cartItem={cartItem} index={idx} />
+                <CartSidebarItem
+                  key={idx}
+                  cartItem={cartItem}
+                  index={idx}
+                  stockCheck={stockCheckResponse}
+                />
               ))}
             </Box>
             {cartItems.length === 0 && (
@@ -118,17 +152,13 @@ export const CartSidebar = ({
               padding="0 32px"
               gap="12px"
             >
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={() => {
-                  toggleDrawer(false);
+              <LoadingButton
+                title={`Checkout Now ${formatPrice(total)}`}
+                fullWidth={true}
+                onClick={handleProceedClick}
+                loading={checkStock}
+              />
 
-                  navigate("/checkout");
-                }}
-              >
-                {`Checkout Now ${formatPrice(total)}`}
-              </Button>
               <Button
                 fullWidth
                 variant="outlined"

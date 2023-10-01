@@ -14,11 +14,11 @@ export const AppSnackbar = () => {
         vertical: guiState.snackbarVerticalPos,
         horizontal: guiState.snackbarHorizontalPos,
       }}
-      autoHideDuration={6000}
+      autoHideDuration={5000}
       onClose={() => {
         dispatch(resetSnackbarState());
       }}
-      sx={{ minWidth: "15%", mt: "50px", mr: "10px" }}
+      sx={{ minWidth: "15%", mt: "50px" }}
     >
       <Alert
         severity="error"

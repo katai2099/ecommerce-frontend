@@ -1,18 +1,44 @@
 import { ShoppingBagOutlined } from "@mui/icons-material";
-import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
+import { Box, Divider, Grid, Paper, Typography } from "@mui/material";
+import { MouseEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { formatPrice } from "../../controllers/utils";
+import { stockCheck } from "../../controllers/cart";
+import { formatPrice, showSnackBar } from "../../controllers/utils";
+import { IStockCountCheck } from "../../model/cart";
 import { RootState } from "../../reducers/combineReducer";
 import { AppBox } from "../../styles/common";
+import { OUT_OF_STOCK_MESSAGE } from "../../utils/constant";
 import { CartItemDetail } from "../components/cart/CartItemDetail";
+import { LoadingButton } from "../components/common/LoadingButton";
 
 export const Cart = () => {
   const carts = useSelector((state: RootState) => state.cart.carts);
   const totalPrice = carts.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.quantity * currentValue.product.price;
   }, 0);
+  const [checkStock, setCheckStock] = useState<boolean>(false);
+  const [stockCheckResponse, setStockCheckResponse] = useState<
+    IStockCountCheck[]
+  >([]);
   const navigate = useNavigate();
+  function handleProceedClick(event: MouseEvent<HTMLButtonElement>): void {
+    setCheckStock(true);
+    stockCheck()
+      .then((res) => {
+        setStockCheckResponse(res);
+        if (res.length === 0) {
+          navigate("/checkout");
+        } else {
+          showSnackBar(OUT_OF_STOCK_MESSAGE);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setCheckStock(false));
+  }
+
   return (
     <AppBox>
       <Typography textAlign="center" fontSize="26px" fontWeight="bold">
@@ -26,7 +52,12 @@ export const Cart = () => {
               <Typography color="GrayText">({carts.length} item)</Typography>
             </Box>
             {carts.map((cartItem, idx) => (
-              <CartItemDetail key={idx} cartItem={cartItem} index={idx} />
+              <CartItemDetail
+                key={idx}
+                cartItem={cartItem}
+                index={idx}
+                stockCheck={stockCheckResponse}
+              />
             ))}
             {carts.length === 0 && (
               <Box textAlign="center">
@@ -57,25 +88,14 @@ export const Cart = () => {
                 {formatPrice(totalPrice)}
               </Typography>
             </Box>
-            <Divider />
-            <Button
-              fullWidth
-              sx={{
-                mt: "32px",
-                "&.Mui-disabled": {
-                  color: "#4b4b4b",
-                  cursor: "not-allowed",
-                  pointerEvents: "all !important",
-                },
-              }}
-              variant="contained"
+            <Divider sx={{ mb: "32px" }} />
+            <LoadingButton
+              title={"Proceed to checkout"}
+              fullWidth={true}
               disabled={carts.length === 0}
-              onClick={() => {
-                navigate("/checkout");
-              }}
-            >
-              Proceed To Checkout
-            </Button>
+              onClick={handleProceedClick}
+              loading={checkStock}
+            />
           </Paper>
         </Grid>
       </Grid>

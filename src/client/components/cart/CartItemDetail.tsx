@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { updateCartAction } from "../../../actions/cartActions";
 import { formatPrice } from "../../../controllers/utils";
-import { ICartItem } from "../../../model/cart";
+import { ICartItem, IStockCountCheck } from "../../../model/cart";
 import { updateCarts } from "../../../reducers/cartReducer";
 import { RootState } from "../../../reducers/combineReducer";
 import { setLoading } from "../../../reducers/guiReducer";
@@ -13,9 +13,14 @@ import { useAppDispatch } from "../../../store/configureStore";
 export interface CartItemDetailProps {
   cartItem: ICartItem;
   index: number;
+  stockCheck: IStockCountCheck[];
 }
 
-export const CartItemDetail = ({ cartItem, index }: CartItemDetailProps) => {
+export const CartItemDetail = ({
+  cartItem,
+  index,
+  stockCheck,
+}: CartItemDetailProps) => {
   const carts = useSelector((state: RootState) => state.cart.carts);
   const dispatch = useAppDispatch();
 
@@ -50,14 +55,13 @@ export const CartItemDetail = ({ cartItem, index }: CartItemDetailProps) => {
       });
   };
 
+  const badStockIndex = stockCheck.findIndex(
+    (item) => item.cartItemId === cartItem.id
+  );
+
   return (
-    <Box
-      p="0px 0 24px"
-      display="flex"
-      justifyContent="space-between"
-      alignItems="flex-start"
-    >
-      <Box display="flex" gap="24px" width="100%">
+    <Box p="0px 0 24px" display="flex" justifyContent="space-between">
+      <Box display="flex" gap="24px" width="100%" alignItems="center">
         <Link to={`/products/${cartItem.product.id}`}>
           <Box>
             <img
@@ -91,6 +95,15 @@ export const CartItemDetail = ({ cartItem, index }: CartItemDetailProps) => {
               Size: {cartItem.product.productSizes[0].size.name}
             </Typography>
           </Box>
+          {badStockIndex !== -1 && (
+            <Box>
+              <Typography fontSize="12px" color="error">
+                {stockCheck[badStockIndex].stockCount === 0
+                  ? "Product out of stock"
+                  : `only ${stockCheck[badStockIndex].stockCount} items remained`}
+              </Typography>
+            </Box>
+          )}
           <Box
             m="15px 0"
             display="flex"

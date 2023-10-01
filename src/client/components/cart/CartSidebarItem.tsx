@@ -19,7 +19,11 @@ const FlexBox = styled(Box)`
   align-items: center;
 `;
 
-export const CartSidebarItem = ({ cartItem, index }: CartItemDetailProps) => {
+export const CartSidebarItem = ({
+  cartItem,
+  index,
+  stockCheck,
+}: CartItemDetailProps) => {
   const carts = useSelector((state: RootState) => state.cart.carts);
   const dispatch = useAppDispatch();
 
@@ -41,7 +45,6 @@ export const CartSidebarItem = ({ cartItem, index }: CartItemDetailProps) => {
     const quantity = cartItem.quantity + quantityChange;
     dispatch(setIsUpdate(true));
     dispatch(updateCartAction({ quantity, cartItemId: cartItem.id }))
-      .unwrap()
       .then(() => {
         const updatedCarts = carts.map((cartItem, idx) =>
           idx === index ? { ...cartItem, quantity: quantity } : cartItem
@@ -57,6 +60,10 @@ export const CartSidebarItem = ({ cartItem, index }: CartItemDetailProps) => {
   const handleItemClick = () => {
     dispatch(setOpen(false));
   };
+
+  const badStockIndex = stockCheck.findIndex(
+    (item) => item.cartItemId === cartItem.id
+  );
 
   return (
     <Box
@@ -94,6 +101,15 @@ export const CartSidebarItem = ({ cartItem, index }: CartItemDetailProps) => {
           {formatPrice(cartItem.product.price)}
         </Typography>
         <Typography color="GrayText">{`Size: ${cartItem.product.productSizes[0].size.name}`}</Typography>
+        {badStockIndex !== -1 && (
+          <Box>
+            <Typography fontSize="12px" color="error">
+              {stockCheck[badStockIndex].stockCount === 0
+                ? "Product out of stock"
+                : `only ${stockCheck[badStockIndex].stockCount} items remained`}
+            </Typography>
+          </Box>
+        )}
         <FlexBox m="15px 0">
           <Box display="flex" alignItems="center">
             <IconButton

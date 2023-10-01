@@ -1,3 +1,6 @@
+import { setSnackbarState } from "../reducers/guiReducer";
+import { store } from "../store/configureStore";
+
 export function clone<T = any>(whatToClone: T): T {
   return JSON.parse(JSON.stringify(whatToClone));
 }
@@ -66,4 +69,21 @@ export function isRecordValueEmpty<T>(
     }
   }
   return true;
+}
+
+export function showSnackBar(
+  text: string,
+  snackbarVerticalPos?: "top" | "bottom",
+  snackbarHorizontalPos?: "left" | "right"
+) {
+  store.dispatch(
+    setSnackbarState({
+      showSnackbar: true,
+      snackbarText: text,
+      snackbarVerticalPos: snackbarVerticalPos ? snackbarVerticalPos : "top",
+      snackbarHorizontalPos: snackbarHorizontalPos
+        ? snackbarHorizontalPos
+        : "right",
+    })
+  );
 }

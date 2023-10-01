@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import {
   getRequest,
   postRequest,
@@ -9,15 +10,19 @@ import {
   ICartItem,
   ICheckoutResponse,
   IPlaceOrderRequest,
+  IStockCountCheck,
   IUpdateCartRequest,
 } from "../model/cart";
 import { setLoading } from "../reducers/guiReducer";
 
-export const getCartAction = createAsyncThunk<ICartItem[]>("get_cart", () => {
-  return getCartWorker()
-    .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err));
-});
+export const getCartAction = createAsyncThunk<ICartItem[]>(
+  "get_cart",
+  (_, thunkApi) => {
+    return getCartWorker()
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
 
 function getCartWorker(): Promise<ICartItem[]> {
   return getRequest<ICartItem[]>(`/carts`, { auth: true })
@@ -32,7 +37,7 @@ export const addToCartAction = createAsyncThunk<number, IAddToCartRequest>(
       .then((res) => {
         return Promise.resolve(res);
       })
-      .catch((err) => Promise.reject(err));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -49,7 +54,7 @@ export const updateCartAction = createAsyncThunk<string, IUpdateCartRequest>(
   (data, thunkApi) => {
     return updateCartWorker(data)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -63,26 +68,45 @@ function updateCartWorker(updateCartRequest: IUpdateCartRequest) {
     .catch((err) => Promise.reject(err));
 }
 
+export const stockCheckAction = createAsyncThunk<IStockCountCheck[]>(
+  "stock_check",
+  (_, thunkApi) => {
+    return stockCheckWorker()
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
+
+function stockCheckWorker() {
+  return postRequest<IStockCountCheck[]>(
+    "/carts/stock-check",
+    {},
+    { auth: true }
+  )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
 export const checkoutAction = createAsyncThunk("checkout", (_, thunkApi) => {
   thunkApi.dispatch(setLoading(true));
   return checkoutWorker()
     .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err))
+    .catch((err) => thunkApi.rejectWithValue(err))
     .finally(() => thunkApi.dispatch(setLoading(false)));
 });
 
 function checkoutWorker() {
   return postRequest<ICheckoutResponse>("/carts/checkout", {}, { auth: true })
     .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err));
+    .catch((err: AxiosError) => Promise.reject(err));
 }
 
 export const placeOrderAction = createAsyncThunk<string, IPlaceOrderRequest>(
   "place_order",
-  (placeOrderRequest) => {
+  (placeOrderRequest, thunkApi) => {
     return placeOrderWorker(placeOrderRequest)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 

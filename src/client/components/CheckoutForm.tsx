@@ -12,11 +12,12 @@ import { PaymentMethod } from "@stripe/stripe-js";
 import { MouseEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { stockCheckAction } from "../../actions/cartActions";
 import { confirmPaymentAction } from "../../actions/orderActions";
 import { placeOrder } from "../../controllers/cart";
 import { validateAddress } from "../../controllers/user";
-import { isRecordValueEmpty } from "../../controllers/utils";
-import { PaymentError } from "../../model/PaymentError";
+import { isRecordValueEmpty, showSnackBar } from "../../controllers/utils";
+import { OutOfStockError, PaymentError } from "../../model/PaymentError";
 import { resetCart } from "../../reducers/cartReducer";
 import {
   setBillingAddressError,
@@ -77,65 +78,80 @@ export const CheckoutForm = () => {
 
     dispatch(setLoading(true));
 
-    dispatch(confirmPaymentAction({ paymentMethodId: paymentMethod!.id }))
+    dispatch(stockCheckAction())
       .unwrap()
-      .then((res) => {
-        console.log(res);
-        if (res.status === "requires_action") {
-          return stripe.handleNextAction({
-            clientSecret: res.clientSecret,
-          });
-        } else if (res.status === "requires_confirmation") {
-          return stripe.confirmPayment({
-            clientSecret: res.clientSecret,
-            elements,
-
-            confirmParams: {
-              return_url: "http://localhost:3000/orders/complete",
-            },
-            redirect: "if_required",
-          });
+      .then((stockCheckRes) => {
+        if (stockCheckRes.length > 0) {
+          throw new OutOfStockError();
         }
-      })
-      .then((res) => {
-        if (res?.error) {
-          throw new PaymentError(
-            res.error.message || "",
-            res.error.type === "card_error"
-          );
-        }
-        const paymentId = res?.paymentIntent?.id;
-        return placeOrder(
-          finalDeliveryAddress,
-          finalBillingAddress,
-          paymentId!
-        );
-      })
-      .then((res) => {
-        dispatch(resetCart());
-        navigate(`/orders/complete?order=${res}`, { replace: true });
+        return dispatch(
+          confirmPaymentAction({ paymentMethodId: paymentMethod!.id })
+        )
+          .unwrap()
+          .then((res) => {
+            if (res.status === "requires_action") {
+              return stripe.handleNextAction({
+                clientSecret: res.clientSecret,
+              });
+            } else if (res.status === "requires_confirmation") {
+              return stripe.confirmPayment({
+                clientSecret: res.clientSecret,
+                elements,
+                confirmParams: {
+                  return_url: "http://localhost:3000/orders/complete",
+                },
+                redirect: "if_required",
+              });
+            }
+          })
+          .then((res) => {
+            if (res?.error) {
+              throw new PaymentError(
+                res.error.message || "",
+                res.error.type === "card_error"
+              );
+            }
+            const paymentId = res?.paymentIntent?.id;
+            return placeOrder(
+              finalDeliveryAddress,
+              finalBillingAddress,
+              paymentId!
+            );
+          })
+          .then((res) => {
+            dispatch(resetCart());
+            navigate(`/orders/complete?order=${res}`, { replace: true });
+          });
       })
       .catch((err) => {
-        dispatch(setPlaceOrderError(true));
-        if (err instanceof PaymentError) {
-          dispatch(
-            setSnackbarState({
-              snackbarText: err.isCardError
-                ? `${err.message}. Please update your card info`
-                : "something went wrong. Please check your info and start the step over again",
-              showSnackbar: true,
-            })
-          );
+        if (err instanceof OutOfStockError) {
+          navigate("/orders/failure", {
+            replace: true,
+            state: {
+              outOfStock: true,
+            },
+          });
         } else {
-          dispatch(
-            setSnackbarState({
-              snackbarText:
-                "something went wrong. Please start the step over again",
-              showSnackbar: true,
-            })
-          );
+          dispatch(setPlaceOrderError(true));
+          if (err instanceof PaymentError) {
+            dispatch(
+              setSnackbarState({
+                snackbarText: err.isCardError
+                  ? `${err.message}. Please update your payment info`
+                  : "something went wrong. Please start the step over again",
+                showSnackbar: true,
+              })
+            );
+          } else {
+            dispatch(
+              setSnackbarState({
+                snackbarText:
+                  "something went wrong. Please start the step over again",
+                showSnackbar: true,
+              })
+            );
+          }
         }
-        console.log(err);
       })
       .finally(() => dispatch(setLoading(false)));
   };
@@ -178,7 +194,6 @@ export const CheckoutForm = () => {
             throw res.error;
           } else {
             setCreatePaymentLoading(true);
-            console.log(finalBillingAddress);
             return stripe?.createPaymentMethod({
               elements,
               params: {
@@ -201,12 +216,11 @@ export const CheckoutForm = () => {
           if (res!.error) {
             throw res?.error;
           }
-          console.log(res?.paymentMethod);
           setPaymentMethod(res?.paymentMethod);
           handleGoToNextStep();
         })
         .catch((err) => {
-          console.log(err);
+          showSnackBar(err.message);
           dispatch(setCheckoutPaymentError(err.message));
         })
         .finally(() => setCreatePaymentLoading(false));

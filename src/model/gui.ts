@@ -4,6 +4,7 @@ export interface IGuiReduxState {
   snackbarText: string;
   snackbarVerticalPos: "top" | "bottom";
   snackbarHorizontalPos: "left" | "right";
+  snackbarExtraMargin: boolean;
 }
 
 export class GuiReduxState implements IGuiReduxState {
@@ -12,7 +13,8 @@ export class GuiReduxState implements IGuiReduxState {
     public showSnackbar = false,
     public snackbarText = "",
     public snackbarVerticalPos: "top" | "bottom" = "top",
-    public snackbarHorizontalPos: "left" | "right" = "right"
+    public snackbarHorizontalPos: "left" | "right" = "right",
+    public snackbarExtraMargin = false
   ) {}
 }
 

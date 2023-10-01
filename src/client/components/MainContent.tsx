@@ -5,6 +5,7 @@ import { Cart } from "../pages/Cart";
 import { Category } from "../pages/Category";
 import { Checkout } from "../pages/Checkout";
 import { Home } from "../pages/Home";
+import { OrderFailure } from "../pages/OrderFailure";
 import { OrderSuccess } from "../pages/OrderSuccess";
 import { ProductDetail } from "../pages/ProductDetail";
 import { Search } from "../pages/Search";
@@ -22,9 +23,9 @@ export const MainContent = () => {
   return (
     <Box>
       <Navbar />
-      <AppSnackbar />
       <LoadingBackDrop />
       <Container maxWidth="xl">
+        <AppSnackbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductDetail />}>
@@ -40,6 +41,7 @@ export const MainContent = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/account/*" element={<Account />} />
           <Route path="/orders/complete" element={<OrderSuccess />} />
+          <Route path="/orders/failure" element={<OrderFailure />} />
         </Routes>
       </Container>
       <Footer />
