@@ -7,6 +7,7 @@ export interface LoadingButtonProps {
   title: string;
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
+  outlinedLoading?: boolean;
 }
 
 export const LoadingButton = ({
@@ -15,6 +16,7 @@ export const LoadingButton = ({
   loading,
   disabled = false,
   fullWidth = false,
+  outlinedLoading = false,
 }: LoadingButtonProps) => {
   return (
     <Button
@@ -22,17 +24,21 @@ export const LoadingButton = ({
       fullWidth={fullWidth}
       variant="contained"
       disabled={loading || disabled}
-      sx={{
-        position: "relative",
-        padding: "10px 15px",
-        color: "primary",
-        "&.Mui-disabled": {
-          color: disabled ? "#4b4b4b" : "white",
-          backgroundColor: disabled ? "diabled" : "black",
-          cursor: disabled ? "not-allowed" : "default",
-          pointerEvents: "all !important",
-        },
-      }}
+      sx={
+        outlinedLoading
+          ? {}
+          : {
+              position: "relative",
+              padding: "10px 15px",
+              color: "primary",
+              "&.Mui-disabled": {
+                color: disabled ? "#4b4b4b" : "white",
+                backgroundColor: disabled ? "diabled" : "black",
+                cursor: disabled ? "not-allowed" : "default",
+                pointerEvents: "all !important",
+              },
+            }
+      }
     >
       <span style={{ visibility: loading ? "hidden" : "visible" }}>
         {title}

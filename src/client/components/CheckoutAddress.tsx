@@ -56,6 +56,10 @@ export const CheckoutAddress = () => {
       dispatch(setSelectedDeliveryAddressIndex(defaultAddressIdx));
       dispatch(setSelectedBillingAddressIndex(defaultAddressIdx));
       dispatch(setFirstLoadToFalse());
+      if (defaultAddressIdx !== -1) {
+        dispatch(setIsNewDeliveryAddress(false));
+        dispatch(setIsNewBillingAddress(false));
+      }
     }
   }, [checkoutInfo.firstLoad]);
 
@@ -106,10 +110,11 @@ export const CheckoutAddress = () => {
           mb="16px"
         >
           <Typography variant="h3">Delivery Address</Typography>
-          {isNewDeliveryAddress && (
+          {isNewDeliveryAddress && userAddresess.length > 0 && (
             <Button
               variant="outlined"
               onClick={() => {
+                dispatch(resetDeliveryAddressError());
                 setIsDeliveryAddressSelect(true);
                 dispatch(setSelectedDeliveryAddressIndex(-1));
                 handleAddressDialogStateUpdate(true);
@@ -169,25 +174,28 @@ export const CheckoutAddress = () => {
           mb="16px"
         >
           <Typography variant="h3">Billing Address</Typography>
-          {isNewBillingAddress && (
-            <Button
-              variant="outlined"
-              onClick={() => {
-                setIsDeliveryAddressSelect(false);
-                dispatch(setSelectedBillingAddressIndex(-1));
-                handleAddressDialogStateUpdate(true);
-              }}
-            >
-              Select from address book
-            </Button>
-          )}
+          {isNewBillingAddress &&
+            userAddresess.length > 0 &&
+            !isBillingSameAsDelivery && (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  dispatch(resetBillingAddressError());
+                  setIsDeliveryAddressSelect(false);
+                  dispatch(setSelectedBillingAddressIndex(-1));
+                  handleAddressDialogStateUpdate(true);
+                }}
+              >
+                Select from address book
+              </Button>
+            )}
         </Box>
         <Box mb="16px">
           <FormGroup>
             <FormControlLabel
               onChange={(event: SyntheticEvent, value: boolean) => {
                 handleIsBillingSameAsDeliveryUpdate(value);
-                dispatch(setIsNewBillingAddress(false));
+                dispatch(resetBillingAddressError());
               }}
               checked={isBillingSameAsDelivery}
               control={<Checkbox size="medium" />}
@@ -233,13 +241,14 @@ export const CheckoutAddress = () => {
               </Box>
             </Box>
           )}
-        {(userAddresess.length === 0 || isNewBillingAddress) && (
-          <AddressForm
-            selectedAddress={billingAddress}
-            onAddressChange={handleBillingAddressChange}
-            error={checkoutInfo.billingAddressError}
-          />
-        )}
+        {(userAddresess.length === 0 || isNewBillingAddress) &&
+          !isBillingSameAsDelivery && (
+            <AddressForm
+              selectedAddress={billingAddress}
+              onAddressChange={handleBillingAddressChange}
+              error={checkoutInfo.billingAddressError}
+            />
+          )}
         <AddressBookDialog
           isDeliveryAddressSelect={isDeliveryAddressSelect}
           open={isAddressBookDialogOpen}

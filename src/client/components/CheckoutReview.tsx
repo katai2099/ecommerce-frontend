@@ -1,8 +1,11 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { Box, IconButton, Paper, Typography } from "@mui/material";
 import { PaymentMethod } from "@stripe/stripe-js";
 import { useSelector } from "react-redux";
 import { IAddress } from "../../model/user";
+import { setPlaceOrderError, setStep } from "../../reducers/checkoutReducer";
 import { RootState } from "../../reducers/combineReducer";
+import { useAppDispatch } from "../../store/configureStore";
 import { AddressDetails } from "./AddressDetails";
 import {
   AmericanExpressLogo,
@@ -24,23 +27,54 @@ export const CheckoutReview = ({
   billingAddress,
 }: CheckoutReviewProps) => {
   const checkoutInfo = useSelector((state: RootState) => state.checkout);
-
+  const dispatch = useAppDispatch();
   return (
     <Box>
       <Box>
         <Typography variant="h3" mb="8px">
           1. Delivery
         </Typography>
+
         <Paper sx={{ padding: "16px 20px 8px", mb: "16px" }}>
-          <Typography variant="h3" mb="16px">
-            Delivery Address
-          </Typography>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            mb="16px"
+            alignItems="center"
+          >
+            <Typography variant="h3">Delivery Address</Typography>
+            <IconButton
+              size="small"
+              onClick={() => {
+                dispatch(setPlaceOrderError(false));
+                dispatch(setStep(0));
+                window.scrollTo(0, 0);
+              }}
+            >
+              <Edit />
+            </IconButton>
+          </Box>
           <AddressDetails address={deliveryAddress} />
         </Paper>
         <Paper sx={{ padding: "16px 20px 8px", mb: "16px" }}>
-          <Typography variant="h3" mb="16px">
-            Billing Address
-          </Typography>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            mb="16px"
+            alignItems="center"
+          >
+            <Typography variant="h3">Billing Address</Typography>
+            <IconButton
+              size="small"
+              onClick={() => {
+                dispatch(setPlaceOrderError(false));
+                dispatch(setStep(0));
+                window.scrollTo(0, 0);
+              }}
+            >
+              <Edit />
+            </IconButton>
+          </Box>
           <AddressDetails address={billingAddress} />
         </Paper>
       </Box>
@@ -49,9 +83,24 @@ export const CheckoutReview = ({
           2. Payment
         </Typography>
         <Paper sx={{ padding: "16px 20px 8px", mb: "16px" }}>
-          <Typography variant="h3" mb="16px">
-            Payment details
-          </Typography>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            mb="16px"
+            alignItems="center"
+          >
+            <Typography variant="h3">Payment details</Typography>
+            <IconButton
+              size="small"
+              onClick={() => {
+                dispatch(setPlaceOrderError(false));
+                dispatch(setStep(1));
+                window.scrollTo(0, 0);
+              }}
+            >
+              <Edit />
+            </IconButton>
+          </Box>
           {paymentMethod && (
             <Box display="flex" gap="16px">
               <Box>

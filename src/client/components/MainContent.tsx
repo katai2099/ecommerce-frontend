@@ -8,6 +8,7 @@ import { Home } from "../pages/Home";
 import { OrderSuccess } from "../pages/OrderSuccess";
 import { ProductDetail } from "../pages/ProductDetail";
 import { Search } from "../pages/Search";
+import { AppSnackbar } from "./AppSnackbar";
 import { LoadingBackDrop } from "./common/LoadingBackDrop";
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
@@ -17,9 +18,11 @@ export const MainContent = () => {
   // useEffect(() => {
   //   dispatch(getCartAction());
   // }, []);
+
   return (
     <Box>
       <Navbar />
+      <AppSnackbar />
       <LoadingBackDrop />
       <Container maxWidth="xl">
         <Routes>

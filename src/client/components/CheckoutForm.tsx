@@ -16,16 +16,18 @@ import { confirmPaymentAction } from "../../actions/orderActions";
 import { placeOrder } from "../../controllers/cart";
 import { validateAddress } from "../../controllers/user";
 import { isRecordValueEmpty } from "../../controllers/utils";
+import { PaymentError } from "../../model/PaymentError";
 import { resetCart } from "../../reducers/cartReducer";
 import {
   setBillingAddressError,
   setCheckoutPaymentError,
   setDeliveryAddressError,
   setNameOnCardError,
+  setPlaceOrderError,
   setStep,
 } from "../../reducers/checkoutReducer";
 import { RootState } from "../../reducers/combineReducer";
-import { setLoading } from "../../reducers/guiReducer";
+import { setLoading, setSnackbarState } from "../../reducers/guiReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { CheckoutAddress } from "./CheckoutAddress";
 import { CheckoutPayment } from "./CheckoutPayment";
@@ -39,7 +41,6 @@ export const CheckoutForm = () => {
   const checkoutInfo = useSelector((state: RootState) => state.checkout);
   const deliveryAddress = checkoutInfo.deliveryAddress;
   const billingAddress = checkoutInfo.billingAddress;
-  const isBillingSameAsDelivery = checkoutInfo.isBillingSameAsDelivery;
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>();
   const [createPaymentLoading, setCreatePaymentLoading] =
     useState<boolean>(false);
@@ -52,13 +53,14 @@ export const CheckoutForm = () => {
   const finalDeliveryAddress = checkoutInfo.isNewDeliveryAddress
     ? deliveryAddress
     : checkoutInfo.addresses[checkoutInfo.selectedDeliveryAddressIndex];
-  const finalBillingAddress = checkoutInfo.isNewBillingAddress
-    ? billingAddress
-    : !checkoutInfo.isNewBillingAddress && isBillingSameAsDelivery
+  const finalBillingAddress = checkoutInfo.isBillingSameAsDelivery
     ? finalDeliveryAddress
+    : checkoutInfo.isNewBillingAddress
+    ? billingAddress
     : checkoutInfo.addresses[checkoutInfo.selectedBillingAddressIndex];
 
   const handleStepChange = (step: number) => {
+    dispatch(setPlaceOrderError(false));
     dispatch(setCheckoutPaymentError(""));
     dispatch(setStep(step));
   };
@@ -87,6 +89,7 @@ export const CheckoutForm = () => {
           return stripe.confirmPayment({
             clientSecret: res.clientSecret,
             elements,
+
             confirmParams: {
               return_url: "http://localhost:3000/orders/complete",
             },
@@ -96,7 +99,10 @@ export const CheckoutForm = () => {
       })
       .then((res) => {
         if (res?.error) {
-          throw new Error();
+          throw new PaymentError(
+            res.error.message || "",
+            res.error.type === "card_error"
+          );
         }
         const paymentId = res?.paymentIntent?.id;
         return placeOrder(
@@ -109,7 +115,28 @@ export const CheckoutForm = () => {
         dispatch(resetCart());
         navigate(`/orders/complete?order=${res}`, { replace: true });
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        dispatch(setPlaceOrderError(true));
+        if (err instanceof PaymentError) {
+          dispatch(
+            setSnackbarState({
+              snackbarText: err.isCardError
+                ? `${err.message}. Please update your card info`
+                : "something went wrong. Please check your info and start the step over again",
+              showSnackbar: true,
+            })
+          );
+        } else {
+          dispatch(
+            setSnackbarState({
+              snackbarText:
+                "something went wrong. Please start the step over again",
+              showSnackbar: true,
+            })
+          );
+        }
+        console.log(err);
+      })
       .finally(() => dispatch(setLoading(false)));
   };
 
@@ -125,7 +152,10 @@ export const CheckoutForm = () => {
           dispatch(setDeliveryAddressError(error));
         }
       }
-      if (checkoutInfo.isNewBillingAddress) {
+      if (
+        !checkoutInfo.isBillingSameAsDelivery &&
+        checkoutInfo.isNewBillingAddress
+      ) {
         const error = validateAddress(checkoutInfo.billingAddress);
         isBillingEmpty = isRecordValueEmpty(error, ["id", "isDefault"]);
         if (!isBillingEmpty) {
@@ -147,6 +177,7 @@ export const CheckoutForm = () => {
           if (res.error) {
             throw res.error;
           } else {
+            setCreatePaymentLoading(true);
             console.log(finalBillingAddress);
             return stripe?.createPaymentMethod({
               elements,
@@ -168,7 +199,7 @@ export const CheckoutForm = () => {
         })
         .then((res) => {
           if (res!.error) {
-            throw res?.error; // Throw an error if there's a payment error.
+            throw res?.error;
           }
           console.log(res?.paymentMethod);
           setPaymentMethod(res?.paymentMethod);
@@ -177,7 +208,8 @@ export const CheckoutForm = () => {
         .catch((err) => {
           console.log(err);
           dispatch(setCheckoutPaymentError(err.message));
-        });
+        })
+        .finally(() => setCreatePaymentLoading(false));
     } else if (checkoutInfo.step === 2) {
       handlePlaceOrder();
     }
@@ -233,8 +265,9 @@ export const CheckoutForm = () => {
             <LoadingButton
               loading={createPaymentLoading}
               fullWidth={true}
-              disabled={!stripe || !elements}
+              disabled={!stripe || !elements || checkoutInfo.placeOrderError}
               onClick={handleStepButtonClick}
+              outlinedLoading={true}
               title={
                 checkoutInfo.step === 0
                   ? "Proceed to payment"

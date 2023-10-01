@@ -17,6 +17,9 @@ export const CheckoutSummary = ({
   const total = carts.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.product.price * currentValue.quantity;
   }, 0);
+  const placeOrderError = useSelector(
+    (state: RootState) => state.checkout.placeOrderError
+  );
   return (
     <Paper sx={{ mb: "32px" }}>
       <Box padding="16px 20px 8px">
@@ -52,7 +55,12 @@ export const CheckoutSummary = ({
       {step === 2 && (
         <Box padding=" 8px 20px 16px">
           {/* <Typography>Payment Details</Typography> */}
-          <Button variant="contained" fullWidth onClick={onPlaceOrder}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={onPlaceOrder}
+            disabled={placeOrderError}
+          >
             Place Order
           </Button>
         </Box>

@@ -15,7 +15,6 @@ const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 export const Checkout = () => {
   const [total, setTotal] = useState<number>(0);
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
-  const [emptyCart, setEmptyCart] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -24,21 +23,19 @@ export const Checkout = () => {
       .then((res) => {
         setTotal(res.total);
         if (res.carts.length === 0) {
-          navigate("/cart");
+          navigate("/cart", { replace: true });
+          throw new Error();
         }
-        setEmptyCart(res.carts.length === 0);
         return getUserAddresses();
       })
       .then((addresses) => dispatch(setAddresses(addresses)))
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch((err) => {})
       .finally(() => setFirstLoad(false));
   }, []);
 
   return (
     <AppBox>
-      {!firstLoad && !emptyCart && (
+      {!firstLoad && (
         <Elements
           stripe={stripePromise}
           options={{

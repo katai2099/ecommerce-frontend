@@ -8,6 +8,7 @@ import App from "./App";
 import "./index.css";
 import { CheckoutReduxState } from "./model/checkout";
 import { IMainState } from "./model/common";
+import { GuiReduxState } from "./model/gui";
 import { Filter } from "./model/product";
 import { setInitialState } from "./reducers/combineReducer";
 import { BASE_NAME, store } from "./store/configureStore";
@@ -31,7 +32,7 @@ window.onload = () => {
     const initialState: IMainState = JSON.parse(storedState);
     const updatedInitialState: IMainState = {
       ...initialState,
-      gui: { loading: false },
+      gui: new GuiReduxState(),
       productSettings: {
         ...initialState.productSettings,
         filter: new Filter(),

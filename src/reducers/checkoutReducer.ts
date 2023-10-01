@@ -68,7 +68,7 @@ const checkoutSlice = createSlice({
     setCheckoutPaymentError(state, action: PayloadAction<string>) {
       return { ...state, checkoutPaymentError: action.payload };
     },
-    setPlaceOrderError(state, action: PayloadAction<string>) {
+    setPlaceOrderError(state, action: PayloadAction<boolean>) {
       return { ...state, placeOrderError: action.payload };
     },
     resetCheckoutState() {

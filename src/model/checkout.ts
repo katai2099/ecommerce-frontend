@@ -17,7 +17,7 @@ export interface ICheckoutReduxState {
   isNewBillingAddress: boolean;
   firstLoad: boolean;
   checkoutPaymentError: string;
-  placeOrderError: string;
+  placeOrderError: boolean;
 }
 
 export class CheckoutReduxState implements ICheckoutReduxState {
@@ -34,10 +34,10 @@ export class CheckoutReduxState implements ICheckoutReduxState {
     public nameOnCard = "",
     public nameOnCardError = "",
     public addressBookDialogOpen = false,
-    public isNewDeliveryAddress = false,
-    public isNewBillingAddress = false,
+    public isNewDeliveryAddress = true,
+    public isNewBillingAddress = true,
     public firstLoad = true,
     public checkoutPaymentError = "",
-    public placeOrderError = ""
+    public placeOrderError = false
   ) {}
 }

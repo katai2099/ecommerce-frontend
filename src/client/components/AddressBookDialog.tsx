@@ -8,6 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { grey } from "@mui/material/colors";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { IAddress } from "../../model/user";
 import {
@@ -43,9 +44,19 @@ const AddressSelect = ({
       dispatch(setIsNewBillingAddress(false));
     }
   };
+
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (ref && idx === selectedIndex) {
+      (ref.current! as any).scrollIntoView({ behavior: "smooth" });
+    }
+  }, [ref]);
+
   return (
     <Paper>
       <Box
+        ref={ref}
         display="flex"
         alignItems="flex-start"
         padding="8px 4px"
