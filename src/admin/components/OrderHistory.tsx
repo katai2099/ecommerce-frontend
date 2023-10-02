@@ -1,11 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  ArrowRight,
-  ArrowRightAlt,
-  ArrowRightAltOutlined,
-  ChevronRight,
-  East,
-} from "@mui/icons-material";
+import { East } from "@mui/icons-material";
 import { Box, Chip, Grid, Paper, Typography } from "@mui/material";
 
 const OrderPaper = styled(Paper)(({ theme }) => ({

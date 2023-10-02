@@ -11,5 +11,5 @@ export const fetchProductSetttingsCategoriesAction = createAsyncThunk<
       thunkApi.dispatch(setCategories(res));
       return Promise.resolve(res);
     })
-    .catch((err) => Promise.reject(err));
+    .catch((err) => thunkApi.rejectWithValue(err));
 });

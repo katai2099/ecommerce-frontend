@@ -1,5 +1,10 @@
 import { IIdName } from "./common";
 
+export enum Gender {
+  MEN = "MEN",
+  WOMEN = "WOMEN",
+}
+
 export class Product implements IProduct {
   constructor(
     public id: number = 0,
@@ -79,11 +84,6 @@ export class Filter implements IProductFilter {
     public category: string[] = [],
     public gender: Gender[] = []
   ) {}
-}
-
-export enum Gender {
-  MEN = "MEN",
-  WOMEN = "WOMEN",
 }
 
 class Category implements ICategory {

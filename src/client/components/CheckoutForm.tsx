@@ -12,13 +12,10 @@ import { PaymentMethod } from "@stripe/stripe-js";
 import { MouseEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { stockCheckAction } from "../../actions/cartActions";
-import { confirmPaymentAction } from "../../actions/orderActions";
-import { placeOrder } from "../../controllers/cart";
+import { confirmPayment, placeOrder, stockCheck } from "../../controllers/cart";
 import { validateAddress } from "../../controllers/user";
 import { isRecordValueEmpty, showSnackBar } from "../../controllers/utils";
 import { OutOfStockError, PaymentError } from "../../model/PaymentError";
-import { resetCart } from "../../reducers/cartReducer";
 import {
   setBillingAddressError,
   setCheckoutPaymentError,
@@ -78,16 +75,12 @@ export const CheckoutForm = () => {
 
     dispatch(setLoading(true));
 
-    dispatch(stockCheckAction())
-      .unwrap()
+    stockCheck()
       .then((stockCheckRes) => {
         if (stockCheckRes.length > 0) {
           throw new OutOfStockError();
         }
-        return dispatch(
-          confirmPaymentAction({ paymentMethodId: paymentMethod!.id })
-        )
-          .unwrap()
+        return confirmPayment(paymentMethod!.id)
           .then((res) => {
             if (res.status === "requires_action") {
               return stripe.handleNextAction({
@@ -119,7 +112,6 @@ export const CheckoutForm = () => {
             );
           })
           .then((res) => {
-            dispatch(resetCart());
             navigate(`/orders/complete?order=${res}`, { replace: true });
           });
       })

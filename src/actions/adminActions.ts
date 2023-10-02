@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { getRequest } from "../controllers/clientRequest";
 import { IIdName } from "../model/common";
 import { setAdminCategories, setAdminSizes } from "../reducers/adminReducer";
-import { getRequest } from "../controllers/clientRequest";
 
 export const fetchAdminSettingsAction = createAsyncThunk(
   "admin/settings",
@@ -11,7 +11,7 @@ export const fetchAdminSettingsAction = createAsyncThunk(
       thunkApi.dispatch(fetchAdminSizesAction()),
     ])
       .then(() => Promise.resolve())
-      .catch((err) => Promise.reject(err));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -23,7 +23,7 @@ const fetchAdminCategoriesAction = createAsyncThunk<IIdName[]>(
         thunkApi.dispatch(setAdminCategories(res));
         return Promise.resolve(res);
       })
-      .catch((err) => Promise.reject(err));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -41,7 +41,7 @@ const fetchAdminSizesAction = createAsyncThunk<IIdName[]>(
         thunkApi.dispatch(setAdminSizes(res));
         return Promise.resolve(res);
       })
-      .catch((err) => Promise.reject(err));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 

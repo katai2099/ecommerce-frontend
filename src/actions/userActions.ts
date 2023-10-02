@@ -1,4 +1,4 @@
-import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   deleteRequest,
   getRequest,
@@ -22,12 +22,13 @@ export const updatePasswordAction = createAsyncThunk<string, string>(
   "update_password",
   (password, thunkApi) => {
     thunkApi.dispatch(setLoading(true));
+    //TODO: encode should go to controller
     const encodedUpdatePasswordRequest: IUpdatePasswordRequest = {
       password: btoa(password),
     };
     return updatePasswordWorker(encodedUpdatePasswordRequest)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
+      .catch((err) => thunkApi.rejectWithValue(err))
       .finally(() => thunkApi.dispatch(setLoading(false)));
   }
 );
@@ -48,7 +49,7 @@ export const updateUserDetailsAction = createAsyncThunk<
       thunkApi.dispatch(updateUserDetails(user));
       return Promise.resolve(res);
     })
-    .catch((err) => Promise.reject(err))
+    .catch((err) => thunkApi.rejectWithValue(err))
     .finally(() => {
       thunkApi.dispatch(setLoading(false));
     });
@@ -62,10 +63,10 @@ function updateUserDetailsWorker(userDetails: IUserDetailsRequest) {
 
 export const getAddressesAction = createAsyncThunk<IAddress[]>(
   "get_address",
-  () => {
+  (_, thunkApi) => {
     return getAddressesWorker()
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -81,7 +82,7 @@ export const addAddressAction = createAsyncThunk<number, IAddress>(
     thunkApi.dispatch(setLoading(true));
     return addAddressWorker(address)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
+      .catch((err) => thunkApi.rejectWithValue(err))
       .finally(() => thunkApi.dispatch(setLoading(false)));
   }
 );
@@ -96,14 +97,14 @@ export const setDefaultAddressAction = createAsyncThunk<string, number>(
   "set_default_address",
   (addressId, thunkApi) => {
     thunkApi.dispatch(setLoading(true));
-    return setDefaultAddress(addressId)
+    return setDefaultAddressWorker(addressId)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
+      .catch((err) => thunkApi.rejectWithValue(err))
       .finally(() => thunkApi.dispatch(setLoading(false)));
   }
 );
 
-function setDefaultAddress(addressId: number): Promise<string> {
+function setDefaultAddressWorker(addressId: number): Promise<string> {
   return getRequest<string>(`/users/address/set-default/${addressId}`, {
     auth: true,
   })
@@ -117,7 +118,7 @@ export const updateAddressAction = createAsyncThunk<string, IAddress>(
     thunkApi.dispatch(setLoading(true));
     return updateAddressWorker(address)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
+      .catch((err) => thunkApi.rejectWithValue(err))
       .finally(() => thunkApi.dispatch(setLoading(false)));
   }
 );
@@ -136,7 +137,7 @@ export const deleteAddressAction = createAsyncThunk<string, number>(
     thunkApi.dispatch(setLoading(true));
     return deleteAddressWorker(addressId)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
+      .catch((err) => thunkApi.rejectWithValue(err))
       .finally(() => thunkApi.dispatch(setLoading(false)));
   }
 );
@@ -158,11 +159,17 @@ export const loginAction = createAsyncThunk<
     })
     .catch((error) => {
       console.log(error);
-      return Promise.reject(error);
+      return thunkApi.rejectWithValue(error);
     });
 });
 
-export const logout = createAction("auth/logout");
+export function loginWorker(
+  loginData: LoginPostData
+): Promise<IAuthenticationResponse> {
+  return postRequest<IAuthenticationResponse>("/auth/login", loginData)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
 
 export const registerAction = createAsyncThunk<
   IAuthenticationResponse,
@@ -175,17 +182,9 @@ export const registerAction = createAsyncThunk<
     })
     .catch((error) => {
       console.log(error);
-      return Promise.reject(error);
+      return thunkApi.rejectWithValue(error);
     });
 });
-
-export function loginWorker(
-  loginData: LoginPostData
-): Promise<IAuthenticationResponse> {
-  return postRequest<IAuthenticationResponse>("/auth/login", loginData)
-    .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err));
-}
 
 export function registerWorker(
   signUpData: SignUpPostData

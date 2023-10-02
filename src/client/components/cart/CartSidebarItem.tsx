@@ -2,13 +2,9 @@ import { Add, CloseOutlined, Remove } from "@mui/icons-material";
 import { Box, IconButton, Typography, styled } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { updateCartAction } from "../../../actions/cartActions";
+import { removeItemFromCart, updateCart } from "../../../controllers/cart";
 import { formatPrice } from "../../../controllers/utils";
-import {
-  setIsUpdate,
-  setOpen,
-  updateCarts,
-} from "../../../reducers/cartReducer";
+import { setOpen } from "../../../reducers/cartReducer";
 import { RootState } from "../../../reducers/combineReducer";
 import { useAppDispatch } from "../../../store/configureStore";
 import { CartItemDetailProps } from "./CartItemDetail";
@@ -28,33 +24,17 @@ export const CartSidebarItem = ({
   const dispatch = useAppDispatch();
 
   const handleRemoveCartItem = () => {
-    dispatch(setIsUpdate(true));
-    dispatch(updateCartAction({ quantity: 0, cartItemId: cartItem.id }))
-      .unwrap()
-      .then(() => {
-        const updatedCarts = carts.filter((_, idx) => idx !== index);
-        dispatch(updateCarts(updatedCarts));
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        dispatch(setIsUpdate(false));
-      });
+    removeItemFromCart(cartItem.id, carts, index, true);
   };
 
   const handleUpdateCartItemQuantity = (quantityChange: number) => {
-    const quantity = cartItem.quantity + quantityChange;
-    dispatch(setIsUpdate(true));
-    dispatch(updateCartAction({ quantity, cartItemId: cartItem.id }))
-      .then(() => {
-        const updatedCarts = carts.map((cartItem, idx) =>
-          idx === index ? { ...cartItem, quantity: quantity } : cartItem
-        );
-        dispatch(updateCarts(updatedCarts));
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        dispatch(setIsUpdate(false));
-      });
+    updateCart(
+      cartItem.quantity + quantityChange,
+      cartItem.id,
+      carts,
+      index,
+      true
+    );
   };
 
   const handleItemClick = () => {
@@ -127,6 +107,12 @@ export const CartSidebarItem = ({
               onClick={() => {
                 handleUpdateCartItemQuantity(1);
               }}
+              disabled={
+                cartItem.product.productSizes[0]?.stockCount
+                  ? cartItem.quantity ===
+                    cartItem.product.productSizes[0].stockCount
+                  : false
+              }
             >
               <Add />
             </IconButton>

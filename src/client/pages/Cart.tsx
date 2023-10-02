@@ -1,9 +1,9 @@
 import { ShoppingBagOutlined } from "@mui/icons-material";
 import { Box, Divider, Grid, Paper, Typography } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { stockCheck } from "../../controllers/cart";
+import { getCart, stockCheck } from "../../controllers/cart";
 import { formatPrice, showSnackBar } from "../../controllers/utils";
 import { IStockCountCheck } from "../../model/cart";
 import { RootState } from "../../reducers/combineReducer";
@@ -22,6 +22,11 @@ export const Cart = () => {
     IStockCountCheck[]
   >([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getCart();
+  }, []);
+
   function handleProceedClick(event: MouseEvent<HTMLButtonElement>): void {
     setCheckStock(true);
     stockCheck()
@@ -77,16 +82,23 @@ export const Cart = () => {
 
         <Grid item md={4}>
           <Paper sx={{ width: "100%", padding: "32px" }}>
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              mb="32px"
-            >
-              <Typography variant="h3">Total</Typography>
-              <Typography fontWeight="bold">
-                {formatPrice(totalPrice)}
-              </Typography>
+            <Box padding=" 8px 20px 8px">
+              <Box display="flex" justifyContent="space-between">
+                <Typography>Subtotal:</Typography>
+                <Typography>{formatPrice(totalPrice)}</Typography>
+              </Box>
+              <Box display="flex" justifyContent="space-between">
+                <Typography>Shipping</Typography>
+                <Typography>-</Typography>
+              </Box>
+              <Box display="flex" justifyContent="space-between">
+                <Typography fontWeight="bold" fontSize="16px">
+                  Total
+                </Typography>
+                <Typography fontWeight="bold" fontSize="16px">
+                  {formatPrice(totalPrice)}
+                </Typography>
+              </Box>
             </Box>
             <Divider sx={{ mb: "32px" }} />
             <LoadingButton

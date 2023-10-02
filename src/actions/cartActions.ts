@@ -13,6 +13,7 @@ import {
   IStockCountCheck,
   IUpdateCartRequest,
 } from "../model/cart";
+import { IConfirmPayment, INextActionResponse } from "../model/order";
 import { setLoading } from "../reducers/guiReducer";
 
 export const getCartAction = createAsyncThunk<ICartItem[]>(
@@ -99,6 +100,27 @@ function checkoutWorker() {
   return postRequest<ICheckoutResponse>("/carts/checkout", {}, { auth: true })
     .then((res) => Promise.resolve(res))
     .catch((err: AxiosError) => Promise.reject(err));
+}
+
+export const confirmPaymentAction = createAsyncThunk<
+  INextActionResponse,
+  IConfirmPayment
+>("confirm_payment", (data, thunkApi) => {
+  return confirmIntentWorker(data)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function confirmIntentWorker(confirmPaymentRequest: IConfirmPayment) {
+  return postRequest<INextActionResponse>(
+    "/carts/confirm-intent",
+    confirmPaymentRequest,
+    {
+      auth: true,
+    }
+  )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
 }
 
 export const placeOrderAction = createAsyncThunk<string, IPlaceOrderRequest>(

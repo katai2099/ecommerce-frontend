@@ -72,9 +72,7 @@ export function setProductSizes(
     const productSize: IProductSize = { id: 0, stockCount: 0, size: pz };
     sizes.push(productSize);
   });
-  store.dispatch(
-    setEditedProduct({ ...editedProduct, ["productSizes"]: sizes })
-  );
+  store.dispatch(setEditedProduct({ ...editedProduct, productSizes: sizes }));
 }
 
 export function processProductFilter(

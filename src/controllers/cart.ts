@@ -1,10 +1,91 @@
-import { placeOrderAction, stockCheckAction } from "../actions/cartActions";
-import { IPlaceOrderRequest, IStockCountCheck } from "../model/cart";
+import {
+  confirmPaymentAction,
+  getCartAction,
+  placeOrderAction,
+  stockCheckAction,
+  updateCartAction,
+} from "../actions/cartActions";
+import { ICartItem, IPlaceOrderRequest, IStockCountCheck } from "../model/cart";
 import { IAddress } from "../model/user";
 import { store } from "../store/configureStore";
 
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { checkoutAction } from "../actions/cartActions";
+import { resetCart, setIsUpdate, updateCarts } from "../reducers/cartReducer";
+import { setLoading } from "../reducers/guiReducer";
+import { showSnackBar } from "./utils";
+
+export function getCart() {
+  store.dispatch(setLoading(true));
+  store
+    .dispatch(getCartAction())
+    .finally(() => store.dispatch(setLoading(false)));
+}
+
+export function removeItemFromCart(
+  cartItemId: number,
+  currentCart: ICartItem[],
+  cartItemIndex: number,
+  sideBarUpdate: boolean = false
+) {
+  sideBarUpdate
+    ? store.dispatch(setIsUpdate(true))
+    : store.dispatch(setLoading(true));
+  store
+    .dispatch(updateCartAction({ quantity: 0, cartItemId: cartItemId }))
+    .unwrap()
+    .then(() => {
+      const updatedCarts = currentCart.filter(
+        (_, idx) => idx !== cartItemIndex
+      );
+      store.dispatch(updateCarts(updatedCarts));
+    })
+    .catch((err) => {
+      if (axios.isAxiosError(err) && err.response?.status === 400) {
+        showSnackBar(err.response.data.message);
+      } else {
+        showSnackBar("something went wrong");
+      }
+    })
+    .finally(() => {
+      sideBarUpdate
+        ? store.dispatch(setIsUpdate(false))
+        : store.dispatch(setLoading(false));
+    });
+}
+
+export function updateCart(
+  quantity: number,
+  cartItemId: number,
+  currentCart: ICartItem[],
+  cartItemIndex: number,
+  sideBarUpdate: boolean = false
+) {
+  sideBarUpdate
+    ? store.dispatch(setIsUpdate(true))
+    : store.dispatch(setLoading(true));
+  store
+    .dispatch(updateCartAction({ quantity, cartItemId: cartItemId }))
+    .unwrap()
+    .then(() => {
+      const updatedCarts = currentCart.map((cartItem, idx) =>
+        idx === cartItemIndex ? { ...cartItem, quantity: quantity } : cartItem
+      );
+      store.dispatch(updateCarts(updatedCarts));
+    })
+    .catch((err) => {
+      if (axios.isAxiosError(err) && err.response?.status === 400) {
+        showSnackBar(err.response.data.message);
+      } else {
+        showSnackBar("something went wrong");
+      }
+    })
+    .finally(() => {
+      sideBarUpdate
+        ? store.dispatch(setIsUpdate(false))
+        : store.dispatch(setLoading(false));
+    });
+}
 
 export function getCheckoutData() {
   return store
@@ -27,13 +108,24 @@ export function placeOrder(
   return store
     .dispatch(placeOrderAction(placeOrderRequest))
     .unwrap()
-    .then((res) => Promise.resolve(res))
+    .then((res) => {
+      store.dispatch(resetCart());
+      return Promise.resolve(res);
+    })
     .catch((err) => Promise.reject(err));
 }
 
 export function stockCheck(): Promise<IStockCountCheck[]> {
   return store
     .dispatch(stockCheckAction())
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function confirmPayment(paymentMethodId: string) {
+  return store
+    .dispatch(confirmPaymentAction({ paymentMethodId: paymentMethodId }))
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));

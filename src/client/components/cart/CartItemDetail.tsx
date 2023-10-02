@@ -2,13 +2,10 @@ import { Add, CloseOutlined, Remove } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { updateCartAction } from "../../../actions/cartActions";
+import { removeItemFromCart, updateCart } from "../../../controllers/cart";
 import { formatPrice } from "../../../controllers/utils";
 import { ICartItem, IStockCountCheck } from "../../../model/cart";
-import { updateCarts } from "../../../reducers/cartReducer";
 import { RootState } from "../../../reducers/combineReducer";
-import { setLoading } from "../../../reducers/guiReducer";
-import { useAppDispatch } from "../../../store/configureStore";
 
 export interface CartItemDetailProps {
   cartItem: ICartItem;
@@ -22,37 +19,12 @@ export const CartItemDetail = ({
   stockCheck,
 }: CartItemDetailProps) => {
   const carts = useSelector((state: RootState) => state.cart.carts);
-  const dispatch = useAppDispatch();
-
   const handleRemoveCartItem = () => {
-    dispatch(setLoading(true));
-    dispatch(updateCartAction({ quantity: 0, cartItemId: cartItem.id }))
-      .unwrap()
-      .then(() => {
-        const updatedCarts = carts.filter((_, idx) => idx !== index);
-        dispatch(updateCarts(updatedCarts));
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
+    removeItemFromCart(cartItem.id, carts, index);
   };
 
   const handleUpdateCartItemQuantity = (quantityChange: number) => {
-    const quantity = cartItem.quantity + quantityChange;
-    dispatch(setLoading(true));
-    dispatch(updateCartAction({ quantity, cartItemId: cartItem.id }))
-      .unwrap()
-      .then(() => {
-        const updatedCarts = carts.map((cartItem, idx) =>
-          idx === index ? { ...cartItem, quantity: quantity } : cartItem
-        );
-        dispatch(updateCarts(updatedCarts));
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
+    updateCart(cartItem.quantity + quantityChange, cartItem.id, carts, index);
   };
 
   const badStockIndex = stockCheck.findIndex(
@@ -123,6 +95,12 @@ export const CartItemDetail = ({
               <Typography>{cartItem.quantity}</Typography>
               <IconButton
                 color="primary"
+                disabled={
+                  cartItem.product.productSizes[0]?.stockCount
+                    ? cartItem.quantity ===
+                      cartItem.product.productSizes[0].stockCount
+                    : false
+                }
                 onClick={() => {
                   handleUpdateCartItemQuantity(1);
                 }}

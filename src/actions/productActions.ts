@@ -25,7 +25,7 @@ export const getProductsAction = createAsyncThunk<
     thunkApi.dispatch(setLoading(true));
     return fetchProductsWorker(filter)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
+      .catch((err) => thunkApi.rejectWithValue(err))
       .finally(() => {
         thunkApi.dispatch(setLoading(false));
       });
@@ -54,7 +54,7 @@ export const getProductAction = createAsyncThunk<IProduct, string>(
     thunkApi.dispatch(setLoading(true));
     return getProductWorker(productId)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err))
+      .catch((err) => thunkApi.rejectWithValue(err))
       .finally(() => {
         thunkApi.dispatch(setLoading(false));
       });
@@ -72,7 +72,7 @@ export const addProductAction = createAsyncThunk<IProduct, INewProductRequest>(
   (product, thunkApi) => {
     return addProductWorker(product)
       .then((res) => Promise.resolve(res))
-      .catch((err) => Promise.reject(err));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -88,10 +88,10 @@ function addProductWorker(product: INewProductRequest) {
 export const getProductReviewsAction = createAsyncThunk<
   IProductReview,
   { productId: number; page: number }
->("get_product_review", (data) => {
+>("get_product_review", (data, thunkApi) => {
   return getProductReviewsWorker(data.productId, data.page)
     .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err));
+    .catch((err) => thunkApi.rejectWithValue(err));
 });
 
 function getProductReviewsWorker(productId: number, page: number = 1) {
@@ -112,7 +112,7 @@ export const submitReviewAction = createAsyncThunk<
   thunkApi.dispatch(setLoading(true));
   return submitReviewWorker(data.productId, data.newReview)
     .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err))
+    .catch((err) => thunkApi.rejectWithValue(err))
     .finally(() => {
       thunkApi.dispatch(setLoading(false));
     });
