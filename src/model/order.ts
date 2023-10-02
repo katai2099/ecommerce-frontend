@@ -1,6 +1,6 @@
 import { Address, IAddress } from "./user";
 
-interface IOrder {
+export interface IOrder {
   id: string;
   status: string;
   orderDate: string;
@@ -60,4 +60,9 @@ export interface IConfirmPayment {
 export interface INextActionResponse {
   status: string;
   clientSecret: string;
+}
+
+export interface IOrderFilterParams {
+  status?: string;
+  page?: number;
 }

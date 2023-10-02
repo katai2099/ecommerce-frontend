@@ -5,6 +5,7 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { OrderHistory } from "../../admin/components/OrderHistory";
 import { AppBox } from "../../styles/common";
 import { AddressBook } from "../components/AddressBook";
+import { OrderDetailComp } from "../components/OrderDetailComp";
 import { UserDetail } from "../components/UserDetail";
 
 const FlexBox = styled(Box)`
@@ -57,10 +58,6 @@ export const Account = () => {
                 <ChevronRight />
               </FlexBox>
             </Link>
-            <FlexBox mb="8px">
-              <Typography>Payment methods</Typography>
-              <ChevronRight />
-            </FlexBox>
           </AccountPaper>
           <AccountPaper elevation={3}>
             <FlexBox>
@@ -72,7 +69,10 @@ export const Account = () => {
         <Grid item lg={9}>
           <Routes>
             <Route path="/" element={<OrderHistory />} />
-            <Route path="/orders" element={<OrderHistory />} />
+            <Route path="/orders">
+              <Route path="/orders/:id" element={<OrderDetailComp />} />
+              <Route path="" element={<OrderHistory />} />
+            </Route>
             <Route path="/address" element={<AddressBook />} />
             <Route path="/details" element={<UserDetail />} />
           </Routes>

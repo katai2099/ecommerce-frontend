@@ -85,10 +85,12 @@ export const UserDetail = () => {
   };
 
   return (
-    <Box width="100%">
+    <Paper sx={{ padding: "16px 32px 32px" }}>
+      <Typography variant="h3" mb="24px">
+        Details
+      </Typography>
       <Paper sx={{ padding: "16px 32px 32px" }}>
         <Typography
-          variant="h3"
           fontSize="24px"
           fontWeight="bold"
           letterSpacing="-0.5px"
@@ -129,7 +131,6 @@ export const UserDetail = () => {
       </Paper>
       <Paper sx={{ mt: "36px", padding: "16px 32px 32px" }}>
         <Typography
-          variant="h3"
           fontSize="24px"
           fontWeight="bold"
           letterSpacing="-0.5px"
@@ -199,6 +200,6 @@ export const UserDetail = () => {
           </form>
         </Box>
       </Paper>
-    </Box>
+    </Paper>
   );
 };

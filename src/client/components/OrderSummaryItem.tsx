@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { formatPrice } from "../../controllers/utils";
 import { IOrderSummary } from "../../model/order";
 
-interface OrderSummaryItemProps {
+export interface OrderSummaryItemProps {
   orderSummary: IOrderSummary;
 }
 

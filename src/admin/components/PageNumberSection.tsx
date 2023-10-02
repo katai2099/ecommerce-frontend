@@ -7,7 +7,7 @@ interface PageNumberSectionProps {
   totalItem: number;
   itemPerPage: number;
   page: number;
-  itemName: string;
+  itemName?: string;
   showbar?: boolean;
   buttonTitle?: string;
   handleLoadMoreClick: () => void;
@@ -20,7 +20,7 @@ export const PageNumberSection = ({
   itemPerPage,
   page,
   firstLoad,
-  itemName,
+  itemName = "",
   showbar = true,
   buttonTitle = "Load more",
   handleLoadMoreClick,

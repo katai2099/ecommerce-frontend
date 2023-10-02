@@ -1,26 +1,25 @@
 import styled from "@emotion/styled";
 import { CheckCircleOutline } from "@mui/icons-material";
-import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getOrderAction } from "../../actions/orderActions";
-import { formatPrice } from "../../controllers/utils";
+import { getOrderDetail } from "../../controllers/order";
 import { IOrderDetail, OrderDetail } from "../../model/order";
 import { resetCheckoutState } from "../../reducers/checkoutReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { AppBox } from "../../styles/common";
-import { AddressDetails } from "../components/AddressDetails";
-import { OrderSummaryItem } from "../components/OrderSummaryItem";
+import { OrderReview } from "../components/OrderReview";
 
 function useQuery() {
   const { search } = useLocation();
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
-const SubHeader = styled(Typography)`
-  font-weight: 500;
-  font-size: 16px;
-`;
+export const SubHeader = styled(Typography)(({ theme }) => ({
+  ...theme,
+  fontWeight: "500",
+  fontSize: "16px",
+}));
 
 export const OrderSuccess = () => {
   let query = useQuery();
@@ -32,8 +31,7 @@ export const OrderSuccess = () => {
   useEffect(() => {
     const orderId = query.get("order");
     dispatch(resetCheckoutState());
-    dispatch(getOrderAction(orderId!))
-      .unwrap()
+    getOrderDetail(orderId!)
       .then((res) => {
         setOrderDetail(res);
         console.log(res);
@@ -57,89 +55,7 @@ export const OrderSuccess = () => {
         </Typography>
       </Box>
       <Box mt="48px">
-        <Typography variant="h3" fontWeight="bold">
-          Order Details - {orderDetail.order.id}
-        </Typography>
-        <Grid container mt="20px">
-          <Grid item md={5}>
-            <Box mb="16px">
-              <SubHeader>Fullname</SubHeader>
-              <Typography color="GrayText">{`${orderDetail.user.firstname} ${orderDetail.user.lastname}`}</Typography>
-            </Box>
-            <Box mb="16px">
-              <SubHeader>Email</SubHeader>
-              <Typography color="GrayText">{orderDetail.user.email}</Typography>
-            </Box>
-            <SubHeader>Order Date</SubHeader>
-            <Typography color="GrayText">
-              {orderDetail.order.orderDate}
-            </Typography>
-          </Grid>
-          <Grid item md={7}>
-            <Grid container>
-              <Grid item md={4}>
-                <Box mb="8px">
-                  <SubHeader>Delivery Address</SubHeader>
-                  <AddressDetails address={orderDetail.order.deliveryAddress} />
-                </Box>
-              </Grid>
-              <Grid item md={8}>
-                <Box>
-                  <SubHeader>Billing Address</SubHeader>
-                  <AddressDetails address={orderDetail.order.billingAddress} />
-                </Box>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box mt="48px">
-        <Typography variant="h3" mb="20px" fontWeight="bold">
-          Order Summary
-        </Typography>
-        <Divider sx={{ mb: "16px" }} />
-        {orderDetail.order.orderDetails.map((order, idx) => (
-          <OrderSummaryItem orderSummary={order} key={idx} />
-        ))}
-        <Divider />
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="flex-end"
-          alignItems="flex-end"
-          mt="16px"
-        >
-          <Box width="30%">
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography>Sub total: </Typography>
-              <Typography>
-                {formatPrice(orderDetail.order.totalPrice)}
-              </Typography>
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography>Delivery: </Typography>
-              <Typography>-</Typography>
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography>Total: </Typography>
-              <Typography>
-                {formatPrice(orderDetail.order.totalPrice)}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
+        <OrderReview orderDetail={orderDetail} />
       </Box>
       <Box mt="48px">
         <Button

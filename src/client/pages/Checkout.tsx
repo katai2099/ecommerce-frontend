@@ -9,6 +9,7 @@ import { getUserAddresses } from "../../controllers/user";
 import { showSnackBar } from "../../controllers/utils";
 import { EmptyCartError } from "../../model/PaymentError";
 import { setAddresses } from "../../reducers/checkoutReducer";
+import { setLoading } from "../../reducers/guiReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { AppBox } from "../../styles/common";
 import {
@@ -27,6 +28,7 @@ export const Checkout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    dispatch(setLoading(true));
     getCheckoutData()
       .then((res) => {
         setTotal(res.total);
@@ -44,7 +46,10 @@ export const Checkout = () => {
           navigate("/cart", { replace: true });
         }
       })
-      .finally(() => setFirstLoad(false));
+      .finally(() => {
+        dispatch(setLoading(false));
+        setFirstLoad(false);
+      });
   }, []);
 
   return (
@@ -54,7 +59,7 @@ export const Checkout = () => {
           stripe={stripePromise}
           options={{
             mode: "payment",
-            amount: total,
+            amount: total * 100,
             currency: "eur",
             paymentMethodCreation: "manual",
           }}
