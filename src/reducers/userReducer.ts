@@ -25,6 +25,7 @@ export const userSlice = createSlice({
         return {
           ...state,
           ...userInfo,
+          loggedIn: true,
         };
       })
       .addCase(registerAction.fulfilled, (state, action) => {

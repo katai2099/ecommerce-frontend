@@ -42,3 +42,11 @@ code {
 .nav-item.selected{
   text-decoration: underline;
 }
+
+.popover{
+  pointer-events: none;
+}
+
+.popover-content{
+  pointer-events: auto;
+}

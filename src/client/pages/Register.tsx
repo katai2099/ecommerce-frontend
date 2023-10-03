@@ -11,10 +11,11 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { Password } from "../components/Password";
 import { Link } from "react-router-dom";
+import { Password } from "../components/Password";
+import { Navbar } from "../components/navbar/Navbar";
 
-export const SignUp = () => {
+export const Register = () => {
   return (
     <Box
       sx={{
@@ -25,6 +26,7 @@ export const SignUp = () => {
         minHeight: "100vh",
       }}
     >
+      <Navbar />
       <Paper
         elevation={3}
         sx={{

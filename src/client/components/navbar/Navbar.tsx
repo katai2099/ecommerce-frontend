@@ -1,5 +1,4 @@
 import {
-  PersonOutline,
   SearchOutlined,
   SearchRounded,
   ShoppingBagOutlined,
@@ -23,8 +22,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setOpen } from "../../../reducers/cartReducer";
 import { RootState } from "../../../reducers/combineReducer";
 import { useAppDispatch } from "../../../store/configureStore";
+import { PersonMenu } from "../PersonMenu";
 import { CartSidebar } from "../cart/CartSidebar";
-import { LoginDialog } from "../login/LoginDialog";
 
 export const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
@@ -44,13 +43,14 @@ export const Navbar = () => {
     setSearchValue(filter.q ? filter.q : "");
   }, [filter.q]);
 
-  const handleProfileButtonClick = () => {
-    setOpenLoginModal(!openLoginModal);
-  };
-
   const handleToggleCartDrawer = (open: boolean) => {
     dispatch(setOpen(open));
   };
+
+  const permitPath =
+    !location.pathname.includes("checkout") &&
+    !location.pathname.includes("login") &&
+    !location.pathname.includes("register");
 
   return (
     <AppBar position="fixed" sx={{ bgcolor: "rgba(255,255,255,0.95)" }}>
@@ -79,7 +79,7 @@ export const Navbar = () => {
               >
                 ECOMMERCE
               </Typography>
-              {!location.pathname.includes("checkout") && (
+              {permitPath && (
                 <>
                   <Link className="nav-item" to="/men">
                     <Typography color="primary">Men</Typography>
@@ -90,7 +90,7 @@ export const Navbar = () => {
                 </>
               )}
             </Stack>
-            {!location.pathname.includes("checkout") && (
+            {permitPath && (
               <>
                 <Stack flex="1 1 0">
                   <Box display="flex" alignItems="center" padding="8px 48px">
@@ -123,9 +123,7 @@ export const Navbar = () => {
                   <IconButton sx={{ display: { sm: "flex", md: "none" } }}>
                     <SearchOutlined />
                   </IconButton>
-                  <IconButton onClick={handleProfileButtonClick}>
-                    <PersonOutline />
-                  </IconButton>
+                  <PersonMenu />
                   <IconButton
                     onClick={() => {
                       handleToggleCartDrawer(true);
@@ -139,11 +137,6 @@ export const Navbar = () => {
               </>
             )}
           </Stack>
-
-          <LoginDialog
-            onClose={handleProfileButtonClick}
-            open={openLoginModal}
-          />
           <CartSidebar
             open={cart.open}
             toggleDrawer={handleToggleCartDrawer}

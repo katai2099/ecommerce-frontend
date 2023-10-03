@@ -89,6 +89,11 @@ const OrderItem = ({ order }: OrderItemProps) => {
                   ? "warning"
                   : "success"
               }
+              sx={{
+                ...(order.status === "PROCESSING" && {
+                  bgcolor: "#B2AA8F",
+                }),
+              }}
             />
           </Box>
           <Typography className="flex-grow">
