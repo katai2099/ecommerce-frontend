@@ -48,11 +48,11 @@ export const PersonMenu = () => {
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
-        onMouseEnter={handleClick}
+        onClick={handleClick}
         onMouseLeave={handleClose}
-        onClick={() => {
-          navigate("/login");
-        }}
+        // onClick={() => {
+        //   navigate("/login");
+        // }}
       >
         <PersonOutline />
       </IconButton>
@@ -101,6 +101,7 @@ export const PersonMenu = () => {
                 sx={{ display: "flex", justifyContent: "space-between" }}
                 onClick={() => {
                   navigate("/account/orders");
+                  setAnchorEl(null);
                 }}
               >
                 Orders
@@ -112,6 +113,7 @@ export const PersonMenu = () => {
                 sx={{ display: "flex", justifyContent: "space-between" }}
                 onClick={() => {
                   navigate("/account/details");
+                  setAnchorEl(null);
                 }}
               >
                 Manage Account
@@ -123,6 +125,7 @@ export const PersonMenu = () => {
                 sx={{ display: "flex", justifyContent: "space-between" }}
                 onClick={() => {
                   navigate("/login");
+                  setAnchorEl(null);
                 }}
               >
                 Log out

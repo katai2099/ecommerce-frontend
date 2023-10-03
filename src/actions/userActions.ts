@@ -157,10 +157,7 @@ export const loginAction = createAsyncThunk<
       window.localStorage.setItem("jwt", res.token);
       return Promise.resolve(res);
     })
-    .catch((error) => {
-      console.log(error);
-      return thunkApi.rejectWithValue(error);
-    });
+    .catch((error) => thunkApi.rejectWithValue(error));
 });
 
 export function loginWorker(

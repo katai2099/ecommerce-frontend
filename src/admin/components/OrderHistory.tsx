@@ -9,6 +9,7 @@ import {
   Chip,
   Paper,
   Typography,
+  colors,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -44,14 +45,26 @@ const PurchasedItem = ({ orderSummary }: OrderSummaryItemProps) => {
           src={orderSummary.productImg}
         />
       </Box>
-      <Box>
-        <Typography fontWeight="bold">{orderSummary.productName}</Typography>
-        <Typography color="lightBlack">
-          {`${formatPrice(orderSummary.priceAtPurchase)} * ${
-            orderSummary.quantity
-          }`}
+      <Box
+        display="flex"
+        alignItems="flex-start"
+        justifyContent="space-between"
+        width="100%"
+        flexWrap="wrap"
+        mt="6px"
+      >
+        <div className="flex-grow">
+          <Typography color={colors.grey[800]}>
+            {orderSummary.productName}
+          </Typography>
+          <Typography fontWeight="bold">
+            {formatPrice(orderSummary.priceAtPurchase)}
+          </Typography>
+        </div>
+        <Typography color="GrayText" fontSize="12px" className="flex-grow">
+          Qty: {orderSummary.quantity}
         </Typography>
-        <Typography color="GrayText" fontSize="12px">
+        <Typography color="GrayText" fontSize="12px" className="flex-grow">
           Size: {orderSummary.sizeLabel}
         </Typography>
       </Box>
@@ -106,7 +119,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" justifyContent="space-between">
-          <Box>
+          <Box width="90%">
             {order.orderDetails.map((orderSummary, idx) => (
               <PurchasedItem key={idx} orderSummary={orderSummary} />
             ))}

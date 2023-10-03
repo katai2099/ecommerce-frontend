@@ -5,8 +5,8 @@ export interface IJWTToken {
 }
 
 export class LoginPostData {
-  public email = "defString";
-  public password = "defString";
+  public email = "";
+  public password = "";
 }
 
 export class SignUpPostData {

@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, SxProps } from "@mui/material";
 import { MouseEvent } from "react";
 
 export interface LoadingButtonProps {
@@ -8,6 +8,8 @@ export interface LoadingButtonProps {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   outlinedLoading?: boolean;
+  type?: "submit" | "button";
+  sxProps?: SxProps;
 }
 
 export const LoadingButton = ({
@@ -17,6 +19,8 @@ export const LoadingButton = ({
   disabled = false,
   fullWidth = false,
   outlinedLoading = false,
+  type = "button",
+  sxProps,
 }: LoadingButtonProps) => {
   return (
     <Button
@@ -24,21 +28,21 @@ export const LoadingButton = ({
       fullWidth={fullWidth}
       variant="contained"
       disabled={loading || disabled}
-      sx={
-        outlinedLoading
-          ? {}
-          : {
-              position: "relative",
-              padding: "10px 15px",
-              color: "primary",
-              "&.Mui-disabled": {
-                color: disabled ? "#4b4b4b" : "white",
-                backgroundColor: disabled ? "diabled" : "black",
-                cursor: disabled ? "not-allowed" : "default",
-                pointerEvents: "all !important",
-              },
-            }
-      }
+      type={type}
+      sx={{
+        ...(outlinedLoading && {
+          position: "relative",
+          padding: "10px 15px",
+          color: "primary",
+          "&.Mui-disabled": {
+            color: disabled ? "#4b4b4b" : "white",
+            backgroundColor: disabled ? "diabled" : "black",
+            cursor: disabled ? "not-allowed" : "default",
+            pointerEvents: "all !important",
+          },
+        }),
+        ...sxProps,
+      }}
     >
       <span style={{ visibility: loading ? "hidden" : "visible" }}>
         {title}

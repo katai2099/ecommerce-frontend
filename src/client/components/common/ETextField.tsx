@@ -9,6 +9,9 @@ interface ETextFieldProps {
   error?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (
+    event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 }
 
 export const ETextField = ({
@@ -19,6 +22,7 @@ export const ETextField = ({
   name,
   value,
   fullWidth = true,
+  onBlur,
 }: ETextFieldProps) => {
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange(event);
@@ -36,6 +40,7 @@ export const ETextField = ({
         required
         fullWidth={fullWidth}
         onChange={handleOnChange}
+        onBlur={onBlur}
       />
     </Box>
   );

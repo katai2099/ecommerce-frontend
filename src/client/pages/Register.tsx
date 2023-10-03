@@ -35,6 +35,7 @@ export const Register = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          minWidth: "310px",
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -100,10 +101,6 @@ export const Register = () => {
             Create Account
           </Button>
         </Box>
-        <Box>or</Box>
-        <Button fullWidth variant="contained">
-          Continue with Google
-        </Button>
         <Box>
           Already have an account? <Link to="/login">Login</Link>
         </Box>

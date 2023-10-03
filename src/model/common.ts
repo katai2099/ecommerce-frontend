@@ -62,3 +62,19 @@ export class PaginationFilterData implements IPaginationFilterData {
     public page = 1
   ) {}
 }
+
+export interface IErrorResponse {
+  message: string;
+  path: string;
+  status: number;
+  timestamp: string;
+}
+
+export class ErrorResponse implements IErrorResponse {
+  constructor(
+    public message = "",
+    public path = "",
+    public status = 0,
+    public timestamp = ""
+  ) {}
+}

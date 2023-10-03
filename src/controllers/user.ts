@@ -1,9 +1,23 @@
 import {
   getAddressesAction,
+  loginAction,
   setDefaultAddressAction,
 } from "../actions/userActions";
+import { LoginPostData } from "../model/authentication";
 import { IAddress } from "../model/user";
 import { store } from "../store/configureStore";
+import { validateEmailRegex } from "./utils";
+
+export function login(email: string, password: string) {
+  const data = new LoginPostData();
+  data.password = btoa(password.trim());
+  data.email = btoa(email.trim());
+  return store
+    .dispatch(loginAction(data))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
 
 export function setAddressAsDefault(addressId: number): Promise<string> {
   return store
@@ -19,6 +33,24 @@ export function getUserAddresses(): Promise<IAddress[]> {
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
+}
+
+export function validateEmail(email: string) {
+  let error = "";
+  if (email.length === 0) {
+    error = "Email is required";
+  } else if (!validateEmailRegex(email)) {
+    error = "Please enter a valid email";
+  }
+  return error;
+}
+
+export function validatePassword(password: string) {
+  let error = "";
+  if (password.length === 0) {
+    error = "Password is required";
+  }
+  return error;
 }
 
 export function validateAddress(
