@@ -1,7 +1,7 @@
 import { Box, TextField } from "@mui/material";
 import { ChangeEvent } from "react";
 
-interface ETextFieldProps {
+export interface ETextFieldProps {
   label: string;
   name: string;
   value: string;

@@ -1,29 +1,16 @@
-import {
-  Cancel,
-  ShoppingBagOutlined,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  FormControl,
-  FormHelperText,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Paper,
-  Typography,
-  colors,
-} from "@mui/material";
+import { Cancel, ShoppingBagOutlined } from "@mui/icons-material";
+import { Avatar, Box, Paper, Typography, colors } from "@mui/material";
 import { AxiosError } from "axios";
 import { ChangeEvent, MouseEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { login, validateEmail, validatePassword } from "../../controllers/user";
 import { isRecordValueEmpty } from "../../controllers/utils";
 import { LoginPostData } from "../../model/authentication";
 import { ErrorResponse, IErrorResponse } from "../../model/common";
+import { Role } from "../../model/user";
+import { RootState } from "../../reducers/combineReducer";
+import { EPasswordField } from "../components/EPasswordField";
 import { ETextField } from "../components/common/ETextField";
 import { LoadingButton } from "../components/common/LoadingButton";
 import { Navbar } from "../components/navbar/Navbar";
@@ -40,11 +27,11 @@ export const Login = () => {
   const [errorResponse, setErrorResponse] = useState<IErrorResponse>(
     new ErrorResponse()
   );
-
   const navigate = useNavigate();
+  const isLogin = useSelector((state: RootState) => state.user.loggedIn);
+  const role = useSelector((state: RootState) => state.user.role);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLoginData({
       ...loginData,
@@ -87,7 +74,10 @@ export const Login = () => {
     }
     setLoggingIn(true);
     login(loginData.email, loginData.password)
-      .then(() => {
+      .then((res) => {
+        if (res.role === Role.ADMIN) {
+          return navigate("/admin/", { replace: true });
+        }
         navigate("/", { replace: true });
       })
       .catch((err: AxiosError) => {
@@ -95,6 +85,12 @@ export const Login = () => {
       })
       .finally(() => setLoggingIn(false));
   };
+
+  if (isLogin && role === Role.ADMIN) {
+    return <Navigate to="/admin/" replace />;
+  } else if (isLogin) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <Box
@@ -115,7 +111,7 @@ export const Login = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          minWidth: "510px",
+          minWidth: { lg: "510px" },
           minHeight: "50vh",
         }}
       >
@@ -153,44 +149,24 @@ export const Login = () => {
           </Box>
         )}
         <Box component="form" sx={{ width: "100%" }}>
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <ETextField
-              label="Email address"
-              name="email"
-              value={loginData.email}
-              error={loginErrorData.email}
-              onChange={handleInputChange}
-              placeholder="example@mail.com"
-              onBlur={handleBlur}
-            />
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "column" }} mb="12px">
-            <FormControl required>
-              <InputLabel>Password</InputLabel>
-              <OutlinedInput
-                value={loginData.password}
-                name="password"
-                onChange={handleInputChange}
-                onBlur={handleBlur}
-                fullWidth
-                error={!!loginErrorData.password}
-                label="Password"
-                required
-                placeholder="*******"
-                type={showPassword ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton onClick={handleClickShowPassword} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              {!!loginErrorData.password && (
-                <FormHelperText error>{loginErrorData.password}</FormHelperText>
-              )}
-            </FormControl>
-          </Box>
+          <ETextField
+            label="Email address"
+            name="email"
+            value={loginData.email}
+            error={loginErrorData.email}
+            onChange={handleInputChange}
+            placeholder="example@mail.com"
+            onBlur={handleBlur}
+          />
+          <EPasswordField
+            label="Password"
+            name="password"
+            value={loginData.password}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            fullWidth={true}
+            error={loginErrorData.password}
+          />
           <Link to="#">
             <Box display="flex" justifyContent="flex-end" mb="16px">
               Forgot your password?
@@ -198,7 +174,7 @@ export const Login = () => {
           </Link>
           <LoadingButton
             loading={loggingIn}
-            title={"Log in"}
+            title="Log in"
             onClick={handleLoginClick}
             fullWidth={true}
             type="submit"

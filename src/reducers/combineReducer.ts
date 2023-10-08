@@ -5,6 +5,7 @@ import {
   createAction,
   createSlice,
 } from "@reduxjs/toolkit";
+import { logoutAction } from "../actions/userActions";
 import { IMainState, MainState } from "../model/common";
 import adminReducer from "./adminReducer";
 import cartReducer from "./cartReducer";
@@ -44,16 +45,14 @@ export const rootReducer: Reducer<IMainState> = (
   state: IMainState | undefined,
   action: AnyAction
 ) => {
-  switch (action.type) {
-    case "SET_INITIAL_STATE": {
-      return action.payload.state;
-    }
-    //   if (logout.async.done.match(action)) {
-    //     state = clone(new MainState());
-    // }
-    default:
-      return appReducer(state, action);
+  if (action.type === "SET_INITIAL_STATE") {
+    return action.payload.state;
   }
+  if (logoutAction.fulfilled.match(action)) {
+    return new MainState();
+  }
+
+  return appReducer(state, action);
 };
 
 export type RootState = ReturnType<typeof rootReducer>;

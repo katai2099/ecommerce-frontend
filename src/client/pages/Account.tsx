@@ -1,8 +1,16 @@
 import styled from "@emotion/styled";
 import { ChevronRight, LogoutOutlined } from "@mui/icons-material";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { Link, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { logoutAction } from "../../actions/userActions";
 import { OrderHistory } from "../../admin/components/OrderHistory";
+import { useAppDispatch } from "../../store/configureStore";
 import { AppBox } from "../../styles/common";
 import { AddressBook } from "../components/AddressBook";
 import { OrderDetailComp } from "../components/OrderDetailComp";
@@ -23,6 +31,8 @@ const AccountPaper = styled(Paper)(({ theme }) => ({
 
 export const Account = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   return (
     <AppBox>
       <Typography variant="h2" mb="32px" letterSpacing="-0.8px">
@@ -59,9 +69,15 @@ export const Account = () => {
               </FlexBox>
             </Link>
           </AccountPaper>
-          <AccountPaper elevation={3}>
+          <AccountPaper
+            elevation={3}
+            onClick={() => {
+              dispatch(logoutAction());
+              navigate("/login");
+            }}
+          >
             <FlexBox>
-              <Typography>Sign out</Typography>
+              <Typography>Log out</Typography>
               <LogoutOutlined fontSize="small" />
             </FlexBox>
           </AccountPaper>

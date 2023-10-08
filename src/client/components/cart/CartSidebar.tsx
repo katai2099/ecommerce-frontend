@@ -16,8 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { stockCheck } from "../../../controllers/cart";
 import { formatPrice, showSnackBar } from "../../../controllers/utils";
 import { IStockCountCheck } from "../../../model/cart";
+import { OUT_OF_STOCK_MESSAGE } from "../../../model/constant";
 import { RootState } from "../../../reducers/combineReducer";
-import { OUT_OF_STOCK_MESSAGE } from "../../../utils/constant";
 import { LoadingButton } from "../common/LoadingButton";
 import { CartSidebarItem } from "./CartSidebarItem";
 
@@ -142,35 +142,36 @@ export const CartSidebar = ({
               </Box>
             )}
           </Box>
-          {cartItems.length > 0 && (
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              height="15vh"
-              padding="0 32px"
-              gap="12px"
-            >
+
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            height="15vh"
+            padding="0 32px"
+            gap="12px"
+          >
+            {cartItems.length > 0 && (
               <LoadingButton
                 title={`Checkout Now ${formatPrice(total)}`}
                 fullWidth={true}
                 onClick={handleProceedClick}
                 loading={checkStock}
               />
+            )}
 
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={() => {
-                  toggleDrawer(false);
-                  navigate("/cart");
-                }}
-              >
-                View Cart
-              </Button>
-            </Box>
-          )}
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => {
+                toggleDrawer(false);
+                navigate("/cart");
+              }}
+            >
+              View Cart
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Drawer>

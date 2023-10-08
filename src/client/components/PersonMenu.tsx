@@ -10,7 +10,9 @@ import {
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { logoutAction } from "../../actions/userActions";
 import { RootState } from "../../reducers/combineReducer";
+import { useAppDispatch } from "../../store/configureStore";
 
 export const PersonMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -39,6 +41,7 @@ export const PersonMenu = () => {
 
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
 
   return (
     <div>
@@ -124,8 +127,9 @@ export const PersonMenu = () => {
                 fullWidth
                 sx={{ display: "flex", justifyContent: "space-between" }}
                 onClick={() => {
-                  navigate("/login");
+                  dispatch(logoutAction());
                   setAnchorEl(null);
+                  navigate("/login");
                 }}
               >
                 Log out

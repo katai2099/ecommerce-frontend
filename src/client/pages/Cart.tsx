@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { getCart, stockCheck } from "../../controllers/cart";
 import { formatPrice, showSnackBar } from "../../controllers/utils";
 import { IStockCountCheck } from "../../model/cart";
+import { OUT_OF_STOCK_MESSAGE } from "../../model/constant";
 import { RootState } from "../../reducers/combineReducer";
 import { AppBox } from "../../styles/common";
-import { OUT_OF_STOCK_MESSAGE } from "../../utils/constant";
 import { CartItemDetail } from "../components/cart/CartItemDetail";
 import { LoadingButton } from "../components/common/LoadingButton";
 
@@ -21,10 +21,13 @@ export const Cart = () => {
   const [stockCheckResponse, setStockCheckResponse] = useState<
     IStockCountCheck[]
   >([]);
+  const isLogin = useSelector((state: RootState) => state.user.loggedIn);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getCart();
+    if (isLogin) {
+      getCart();
+    }
   }, []);
 
   function handleProceedClick(event: MouseEvent<HTMLButtonElement>): void {

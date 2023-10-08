@@ -16,6 +16,9 @@ export const userSlice = createSlice({
     updateUserDetails: (state, payload: PayloadAction<IUserDetailsRequest>) => {
       return { ...state, ...payload.payload };
     },
+    setLogin: (state, payload: PayloadAction<boolean>) => {
+      return { ...state, loggedIn: payload.payload };
+    },
   },
   initialState,
   extraReducers: (builder) => {
@@ -30,10 +33,10 @@ export const userSlice = createSlice({
       })
       .addCase(registerAction.fulfilled, (state, action) => {
         const userInfo: IAuthenticationResponse = action.payload;
-        return { ...state, ...userInfo };
+        return { ...state, ...userInfo, loggedIn: true };
       });
   },
 });
 
-export const { updateUserDetails } = userSlice.actions;
+export const { updateUserDetails, setLogin } = userSlice.actions;
 export default userSlice.reducer;

@@ -26,7 +26,6 @@ import { PersonMenu } from "../PersonMenu";
 import { CartSidebar } from "../cart/CartSidebar";
 
 export const Navbar = () => {
-  const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
   const cart = useSelector((state: RootState) => state.cart);
   const totalItems = cart.carts.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.quantity;

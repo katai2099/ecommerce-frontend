@@ -8,14 +8,14 @@ import { getCheckoutData } from "../../controllers/cart";
 import { getUserAddresses } from "../../controllers/user";
 import { showSnackBar } from "../../controllers/utils";
 import { EmptyCartError } from "../../model/PaymentError";
+import {
+  OUT_OF_STOCK_MESSAGE,
+  STRIPE_PUBLISHABLE_KEY,
+} from "../../model/constant";
 import { setAddresses } from "../../reducers/checkoutReducer";
 import { setLoading } from "../../reducers/guiReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { AppBox } from "../../styles/common";
-import {
-  OUT_OF_STOCK_MESSAGE,
-  STRIPE_PUBLISHABLE_KEY,
-} from "../../utils/constant";
 import { CheckoutForm } from "../components/CheckoutForm";
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);

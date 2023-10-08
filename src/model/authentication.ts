@@ -9,12 +9,22 @@ export class LoginPostData {
   public password = "";
 }
 
-export class SignUpPostData {
+export class RegistrationPostData {
   constructor(
     public firstname: string = "",
     public lastname: string = "",
     public email: string = "",
     public password: string = ""
+  ) {}
+}
+
+export class RegistrationForm {
+  constructor(
+    public firstname: string = "",
+    public lastname: string = "",
+    public email: string = "",
+    public password: string = "",
+    public retypePassword: string = ""
   ) {}
 }
 

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import FormData from "form-data";
+import { API_ENDPOINT, API_PORT } from "../model/constant";
 import { prepareFormData } from "./utils";
 
 interface RequestOptions {
@@ -19,7 +20,7 @@ function fillAxiosConfig(
   if (formData) {
   }
   const config: AxiosRequestConfig = {
-    baseURL: "http://localhost:8080/api",
+    baseURL: `http://${API_ENDPOINT}:${API_PORT}/api`,
     url,
     params: requestParams,
     method: requestType,

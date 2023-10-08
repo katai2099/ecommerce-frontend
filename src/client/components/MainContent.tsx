@@ -10,16 +10,12 @@ import { OrderSuccess } from "../pages/OrderSuccess";
 import { ProductDetail } from "../pages/ProductDetail";
 import { Search } from "../pages/Search";
 import { AppSnackbar } from "./AppSnackbar";
+import { ProtectedRoute } from "./ProtectedRoute";
 import { LoadingBackDrop } from "./common/LoadingBackDrop";
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
 
 export const MainContent = () => {
-  // const dispatch = useAppDispatch();
-  // useEffect(() => {
-  //   dispatch(getCartAction());
-  // }, []);
-
   return (
     <Box>
       <Navbar />
@@ -38,8 +34,14 @@ export const MainContent = () => {
           </Route>
           <Route path="/:gender" element={<Category />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/account/*" element={<Account />} />
+          <Route
+            path="/checkout"
+            element={<ProtectedRoute element={<Checkout />} />}
+          />
+          <Route
+            path="/account/*"
+            element={<ProtectedRoute element={<Account />} />}
+          />
           <Route path="/orders/complete" element={<OrderSuccess />} />
           <Route path="/orders/failure" element={<OrderFailure />} />
         </Routes>

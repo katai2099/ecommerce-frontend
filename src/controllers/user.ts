@@ -1,9 +1,14 @@
 import {
   getAddressesAction,
   loginAction,
+  registerAction,
   setDefaultAddressAction,
 } from "../actions/userActions";
-import { LoginPostData } from "../model/authentication";
+import {
+  LoginPostData,
+  RegistrationForm,
+  RegistrationPostData,
+} from "../model/authentication";
 import { IAddress } from "../model/user";
 import { store } from "../store/configureStore";
 import { validateEmailRegex } from "./utils";
@@ -14,6 +19,19 @@ export function login(email: string, password: string) {
   data.email = btoa(email.trim());
   return store
     .dispatch(loginAction(data))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function register(registrationForm: RegistrationForm) {
+  const data = new RegistrationPostData();
+  data.email = registrationForm.email;
+  data.firstname = registrationForm.firstname;
+  data.lastname = registrationForm.lastname;
+  data.password = btoa(registrationForm.password);
+  return store
+    .dispatch(registerAction(data))
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
@@ -37,7 +55,7 @@ export function getUserAddresses(): Promise<IAddress[]> {
 
 export function validateEmail(email: string) {
   let error = "";
-  if (email.length === 0) {
+  if (email.trim().length === 0) {
     error = "Email is required";
   } else if (!validateEmailRegex(email)) {
     error = "Please enter a valid email";
@@ -47,9 +65,54 @@ export function validateEmail(email: string) {
 
 export function validatePassword(password: string) {
   let error = "";
-  if (password.length === 0) {
+  if (password.trim().length === 0) {
     error = "Password is required";
   }
+  return error;
+}
+
+export function validateFirstname(firstname: string) {
+  if (firstname.trim().length === 0) {
+    return "Firstname is required";
+  }
+  return "";
+}
+
+export function validateLastname(lastname: string) {
+  if (lastname.trim().length === 0) {
+    return "Lastname is required";
+  }
+  return "";
+}
+
+export function validateRetypePassword(
+  retypePassword: string,
+  password: string
+) {
+  if (retypePassword.trim().length === 0) {
+    return "Retype password is required";
+  }
+  if (
+    password.trim().length !== 0 &&
+    retypePassword.trim() !== password.trim()
+  ) {
+    return "Passwords do not match";
+  }
+  return "";
+}
+
+export function validateRegistrationData(
+  registrationForm: RegistrationForm
+): RegistrationForm {
+  const error: RegistrationForm = new RegistrationForm();
+  error.firstname = validateFirstname(registrationForm.firstname);
+  error.lastname = validateLastname(registrationForm.lastname);
+  error.email = validateEmail(registrationForm.email);
+  error.password = validatePassword(registrationForm.password);
+  error.retypePassword = validateRetypePassword(
+    registrationForm.retypePassword,
+    registrationForm.password
+  );
   return error;
 }
 

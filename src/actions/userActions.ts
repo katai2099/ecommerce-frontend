@@ -8,7 +8,7 @@ import {
 import {
   IAuthenticationResponse,
   LoginPostData,
-  SignUpPostData,
+  RegistrationPostData,
 } from "../model/authentication";
 import {
   IAddress,
@@ -16,7 +16,8 @@ import {
   IUserDetailsRequest,
 } from "../model/user";
 import { setLoading } from "../reducers/guiReducer";
-import { updateUserDetails } from "../reducers/userReducer";
+import { setLogin, updateUserDetails } from "../reducers/userReducer";
+import { store } from "../store/configureStore";
 
 export const updatePasswordAction = createAsyncThunk<string, string>(
   "update_password",
@@ -148,29 +149,9 @@ function deleteAddressWorker(addressId: number): Promise<string> {
     .catch((err) => Promise.reject(err));
 }
 
-export const loginAction = createAsyncThunk<
-  IAuthenticationResponse,
-  LoginPostData
->("auth/login", (data, thunkApi) => {
-  return loginWorker(data)
-    .then((res) => {
-      window.localStorage.setItem("jwt", res.token);
-      return Promise.resolve(res);
-    })
-    .catch((error) => thunkApi.rejectWithValue(error));
-});
-
-export function loginWorker(
-  loginData: LoginPostData
-): Promise<IAuthenticationResponse> {
-  return postRequest<IAuthenticationResponse>("/auth/login", loginData)
-    .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err));
-}
-
 export const registerAction = createAsyncThunk<
   IAuthenticationResponse,
-  SignUpPostData
+  RegistrationPostData
 >("auth/register", (data, thunkApi) => {
   return registerWorker(data)
     .then((res) => {
@@ -183,10 +164,46 @@ export const registerAction = createAsyncThunk<
     });
 });
 
-export function registerWorker(
-  signUpData: SignUpPostData
+function registerWorker(
+  signUpData: RegistrationPostData
 ): Promise<IAuthenticationResponse> {
   return postRequest<IAuthenticationResponse>("/auth/register", signUpData)
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
+}
+
+export const loginAction = createAsyncThunk<
+  IAuthenticationResponse,
+  LoginPostData
+>("auth/login", (data, thunkApi) => {
+  return loginWorker(data)
+    .then((res) => {
+      window.localStorage.setItem("jwt", res.token);
+      return Promise.resolve(res);
+    })
+    .catch((error) => thunkApi.rejectWithValue(error));
+});
+
+function loginWorker(
+  loginData: LoginPostData
+): Promise<IAuthenticationResponse> {
+  return postRequest<IAuthenticationResponse>("/auth/login", loginData)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const logoutAction = createAsyncThunk("auth/logout", () => {
+  return logoutWorker()
+    .then(() => Promise.resolve())
+    .catch((err) => Promise.reject(err));
+});
+
+function logoutWorker(): Promise<void> {
+  try {
+    window.localStorage.removeItem("jwt");
+    store.dispatch(setLogin(false));
+    return Promise.resolve();
+  } catch (err) {
+    return Promise.reject();
+  }
 }

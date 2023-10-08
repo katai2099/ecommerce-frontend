@@ -28,7 +28,7 @@ const fetchAdminCategoriesAction = createAsyncThunk<IIdName[]>(
 );
 
 export function getAdminCategoriesWorker(): Promise<IIdName[]> {
-  return getRequest<IIdName[]>("/products/category/", { auth: true })
+  return getRequest<IIdName[]>("/products/category/")
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }
