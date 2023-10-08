@@ -22,6 +22,7 @@ code {
 .img-contain{
   object-fit: contain;
   width:100%;
+  min-height: 300px;
   max-width: 300px;
   max-height: 300px;
   height:100%;

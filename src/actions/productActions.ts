@@ -5,10 +5,41 @@ import {
   putRequest,
 } from "../controllers/clientRequest";
 import { processProductFilter } from "../controllers/product";
+import { ICategory } from "../model/category";
 import { IPaginationResponse } from "../model/common";
 import { INewProductRequest, IProduct, IProductFilter } from "../model/product";
 import { INewReview, IProductReview } from "../model/review";
 import { setLoading } from "../reducers/guiReducer";
+
+export const getTopCategoriesAction = createAsyncThunk<ICategory[]>(
+  "get_top_categories",
+  () => {
+    return getTopCategoriesWorker()
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err));
+  }
+);
+
+function getTopCategoriesWorker(): Promise<ICategory[]> {
+  return getRequest<ICategory[]>("/products/top-categories")
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const getFeaturedProductsAction = createAsyncThunk<IProduct[]>(
+  "get_featured_products",
+  () => {
+    return getFeaturedProductsWorker()
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err));
+  }
+);
+
+function getFeaturedProductsWorker(): Promise<IProduct[]> {
+  return getRequest<IProduct[]>("/products/featured-products")
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
 
 export const getProductsAction = createAsyncThunk<
   IPaginationResponse<IProduct>,

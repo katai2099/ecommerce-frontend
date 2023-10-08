@@ -1,5 +1,12 @@
 import { MarkEmailReadOutlined } from "@mui/icons-material";
-import { Box, Divider, IconButton, InputBase, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  InputBase,
+  Typography,
+} from "@mui/material";
 import { ChangeEvent, useState } from "react";
 
 export const Subscribe = () => {
@@ -33,9 +40,15 @@ export const Subscribe = () => {
           }}
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-        <Typography sx={{ p: "10px", ":hover": { cursor: "pointer" } }}>
+        <Button
+          sx={{
+            p: "10px",
+            ":hover": { cursor: "pointer" },
+            textTransform: "unset",
+          }}
+        >
           Subscribe
-        </Typography>
+        </Button>
       </Box>
     </Box>
   );

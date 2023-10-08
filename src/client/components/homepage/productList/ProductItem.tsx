@@ -1,6 +1,7 @@
 import { Box, Rating, Typography, styled } from "@mui/material";
 import { Link } from "react-router-dom";
-import { IProduct } from "../../../../model/product";
+import { formatPrice } from "../../../../controllers/utils";
+import { ProductProps } from "../../../../model/product";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -9,11 +10,7 @@ const FlexBox = styled(Box)`
   align-items: center;
 `;
 
-interface ProductItemProps {
-  product: IProduct;
-}
-
-export const ProductItem = ({ product }: ProductItemProps) => {
+export const ProductItem = ({ product }: ProductProps) => {
   return (
     <FlexBox>
       <Link to={`/products/${product.id}`}>
@@ -25,7 +22,7 @@ export const ProductItem = ({ product }: ProductItemProps) => {
         <Link to={`/products/${product.id}`} className="nav-item">
           <Typography color="primary">{product.name}</Typography>
         </Link>
-        <Typography>{`$ ${product.price}`}</Typography>
+        <Typography>{formatPrice(product.price)}</Typography>
         <Box
           sx={{
             display: "flex",

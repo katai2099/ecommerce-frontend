@@ -20,7 +20,11 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setOpen } from "../../../reducers/cartReducer";
-import { RootState } from "../../../reducers/combineReducer";
+import {
+  RootState,
+  getAppInitialState,
+  setInitialState,
+} from "../../../reducers/combineReducer";
 import { useAppDispatch } from "../../../store/configureStore";
 import { PersonMenu } from "../PersonMenu";
 import { CartSidebar } from "../cart/CartSidebar";
@@ -66,7 +70,6 @@ export const Navbar = () => {
                 color="primary"
                 variant="h6"
                 noWrap
-                href="/"
                 component="a"
                 sx={{
                   mr: 2,
@@ -74,6 +77,14 @@ export const Navbar = () => {
                   fontWeight: 700,
                   letterSpacing: ".3rem",
                   textDecoration: "none",
+                  ":hover": {
+                    cursor: "pointer",
+                  },
+                }}
+                onClick={() => {
+                  const initialState = getAppInitialState();
+                  dispatch(setInitialState({ state: initialState }));
+                  navigate("/");
                 }}
               >
                 ECOMMERCE
@@ -111,7 +122,7 @@ export const Navbar = () => {
                         }}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" && searchValue.length !== 0) {
-                            navigate(`/search/${searchValue}`);
+                            navigate(`/search?q=${searchValue}`);
                           }
                         }}
                       />

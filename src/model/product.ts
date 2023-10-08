@@ -5,6 +5,10 @@ export enum Gender {
   WOMEN = "WOMEN",
 }
 
+export interface ProductProps {
+  product: IProduct;
+}
+
 export class Product implements IProduct {
   constructor(
     public id: number = 0,

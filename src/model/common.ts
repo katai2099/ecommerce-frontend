@@ -2,6 +2,7 @@ import { IAdminReduxState, adminReduxState } from "./admin";
 import { CartReduxState, ICartReduxState } from "./cart";
 import { CheckoutReduxState, ICheckoutReduxState } from "./checkout";
 import { GuiReduxState, IGuiReduxState } from "./gui";
+import { HomepageReduxState, IHomepageReduxState } from "./homepage";
 import { IProductReduxState, ProductReduxState } from "./product";
 import {
   IProductSettingsReduxState,
@@ -17,7 +18,8 @@ export class MainState implements IMainState {
     public gui: IGuiReduxState = new GuiReduxState(),
     public productSettings: IProductSettingsReduxState = new ProductSettingsReduxState(),
     public cart: ICartReduxState = new CartReduxState(),
-    public checkout: ICheckoutReduxState = new CheckoutReduxState()
+    public checkout: ICheckoutReduxState = new CheckoutReduxState(),
+    public homepage: IHomepageReduxState = new HomepageReduxState()
   ) {}
 }
 
@@ -29,6 +31,7 @@ export interface IMainState {
   productSettings: IProductSettingsReduxState;
   cart: ICartReduxState;
   checkout: ICheckoutReduxState;
+  homepage: IHomepageReduxState;
 }
 
 export interface IIdName {

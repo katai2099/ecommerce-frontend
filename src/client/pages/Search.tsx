@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { getProductsAction } from "../../actions/productActions";
 import { fetchProductSetttingsCategoriesAction } from "../../actions/productSettingsActions";
 import { PageNumberSection } from "../../admin/components/PageNumberSection";
@@ -16,8 +16,12 @@ import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
 import { ProductList } from "../components/ProductList";
 
+function useQuery() {
+  const { search } = useLocation();
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
 export const Search = () => {
-  const { q } = useParams();
   const dispatch = useAppDispatch();
   const filter = useSelector(
     (state: RootState) => state.productSettings.filter
@@ -29,8 +33,21 @@ export const Search = () => {
   const [totalPage, setTotalPage] = useState<number>(0);
   const [products, setProducts] = useState<IProduct[]>([]);
 
+  let query = useQuery();
+
+  const q = query.get("q");
+  const category = query.get("category");
+
   useEffect(() => {
-    dispatch(startNewFilter({ key: "q", value: q }));
+    if (category && category !== "") {
+      dispatch(startNewFilter({ key: "category", value: [category] }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (q && q !== "") {
+      dispatch(startNewFilter({ key: "q", value: q }));
+    }
   }, [q]);
 
   useEffect(() => {
@@ -38,7 +55,7 @@ export const Search = () => {
   }, []);
 
   useEffect(() => {
-    if (filter.q) {
+    if (filter.q || filter.category.length > 0) {
       dispatch(getProductsAction(filter))
         .unwrap()
         .then((res) => {
@@ -80,7 +97,11 @@ export const Search = () => {
 
   return (
     <Box minHeight="84vh" margin="80px auto 0">
-      <CategoryHeader isSearch={true} totalItems={totalItem} />
+      <CategoryHeader
+        isSearch={!!q}
+        totalItems={totalItem}
+        isTopCategory={!!category}
+      />
       <Grid container>
         <Grid item md={2}>
           <FilterSection isSearch={true} />

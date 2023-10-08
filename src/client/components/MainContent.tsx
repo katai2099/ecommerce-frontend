@@ -28,10 +28,8 @@ export const MainContent = () => {
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="" element={<ProductDetail />} />
           </Route>
-          <Route path="/search">
-            <Route path="/search/:q" element={<Search />} />
-            <Route path="" element={<Search />} />
-          </Route>
+          <Route path="/search" element={<Search />} />
+
           <Route path="/:gender" element={<Category />} />
           <Route path="/cart" element={<Cart />} />
           <Route

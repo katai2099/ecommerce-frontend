@@ -40,7 +40,6 @@ window.onload = () => {
       checkout: new CheckoutReduxState(),
     };
     store.dispatch(setInitialState({ state: updatedInitialState }));
-    console.log(initialState);
   } else {
     window.localStorage.removeItem("jwt");
   }

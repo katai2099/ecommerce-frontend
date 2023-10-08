@@ -17,11 +17,13 @@ import { FilterSectionProps } from "./FilterSection";
 
 interface SearchProps {
   totalItems?: number;
+  isTopCategory?: boolean;
 }
 
 export const CategoryHeader = ({
   isSearch = false,
   totalItems = 0,
+  isTopCategory = false,
 }: FilterSectionProps & SearchProps) => {
   const filter = useSelector(
     (state: RootState) => state.productSettings.filter
@@ -41,9 +43,11 @@ export const CategoryHeader = ({
         alignItems="center"
         padding="12px 36px"
       >
-        {isSearch ? (
+        {isSearch || isTopCategory ? (
           <Box>
-            <Typography variant="h3">Searching for " {filter.q}"</Typography>
+            <Typography variant="h3">
+              Searching for "{isTopCategory ? filter.category[0] : filter.q}"
+            </Typography>
             <Typography variant="h4" fontWeight="300">
               {totalItems} results found
             </Typography>
