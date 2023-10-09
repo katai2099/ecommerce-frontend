@@ -120,6 +120,9 @@ export const FeaturedProducts = () => {
                   padding: "8px",
                   bgcolor: "#f0f0f0",
                   borderRadius: "4px",
+                  "&:hover": {
+                    bgcolor: "#d8d8d8",
+                  },
                 }}
               >
                 <ChevronLeft />
@@ -132,6 +135,9 @@ export const FeaturedProducts = () => {
                   padding: "8px",
                   bgcolor: "#f0f0f0",
                   borderRadius: "4px",
+                  "&:hover": {
+                    bgcolor: "#d8d8d8",
+                  },
                 }}
               >
                 <ChevronRight />
