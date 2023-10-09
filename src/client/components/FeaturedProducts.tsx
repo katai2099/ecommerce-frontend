@@ -115,12 +115,23 @@ export const FeaturedProducts = () => {
                 onClick={() => {
                   handleLgIdxChange(lgIndex - 1);
                 }}
+                sx={{
+                  mr: "4px",
+                  padding: "8px",
+                  bgcolor: "#f0f0f0",
+                  borderRadius: "4px",
+                }}
               >
                 <ChevronLeft />
               </IconButton>
               <IconButton
                 onClick={() => {
                   handleLgIdxChange(lgIndex + 1);
+                }}
+                sx={{
+                  padding: "8px",
+                  bgcolor: "#f0f0f0",
+                  borderRadius: "4px",
                 }}
               >
                 <ChevronRight />
@@ -163,8 +174,6 @@ export const FeaturedProducts = () => {
               <Carousel
                 autoPlay={false}
                 sx={{ mt: "36px" }}
-                swipe={false}
-                navButtonsAlwaysInvisible={!matchSM}
                 indicators
                 index={matchSM ? smIndex : lgIndex}
                 onChange={(now) => {
