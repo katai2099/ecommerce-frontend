@@ -21,11 +21,12 @@ import { RootState } from "../../../reducers/combineReducer";
 import { LoadingButton } from "../common/LoadingButton";
 import { CartSidebarItem } from "./CartSidebarItem";
 
-const FlexBox = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
+const FlexBox = styled(Box)(({ theme }) => ({
+  ...theme,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));
 
 export interface CartSidebarProps {
   open: boolean;

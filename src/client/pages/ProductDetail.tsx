@@ -6,6 +6,8 @@ import {
   Tab,
   Tabs,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -103,19 +105,25 @@ export const ProductDetail = () => {
     setOwnerReview(review);
   };
 
+  const theme = useTheme();
+  const matchSm = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <AppBox>
-      <Grid container>
+      <Grid container spacing={3}>
         <Grid
           item
           lg={4}
+          md={4}
+          sm={5}
+          xs={12}
           display="flex"
           flexDirection="column"
           alignItems="center"
+          width="100%"
         >
           <ImageSection images={product.images} />
         </Grid>
-        <Grid item lg={8} pl="24px">
+        <Grid item lg={8} md={8} sm={7} xs={12}>
           <Box>
             <Box>
               <Typography variant="h2">{product.name}</Typography>
@@ -138,7 +146,7 @@ export const ProductDetail = () => {
             </Box>
             <Box pt="16px" pb="4px">
               <Typography pb="4px">Sizes:</Typography>
-              <Box display="flex" gap="8px">
+              <Box display="flex" gap="8px" flexWrap="wrap">
                 {product.productSizes.map((productSize, idx) => (
                   <Button
                     key={idx}
@@ -180,6 +188,7 @@ export const ProductDetail = () => {
               title="add to cart"
               loading={isAddTocart}
               onClick={handleAddToCart}
+              fullWidth={matchSm}
             />
           </Box>
         </Grid>

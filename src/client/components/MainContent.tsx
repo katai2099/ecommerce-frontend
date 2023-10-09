@@ -2,8 +2,8 @@ import { Box, Container } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import { Account } from "../pages/Account";
 import { Cart } from "../pages/Cart";
-import { Category } from "../pages/Category";
 import { Checkout } from "../pages/Checkout";
+import { GenderSection } from "../pages/GenderSection";
 import { Home } from "../pages/Home";
 import { OrderFailure } from "../pages/OrderFailure";
 import { OrderSuccess } from "../pages/OrderSuccess";
@@ -30,7 +30,7 @@ export const MainContent = () => {
           </Route>
           <Route path="/search" element={<Search />} />
 
-          <Route path="/:gender" element={<Category />} />
+          <Route path="/:gender" element={<GenderSection />} />
           <Route path="/cart" element={<Cart />} />
           <Route
             path="/checkout"

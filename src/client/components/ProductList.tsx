@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import { IProduct } from "../../model/product";
-import { ProductItem } from "./homepage/productList/ProductItem";
 import { NoContentFound } from "./common/NoContentFound";
+import { ProductItem } from "./homepage/productList/ProductItem";
 
 export interface ListLoadProps {
   firstLoad: boolean;
@@ -18,11 +18,11 @@ export const ProductList = ({
   totalItem,
 }: ProductListProps & ListLoadProps) => {
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       {!firstLoad && totalItem !== 0 && (
         <>
           {products.map((product, idx) => (
-            <Grid item md={3} key={idx}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
               <ProductItem product={product} />
             </Grid>
           ))}

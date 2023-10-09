@@ -14,9 +14,10 @@ import {
 import { useAppDispatch } from "../../store/configureStore";
 import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
+import { MobileFilter } from "../components/MobileFilter";
 import { ProductList } from "../components/ProductList";
 
-export const Category = () => {
+export const GenderSection = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const filter = useSelector(
@@ -92,12 +93,23 @@ export const Category = () => {
 
   return (
     <Box minHeight="84vh" margin="80px auto 0">
-      <CategoryHeader />
-      <Grid container>
-        <Grid item xs={0} md={2}>
+      <Grid container sx={{ display: { sm: "none", xs: "none", md: "flex " } }}>
+        <Grid item md={3} lg={2.5}></Grid>
+        <Grid item md={9} lg={9.5}>
+          <CategoryHeader />
+        </Grid>
+      </Grid>
+      <MobileFilter />
+      <Grid container spacing={2}>
+        <Grid
+          item
+          md={3}
+          lg={2.5}
+          sx={{ display: { sm: "none", xs: "none", md: "inline-block" } }}
+        >
           <FilterSection />
         </Grid>
-        <Grid item xs={12} md={10}>
+        <Grid item xs={12} sm={12} md={9} lg={9.5}>
           <ProductList
             products={products}
             firstLoad={firstLoad}

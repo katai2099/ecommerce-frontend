@@ -97,12 +97,17 @@ export const Search = () => {
 
   return (
     <Box minHeight="84vh" margin="80px auto 0">
-      <CategoryHeader
-        isSearch={!!q}
-        totalItems={totalItem}
-        isTopCategory={!!category}
-      />
       <Grid container>
+        <Grid item md={2}></Grid>
+        <Grid item md={10}>
+          <CategoryHeader
+            isSearch={!!q}
+            totalItems={totalItem}
+            isTopCategory={!!category}
+          />
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
         <Grid item md={2}>
           <FilterSection isSearch={true} />
         </Grid>

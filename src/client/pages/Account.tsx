@@ -16,12 +16,13 @@ import { AddressBook } from "../components/AddressBook";
 import { OrderDetailComp } from "../components/OrderDetailComp";
 import { UserDetail } from "../components/UserDetail";
 
-const FlexBox = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-`;
+const FlexBox = styled(Box)(({ theme }) => ({
+  ...theme,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  cursor: "pointer",
+}));
 
 const AccountPaper = styled(Paper)(({ theme }) => ({
   ...theme,

@@ -34,7 +34,7 @@ const FeaturedProductItem = ({ product }: ProductProps) => {
               width="100%"
               height="100%"
               src={product.images[0].imageUrl}
-              className="img-contain"
+              className="img-contain img-300"
             />
           </Box>
         </Link>
@@ -102,7 +102,7 @@ export const FeaturedProducts = () => {
   return (
     <Box my="48px">
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="h3" fontWeight="bold">
+        <Typography variant="h3" fontWeight="bold" mb="36px">
           Featured Products
         </Typography>
         {!matches &&
@@ -151,7 +151,7 @@ export const FeaturedProducts = () => {
             <Grid item xs={12}>
               <Carousel
                 autoPlay={false}
-                sx={{ mt: "36px", paddingX: "16px" }}
+                sx={{ paddingX: "16px" }}
                 indicators
                 navButtonsAlwaysVisible
                 index={mbIndex}
@@ -179,7 +179,6 @@ export const FeaturedProducts = () => {
             <Grid item sm={12} md={12}>
               <Carousel
                 autoPlay={false}
-                sx={{ mt: "36px" }}
                 indicators
                 index={matchSM ? smIndex : lgIndex}
                 onChange={(now) => {
@@ -216,23 +215,13 @@ export const FeaturedProducts = () => {
       {loading && <FeaturedProductSkeletonLoading />}
       {!error && !loading && featuredProducts.length === 0 && (
         <Box>
-          <Typography
-            variant="h1"
-            textAlign="center"
-            mt="24px"
-            letterSpacing="-1.5px"
-          >
+          <Typography variant="h1" textAlign="center" letterSpacing="-1.5px">
             There is no featured products at the moment
           </Typography>
         </Box>
       )}
       {error && !loading && (
-        <Typography
-          variant="h1"
-          textAlign="center"
-          mt="24px"
-          letterSpacing="-1.5px"
-        >
+        <Typography variant="h1" textAlign="center" letterSpacing="-1.5px">
           Something went wrong
         </Typography>
       )}

@@ -97,15 +97,22 @@ export const Reviews = (props: ReviewsProps) => {
 
   return (
     <Box>
-      <Button
-        variant="contained"
-        sx={{ mb: "32px", borderRadius: "4px" }}
-        onClick={() => {
-          setModalState(true);
-        }}
-      >
-        {ownerReview ? "Update " : "Write a"} review
-      </Button>
+      <Box mb="32px">
+        {user.loggedIn ? (
+          <Button
+            variant="contained"
+            onClick={() => {
+              setModalState(true);
+            }}
+          >
+            {ownerReview ? "Update " : "Write a"} review
+          </Button>
+        ) : (
+          <Typography variant="h3" color="GrayText">
+            Log in to review
+          </Typography>
+        )}
+      </Box>
       {ownerReview && <ReviewItem review={ownerReview} />}
       {otherReviews.map((review) => (
         <ReviewItem key={review.id} review={review} />

@@ -7,11 +7,12 @@ import { setProductFilter } from "../../reducers/productSettingsReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { FilterHeader } from "./common/FilterHeader";
 
-const FlexBox = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
+const FlexBox = styled(Box)(({ theme }) => ({
+  ...theme,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));
 
 export const PriceRangeFilter = () => {
   const filter = useSelector(
@@ -51,7 +52,9 @@ export const PriceRangeFilter = () => {
           borderRadius="4px"
           padding="2px 8px"
         >
-          <Box color="GrayText">Min $</Box>
+          <Box color="GrayText" fontSize="12px">
+            Min $
+          </Box>
           <Box fontWeight="bold">{value[0]}</Box>
         </FlexBox>
         <FlexBox
@@ -60,7 +63,9 @@ export const PriceRangeFilter = () => {
           borderRadius="4px"
           padding="2px 8px"
         >
-          <Box color="GrayText">Max $</Box>
+          <Box color="GrayText" fontSize="12px">
+            Max $
+          </Box>
           <Box fontWeight="bold">{value[1]}</Box>
         </FlexBox>
       </FlexBox>

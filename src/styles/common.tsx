@@ -2,12 +2,13 @@ import styled from "@emotion/styled";
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
 
-export const AppBox = styled(Box)`
-  max-width: 1280px;
-  min-height: 84vh;
-  padding: 40px 24px;
-  margin: 80px auto 0;
-`;
+export const AppBox = styled(Box)(({ theme }) => ({
+  ...theme,
+  maxWidth: "1280px",
+  minHeight: "84vh",
+  padding: "40px 24px",
+  margin: "80px auto 0",
+}));
 
 interface TabPanelProps {
   children: ReactNode;

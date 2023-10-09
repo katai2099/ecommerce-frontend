@@ -1,5 +1,6 @@
+import styled from "@emotion/styled";
 import { Add, CloseOutlined, Remove } from "@mui/icons-material";
-import { Box, IconButton, Typography, styled } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { removeItemFromCart, updateCart } from "../../../controllers/cart";
@@ -9,12 +10,12 @@ import { RootState } from "../../../reducers/combineReducer";
 import { useAppDispatch } from "../../../store/configureStore";
 import { CartItemDetailProps } from "./CartItemDetail";
 
-const FlexBox = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
+const FlexBox = styled(Box)(({ theme }) => ({
+  ...theme,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));
 export const CartSidebarItem = ({
   cartItem,
   index,

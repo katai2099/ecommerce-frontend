@@ -12,7 +12,7 @@ import { RootState } from "../../reducers/combineReducer";
 import { setProductFilter } from "../../reducers/productSettingsReducer";
 import { FilterHeader } from "./common/FilterHeader";
 
-const values: number[] = [4, 3, 2, 1, 0];
+const values: number[] = [4, 3, 2, 1];
 
 export const RatingFilter = () => {
   const currentFilter = useSelector(
@@ -32,14 +32,7 @@ export const RatingFilter = () => {
   return (
     <Box>
       <FilterHeader title="Rating" />
-      <RadioGroup
-        value={
-          currentFilter.rating
-            ? currentFilter.rating
-            : values[values.length - 1]
-        }
-        onChange={handleChange}
-      >
+      <RadioGroup value={currentFilter.rating} onChange={handleChange}>
         {values.map((value) => (
           <FormControlLabel
             key={value}

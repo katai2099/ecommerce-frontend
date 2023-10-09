@@ -30,7 +30,7 @@ export const ProductImagePreview: React.FC<ProductImagePreviewProps> = ({
     >
       <Box display="flex">
         <Box width="72px" height="72px" padding="8px">
-          <img alt="" src={src} className="img-contain" />
+          <img alt="" src={src} className="img-contain img-300" />
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center">
           <Typography>{isLocal ? title : `${title} ${index + 1}`}</Typography>

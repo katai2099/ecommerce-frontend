@@ -59,11 +59,11 @@ export const TopCategories = () => {
   );
   return (
     <Box my="48px">
-      <Typography variant="h3" fontWeight="bold">
+      <Typography variant="h3" fontWeight="bold" mb="24px">
         Top Categories
       </Typography>
       {!loading && topCategories.length !== 0 && !error && (
-        <Grid mt="12px" container spacing={3}>
+        <Grid container spacing={3}>
           {topCategories.map((category) => (
             <Grid key={category.id} item xs={12} sm={6} md={3}>
               <TopCategoryItem category={category} />
@@ -74,23 +74,13 @@ export const TopCategories = () => {
       {loading && <TopCategoriesSkeletonLoading />}
       {!error && !loading && topCategories.length === 0 && (
         <Box>
-          <Typography
-            variant="h1"
-            textAlign="center"
-            mt="24px"
-            letterSpacing="-1.5px"
-          >
+          <Typography variant="h1" textAlign="center" letterSpacing="-1.5px">
             There is no top categories at the moment
           </Typography>
         </Box>
       )}
       {error && !loading && (
-        <Typography
-          variant="h1"
-          textAlign="center"
-          mt="24px"
-          letterSpacing="-1.5px"
-        >
+        <Typography variant="h1" textAlign="center" letterSpacing="-1.5px">
           Something went wrong
         </Typography>
       )}

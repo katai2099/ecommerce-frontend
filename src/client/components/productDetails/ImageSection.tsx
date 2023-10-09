@@ -18,7 +18,7 @@ export const ImageSection = ({ images }: ImageSectionProps) => {
     >
       <img
         src={images[selectedIndex].imageUrl}
-        className="img-contain"
+        className="img-contain img-300"
         style={{ marginBottom: "24px" }}
       />
       <Box display="flex" justifyItems="center" alignItems="center" gap="16px">

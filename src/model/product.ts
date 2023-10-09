@@ -84,9 +84,10 @@ export interface IProductFilterParams {
 export class Filter implements IProductFilter {
   constructor(
     public page: number = 1,
-    public sort: string = productSort[1],
+    public sort: string = productSort[0],
     public category: string[] = [],
-    public gender: Gender[] = []
+    public gender: Gender[] = [],
+    public rating: number = 0
   ) {}
 }
 
