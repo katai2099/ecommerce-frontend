@@ -136,6 +136,7 @@ export const FeaturedProducts = () => {
                 autoPlay={false}
                 sx={{ mt: "36px", paddingX: "16px" }}
                 indicators
+                navButtonsAlwaysVisible
                 index={mbIndex}
                 onChange={(now) => {
                   setMbIndex(now!);

@@ -16,7 +16,11 @@ export const ECarousel = () => {
 
   return (
     <Box my="24px">
-      <Carousel autoPlay={false} height="350px">
+      <Carousel
+        autoPlay={false}
+        height="350px"
+        navButtonsAlwaysVisible={matchSm}
+      >
         <Paper
           sx={{
             position: "relative",
