@@ -2,9 +2,12 @@ import {
   Box,
   Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   ListItemText,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
@@ -13,9 +16,13 @@ import { IIdName } from "../../model/common";
 import { RootState } from "../../reducers/combineReducer";
 import { setProductFilter } from "../../reducers/productSettingsReducer";
 import { FilterSectionProps } from "./FilterSection";
+import { LgScreenProps } from "./MobileFilter";
 import { FilterHeader } from "./common/FilterHeader";
 
-export const CategoryFilter = ({ isSearch = false }: FilterSectionProps) => {
+export const CategoryFilter = ({
+  isSearch = false,
+  isLgScreen = true,
+}: FilterSectionProps & LgScreenProps) => {
   const productSettings = useSelector(
     (state: RootState) => state.productSettings
   );
@@ -44,7 +51,7 @@ export const CategoryFilter = ({ isSearch = false }: FilterSectionProps) => {
   return (
     <Box>
       <FormControl fullWidth>
-        <FilterHeader title="Category" />
+        {isLgScreen && <FilterHeader title="Category" />}
         <InputLabel></InputLabel>
         {isSearch ? (
           <Box position="relative" width="100%">
@@ -70,22 +77,52 @@ export const CategoryFilter = ({ isSearch = false }: FilterSectionProps) => {
           </Box>
         ) : (
           <>
-            <Select
-              value={
-                productSettings.filter.category &&
-                productSettings.filter.category.length > 0
-                  ? productSettings.filter.category[0]
-                  : displayCategories[0].name
-              }
-              onChange={updateSingleCategory}
-              fullWidth
-            >
-              {displayCategories.map((category) => (
-                <MenuItem key={category.id} value={category.name}>
-                  {category.name}
-                </MenuItem>
-              ))}
-            </Select>
+            {isLgScreen ? (
+              <Select
+                value={
+                  productSettings.filter.category &&
+                  productSettings.filter.category.length > 0
+                    ? productSettings.filter.category[0]
+                    : displayCategories[0].name
+                }
+                onChange={updateSingleCategory}
+                fullWidth
+              >
+                {displayCategories.map((category) => (
+                  <MenuItem key={category.id} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            ) : (
+              <FormControl>
+                <RadioGroup
+                  name="sort"
+                  value={
+                    filter.category && filter.category.length > 0
+                      ? filter.category[0]
+                      : displayCategories[0].name
+                  }
+                >
+                  {displayCategories.map((category) => (
+                    <FormControlLabel
+                      key={category.id}
+                      value={category.name}
+                      control={<Radio size="small" />}
+                      label={category.name}
+                      onChange={() => {
+                        dispatch(
+                          setProductFilter({
+                            ...filter,
+                            category: [category.name],
+                          })
+                        );
+                      }}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            )}
           </>
         )}
       </FormControl>

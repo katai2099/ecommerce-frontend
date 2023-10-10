@@ -88,26 +88,29 @@ export const CategoryHeader = ({
                     }}
                   />
                 ))}
-              {!!(filter.category.length > 0) &&
-                filter.category.map((cat, idx) => (
-                  <Chip
-                    key={cat}
-                    label={cat}
-                    onDelete={() => {
-                      const updatedCategories = filter.category.filter(
-                        (_, index) => idx !== index
-                      );
-                      dispatch(
-                        setProductFilter({
-                          ...filter,
-                          category: updatedCategories,
-                        })
-                      );
-                    }}
-                  />
-                ))}
             </>
           )}
+          {!!(
+            filter.category.length > 0 &&
+            filter.category[0].toLowerCase() !== "all"
+          ) &&
+            filter.category.map((cat, idx) => (
+              <Chip
+                key={cat}
+                label={cat}
+                onDelete={() => {
+                  const updatedCategories = filter.category.filter(
+                    (_, index) => idx !== index
+                  );
+                  dispatch(
+                    setProductFilter({
+                      ...filter,
+                      category: updatedCategories,
+                    })
+                  );
+                }}
+              />
+            ))}
           {!!(
             filter.pmin !== undefined &&
             filter.pmax &&

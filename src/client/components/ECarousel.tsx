@@ -88,7 +88,7 @@ export const ECarousel = () => {
               navigate("/men");
             }}
           >
-            Shop now
+            Shop Men
           </Button>
         </Paper>
         <Paper
@@ -159,7 +159,7 @@ export const ECarousel = () => {
               navigate("/women");
             }}
           >
-            Shop now
+            Shop Women
           </Button>
         </Paper>
       </Carousel>

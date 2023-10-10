@@ -50,6 +50,7 @@ export const getAppInitialState = () => {
     const updatedInitialState: IMainState = {
       ...initialState,
       gui: new GuiReduxState(),
+      cart: { ...initialState.cart, open: false },
       productSettings: {
         ...initialState.productSettings,
         filter: { ...new Filter() },

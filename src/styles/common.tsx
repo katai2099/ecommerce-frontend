@@ -1,5 +1,12 @@
 import styled from "@emotion/styled";
-import { Box } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionProps,
+  AccordionSummary,
+  AccordionSummaryProps,
+  Box,
+} from "@mui/material";
 import { ReactNode } from "react";
 
 export const AppBox = styled(Box)(({ theme }) => ({
@@ -24,3 +31,29 @@ export const TabPanel = (props: TabPanelProps) => {
     </div>
   );
 };
+
+export const EAccordion = styled((props: AccordionProps) => (
+  <Accordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+  borderBottom: `1px solid rgba(0, 0, 0, .125)`,
+  "&:not(:last-child)": {
+    borderBottom: 0,
+  },
+  "&:before": {
+    display: "none",
+  },
+}));
+
+export const EAccordionSummary = styled((props: AccordionSummaryProps) => (
+  <AccordionSummary {...props} />
+))(({ theme }) => ({
+  backgroundColor: "rgba(0, 0, 0, .03)",
+  "& .MuiAccordionSummary-content": {
+    marginLeft: 1,
+  },
+}));
+
+export const EAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+  padding: "8px 16px",
+  borderTop: "1px solid rgba(0, 0, 0, .125)",
+}));

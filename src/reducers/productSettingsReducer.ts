@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IIdName } from "../model/common";
-import { Filter, Gender, IProductFilter } from "../model/product";
+import { Filter, IProductFilter } from "../model/product";
 import {
   IProductSettingsReduxState,
   ProductSettingsReduxState,
@@ -25,9 +25,16 @@ const productSettingsSlice = createSlice({
       const updatedFilter = { ...newFilter, [key]: value };
       return { ...state, filter: updatedFilter };
     },
+    setMobileFilterDrawerOpen(state, payload: PayloadAction<boolean>) {
+      return { ...state, mobileFilterDrawerOpen: payload.payload };
+    },
   },
 });
 
-export const { setCategories, setProductFilter, startNewFilter } =
-  productSettingsSlice.actions;
+export const {
+  setCategories,
+  setProductFilter,
+  startNewFilter,
+  setMobileFilterDrawerOpen,
+} = productSettingsSlice.actions;
 export default productSettingsSlice.reducer;

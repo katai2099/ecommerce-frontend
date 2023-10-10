@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/combineReducer";
 import { setProductFilter } from "../../reducers/productSettingsReducer";
 import { useAppDispatch } from "../../store/configureStore";
+import { LgScreenProps } from "./MobileFilter";
 import { FilterHeader } from "./common/FilterHeader";
 
 const FlexBox = styled(Box)(({ theme }) => ({
@@ -14,7 +15,7 @@ const FlexBox = styled(Box)(({ theme }) => ({
   alignItems: "center",
 }));
 
-export const PriceRangeFilter = () => {
+export const PriceRangeFilter = ({ isLgScreen = true }: LgScreenProps) => {
   const filter = useSelector(
     (state: RootState) => state.productSettings.filter
   );
@@ -44,7 +45,7 @@ export const PriceRangeFilter = () => {
 
   return (
     <Box>
-      <FilterHeader title="Price range" />
+      {isLgScreen && <FilterHeader title="Price range" />}
       <FlexBox mt="12px" gap="8px">
         <FlexBox
           flex="1"
@@ -69,7 +70,7 @@ export const PriceRangeFilter = () => {
           <Box fontWeight="bold">{value[1]}</Box>
         </FlexBox>
       </FlexBox>
-      <Box display="flex" mt="12px">
+      <Box display="flex" mt="12px" alignItems="center">
         <Slider
           size="small"
           getAriaLabel={() => "Temperature range"}

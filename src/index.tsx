@@ -6,11 +6,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import App from "./App";
 import "./index.css";
-import { CheckoutReduxState } from "./model/checkout";
-import { IMainState } from "./model/common";
-import { GuiReduxState } from "./model/gui";
-import { Filter } from "./model/product";
-import { setInitialState } from "./reducers/combineReducer";
+import { getAppInitialState, setInitialState } from "./reducers/combineReducer";
 import { BASE_NAME, store } from "./store/configureStore";
 import { theme } from "./styles/theme";
 
@@ -29,17 +25,8 @@ const ScrollToTop = () => {
 window.onload = () => {
   const storedState = window.localStorage.getItem(BASE_NAME);
   if (storedState) {
-    const initialState: IMainState = JSON.parse(storedState);
-    const updatedInitialState: IMainState = {
-      ...initialState,
-      gui: new GuiReduxState(),
-      productSettings: {
-        ...initialState.productSettings,
-        filter: new Filter(),
-      },
-      checkout: new CheckoutReduxState(),
-    };
-    store.dispatch(setInitialState({ state: updatedInitialState }));
+    const state = getAppInitialState();
+    store.dispatch(setInitialState({ state: state }));
   } else {
     window.localStorage.removeItem("jwt");
   }

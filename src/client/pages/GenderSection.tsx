@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -29,6 +29,8 @@ export const GenderSection = () => {
   const [totalPage, setTotalPage] = useState<number>(0);
   const dispatch = useAppDispatch();
   const { gender } = useParams();
+  const theme = useTheme();
+  const matchMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const updateFilter = (field: string, value: any) => {
     const updatedFilter = { ...filter, [field]: value };
@@ -99,7 +101,7 @@ export const GenderSection = () => {
           <CategoryHeader />
         </Grid>
       </Grid>
-      <MobileFilter />
+      {matchMobile && <MobileFilter />}
       <Grid container spacing={2}>
         <Grid
           item
@@ -109,7 +111,16 @@ export const GenderSection = () => {
         >
           <FilterSection />
         </Grid>
-        <Grid item xs={12} sm={12} md={9} lg={9.5}>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={9}
+          lg={9.5}
+          onClick={() => {
+            console.log(matchMobile);
+          }}
+        >
           <ProductList
             products={products}
             firstLoad={firstLoad}

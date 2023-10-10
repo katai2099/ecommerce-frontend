@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Gender } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import { setProductFilter } from "../../reducers/productSettingsReducer";
+import { LgScreenProps } from "./MobileFilter";
 import { FilterHeader } from "./common/FilterHeader";
 
-export const GenderFilter = () => {
+export const GenderFilter = ({ isLgScreen = true }: LgScreenProps) => {
   const [checked, setChecked] = useState<boolean[]>([false, false]);
   const genderValues = Object.values(Gender);
   const currentFilter = useSelector(
@@ -34,7 +35,7 @@ export const GenderFilter = () => {
 
   return (
     <Box>
-      <FilterHeader title={"Gender"} />
+      {isLgScreen && <FilterHeader title={"Gender"} />}
       <FormGroup>
         {genderValues.map((value, index) => (
           <FormControlLabel
