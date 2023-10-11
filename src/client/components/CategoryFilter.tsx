@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IIdName } from "../../model/common";
 import { RootState } from "../../reducers/combineReducer";
 import { setProductsFilter } from "../../reducers/productListReducer";
+import { CheckboxMenuItem } from "../../styles/common";
 import { LgScreenProps } from "./MobileFilter";
 import { FilterHeader } from "./common/FilterHeader";
 
@@ -53,27 +54,55 @@ export const CategoryFilter = ({ isLgScreen = true }: LgScreenProps) => {
         {isLgScreen && <FilterHeader title="Category" />}
         <InputLabel></InputLabel>
         {isSearch ? (
-          <Box position="relative" width="100%">
-            <Box position="absolute" left="8%" top="30%">
-              Select
-            </Box>
-            <Select
-              fullWidth
-              multiple
-              value={filter.category}
-              onChange={handleChange}
-              renderValue={() => null}
-            >
-              {categories.map((category) => (
-                <MenuItem key={category.id} value={category.name}>
-                  <Checkbox
+          <>
+            {isLgScreen ? (
+              <Box position="relative" width="100%">
+                <Box position="absolute" left="8%" top="30%">
+                  Select
+                </Box>
+                <Select
+                  fullWidth
+                  multiple
+                  value={filter.category}
+                  onChange={handleChange}
+                  renderValue={() => null}
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category.id} value={category.name}>
+                      <Checkbox
+                        checked={filter.category.indexOf(category.name) > -1}
+                      />
+                      <ListItemText primary={category.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+            ) : (
+              <Box>
+                {categories.map((category) => (
+                  <CheckboxMenuItem
+                    key={category.id}
+                    value={category.name}
                     checked={filter.category.indexOf(category.name) > -1}
+                    onClick={(checked) => {
+                      if (checked) {
+                        const addedFilterCategories = [
+                          ...filter.category,
+                          category.name,
+                        ];
+                        updateFilter(addedFilterCategories);
+                      } else {
+                        const updatedFilterCategories = filter.category.filter(
+                          (item) => item !== category.name
+                        );
+                        updateFilter(updatedFilterCategories);
+                      }
+                    }}
                   />
-                  <ListItemText primary={category.name} />
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
+                ))}
+              </Box>
+            )}
+          </>
         ) : (
           <>
             {isLgScreen ? (

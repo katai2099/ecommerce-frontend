@@ -35,6 +35,27 @@ const productListSlice = createSlice({
     setTopCategory(state, payload: PayloadAction<boolean>) {
       return { ...state, isTopCategory: payload.payload };
     },
+    resetSearchFilter(state) {
+      const resetFilter: IProductFilter = {
+        ...state.filter,
+        category: [],
+        gender: [],
+        pmin: undefined,
+        pmax: undefined,
+        rating: 0,
+      };
+      return { ...state, filter: resetFilter };
+    },
+    resetGenderSectionFilter(state) {
+      const resetFilter: IProductFilter = {
+        ...state.filter,
+        category: [],
+        pmin: undefined,
+        pmax: undefined,
+        rating: 0,
+      };
+      return { ...state, filter: resetFilter };
+    },
   },
 });
 
@@ -44,5 +65,7 @@ export const {
   setMobileFilterDrawerOpen,
   setTopCategory,
   setIsSearch,
+  resetSearchFilter,
+  resetGenderSectionFilter,
 } = productListSlice.actions;
 export default productListSlice.reducer;

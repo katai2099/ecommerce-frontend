@@ -31,7 +31,7 @@ export const ProductList = ({
       {!firstLoad && totalItem == 0 && (
         <Grid
           item
-          md={12}
+          xs={12}
           alignItems="center"
           minHeight="50vh"
           justifyContent="center"

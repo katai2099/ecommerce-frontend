@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -14,6 +14,7 @@ import {
 import { useAppDispatch } from "../../store/configureStore";
 import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
+import { MobileFilter } from "../components/MobileFilter";
 import { ProductList } from "../components/ProductList";
 
 function useQuery() {
@@ -35,6 +36,8 @@ export const Search = () => {
 
   const q = query.get("q");
   const category = query.get("category");
+  const theme = useTheme();
+  const matchMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     if (category && category !== "") {
@@ -95,17 +98,23 @@ export const Search = () => {
 
   return (
     <Box minHeight="84vh" margin="80px auto 0">
-      <Grid container>
-        <Grid item md={2}></Grid>
-        <Grid item md={10}>
+      <Grid container sx={{ display: { xs: "none", md: "flex " } }}>
+        <Grid item md={3} lg={2.5}></Grid>
+        <Grid item md={9} lg={9.5}>
           <CategoryHeader totalItems={totalItem} />
         </Grid>
       </Grid>
+      {matchMobile && <MobileFilter />}
       <Grid container spacing={2}>
-        <Grid item md={2}>
+        <Grid
+          item
+          md={3}
+          lg={2.5}
+          sx={{ display: { xs: "none", md: "inline-block" } }}
+        >
           <FilterSection />
         </Grid>
-        <Grid item md={10}>
+        <Grid item xs={12} sm={12} md={9} lg={9.5}>
           <ProductList
             products={products}
             firstLoad={firstLoad}

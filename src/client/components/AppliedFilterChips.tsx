@@ -1,8 +1,12 @@
 import { Star } from "@mui/icons-material";
-import { Box, Chip } from "@mui/material";
+import { Box, Button, Chip } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/combineReducer";
-import { setProductsFilter } from "../../reducers/productListReducer";
+import {
+  resetGenderSectionFilter,
+  resetSearchFilter,
+  setProductsFilter,
+} from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
 
 export const AppliedFilterChips = () => {
@@ -12,7 +16,7 @@ export const AppliedFilterChips = () => {
   const isSearch = productList.isSearch;
   const isTopCategory = productList.isTopCategory;
   return (
-    <Box display="flex" gap="8px">
+    <Box display="flex" gap="8px" flexWrap="wrap">
       {(isSearch || isTopCategory) && (
         <>
           {!!(filter.gender && filter.gender.length > 0) &&
@@ -73,6 +77,22 @@ export const AppliedFilterChips = () => {
           }}
         />
       )}
+      <Button
+        sx={{
+          textDecoration: "underline",
+          textTransform: "none",
+          ":hover": { textDecoration: "underline" },
+        }}
+        onClick={() => {
+          if (isSearch) {
+            dispatch(resetSearchFilter());
+          } else {
+            dispatch(resetGenderSectionFilter());
+          }
+        }}
+      >
+        Reset Filters
+      </Button>
     </Box>
   );
 };

@@ -93,7 +93,7 @@ export const GenderSection = () => {
 
   return (
     <Box minHeight="84vh" margin="80px auto 0">
-      <Grid container sx={{ display: { sm: "none", xs: "none", md: "flex " } }}>
+      <Grid container sx={{ display: { xs: "none", md: "flex " } }}>
         <Grid item md={3} lg={2.5}></Grid>
         <Grid item md={9} lg={9.5}>
           <CategoryHeader />
@@ -105,20 +105,11 @@ export const GenderSection = () => {
           item
           md={3}
           lg={2.5}
-          sx={{ display: { sm: "none", xs: "none", md: "inline-block" } }}
+          sx={{ display: { xs: "none", md: "inline-block" } }}
         >
           <FilterSection />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={9}
-          lg={9.5}
-          onClick={() => {
-            console.log(matchMobile);
-          }}
-        >
+        <Grid item xs={12} sm={12} md={9} lg={9.5}>
           <ProductList
             products={products}
             firstLoad={firstLoad}

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Box, Button, Slider } from "@mui/material";
+import { Box, Button, Slider, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/combineReducer";
@@ -41,6 +41,9 @@ export const PriceRangeFilter = ({ isLgScreen = true }: LgScreenProps) => {
     dispatch(setProductsFilter(newFilter));
   };
 
+  const theme = useTheme();
+  const matchMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <Box>
       {isLgScreen && <FilterHeader title="Price range" />}
@@ -68,7 +71,11 @@ export const PriceRangeFilter = ({ isLgScreen = true }: LgScreenProps) => {
           <Box fontWeight="bold">{value[1]}</Box>
         </FlexBox>
       </FlexBox>
-      <Box display="flex" mt="12px" alignItems="center">
+      <Box
+        display={matchMobile ? "block" : "flex"}
+        mt="12px"
+        alignItems="center"
+      >
         <Slider
           size="small"
           getAriaLabel={() => "Temperature range"}
@@ -79,11 +86,12 @@ export const PriceRangeFilter = ({ isLgScreen = true }: LgScreenProps) => {
           min={0}
           step={10}
         />
-        <Box ml="8px">
+        <Box ml={matchMobile ? 0 : "8px"}>
           <Button
             sx={{ minWidth: "32px", padding: "4px 8px" }}
-            variant="contained"
+            variant={matchMobile ? "outlined" : "contained"}
             onClick={setPriceRange}
+            fullWidth
           >
             GO
           </Button>

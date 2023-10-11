@@ -56,7 +56,7 @@ export const Navbar = () => {
   return (
     <AppBar position="fixed" sx={{ bgcolor: "rgba(255,255,255,0.95)" }}>
       <Container maxWidth="lg">
-        <Toolbar disableGutters>
+        <Toolbar>
           <Stack
             width="100%"
             direction="row"
@@ -75,9 +75,7 @@ export const Navbar = () => {
                   fontWeight: 700,
                   letterSpacing: ".3rem",
                   textDecoration: "none",
-                  ":hover": {
-                    cursor: "pointer",
-                  },
+                  cursor: "pointer !important",
                 }}
                 onClick={() => {
                   const initialState = getAppInitialState();

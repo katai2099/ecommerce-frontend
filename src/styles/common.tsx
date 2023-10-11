@@ -6,6 +6,9 @@ import {
   AccordionSummary,
   AccordionSummaryProps,
   Box,
+  Checkbox,
+  ListItemText,
+  MenuItem,
 } from "@mui/material";
 import { ReactNode } from "react";
 
@@ -57,3 +60,28 @@ export const EAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
   padding: "8px 16px",
   borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
+
+export interface CheckboxMenuItemProps {
+  checked: boolean;
+  onClick: (checked: boolean) => void;
+  value: string;
+}
+
+export const CheckboxMenuItem = ({
+  checked,
+  onClick,
+  value,
+}: CheckboxMenuItemProps) => {
+  return (
+    <MenuItem
+      sx={{ p: 0 }}
+      value={value}
+      onClick={() => {
+        onClick(!checked);
+      }}
+    >
+      <Checkbox checked={checked} size="small" sx={{ pl: 0 }} />
+      <ListItemText primary={value} />
+    </MenuItem>
+  );
+};

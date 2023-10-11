@@ -1,6 +1,7 @@
 import { FormControl } from "@mui/base";
 import { Close, ExpandMore, FilterList, Star } from "@mui/icons-material";
 import {
+  Button,
   Drawer,
   FormControlLabel,
   IconButton,
@@ -40,11 +41,12 @@ export const MobileFilter = () => {
   const filter = useSelector((state: RootState) => state.productList.filter);
 
   return (
-    <Box mt="12px" mb="24px">
+    <Box mt="12px" mb="24px" width="100%">
       <Box display="flex" justifyContent="space-between">
         <Box mt="8px">
           <AppliedFilterChips />
         </Box>
+
         <Box textAlign="end">
           <IconButton
             onClick={() => {
@@ -55,14 +57,16 @@ export const MobileFilter = () => {
           </IconButton>
         </Box>
       </Box>
+
       <Drawer
         open={open}
         anchor="right"
         onClose={() => {
           dispatch(setMobileFilterDrawerOpen(false));
         }}
+        PaperProps={{ sx: { minWidth: "70%", maxWidth: "70%" } }}
       >
-        <Box padding="0 16px" minWidth="300px">
+        <Box padding="0 16px">
           <Box
             mt="12px"
             display="flex"
@@ -79,6 +83,9 @@ export const MobileFilter = () => {
             >
               <Close />
             </IconButton>
+          </Box>
+          <Box my="8px">
+            <AppliedFilterChips />
           </Box>
           <Box mt="12px">
             <EAccordion>
@@ -120,7 +127,12 @@ export const MobileFilter = () => {
                   aria-controls="-content"
                   id="-header"
                 >
-                  <Typography>Gender: {filter.gender}</Typography>
+                  <Typography>
+                    Gender:{" "}
+                    {filter.gender.length > 1
+                      ? `${filter.gender.length} selected`
+                      : filter.gender}
+                  </Typography>
                 </EAccordionSummary>
                 <EAccordionDetails>
                   <GenderFilter isLgScreen={false} />
@@ -137,7 +149,14 @@ export const MobileFilter = () => {
                 id="-header"
               >
                 <Typography>
-                  Category: {filter.category[0] ? filter.category[0] : "All"}
+                  Category:{" "}
+                  {isSearch
+                    ? filter.category.length > 1
+                      ? `${filter.category.length} selected`
+                      : filter.category
+                    : filter.category[0]
+                    ? filter.category[0]
+                    : "All"}
                 </Typography>
               </EAccordionSummary>
               <EAccordionDetails>
@@ -154,7 +173,14 @@ export const MobileFilter = () => {
                 id="-header"
               >
                 <Typography>
-                  Price: {`${filter.pmin} - ${filter.pmax}`}
+                  Price:{" "}
+                  {!!(
+                    filter.pmin !== undefined &&
+                    filter.pmax &&
+                    (filter.pmin !== 0 || filter.pmax !== 100)
+                  )
+                    ? `${filter.pmin} - ${filter.pmax} $`
+                    : "0 - 100 $"}
                 </Typography>
               </EAccordionSummary>
               <EAccordionDetails>
@@ -180,6 +206,17 @@ export const MobileFilter = () => {
                 <RatingFilter isLgScreen={false} />
               </EAccordionDetails>
             </EAccordion>
+          </Box>
+          <Box mt="12px">
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                dispatch(setMobileFilterDrawerOpen(false));
+              }}
+            >
+              See results
+            </Button>
           </Box>
         </Box>
       </Drawer>
