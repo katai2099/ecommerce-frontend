@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IIdName } from "../model/common";
-import { setCategories } from "../reducers/productSettingsReducer";
+import { setCategories } from "../reducers/productAttributesReducer";
 import { getAdminCategoriesWorker } from "./adminActions";
 
 export const fetchProductSetttingsCategoriesAction = createAsyncThunk<

@@ -3,7 +3,7 @@ import { Box, Button, Slider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/combineReducer";
-import { setProductFilter } from "../../reducers/productSettingsReducer";
+import { setProductsFilter } from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { LgScreenProps } from "./MobileFilter";
 import { FilterHeader } from "./common/FilterHeader";
@@ -16,9 +16,7 @@ const FlexBox = styled(Box)(({ theme }) => ({
 }));
 
 export const PriceRangeFilter = ({ isLgScreen = true }: LgScreenProps) => {
-  const filter = useSelector(
-    (state: RootState) => state.productSettings.filter
-  );
+  const filter = useSelector((state: RootState) => state.productList.filter);
   const [value, setValue] = useState<number[]>([0, 100]);
 
   useEffect(() => {
@@ -40,7 +38,7 @@ export const PriceRangeFilter = ({ isLgScreen = true }: LgScreenProps) => {
       pmax: value[1],
       page: 1,
     };
-    dispatch(setProductFilter(newFilter));
+    dispatch(setProductsFilter(newFilter));
   };
 
   return (

@@ -3,23 +3,21 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Gender } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
-import { setProductFilter } from "../../reducers/productSettingsReducer";
+import { setProductsFilter } from "../../reducers/productListReducer";
 import { LgScreenProps } from "./MobileFilter";
 import { FilterHeader } from "./common/FilterHeader";
 
 export const GenderFilter = ({ isLgScreen = true }: LgScreenProps) => {
   const [checked, setChecked] = useState<boolean[]>([false, false]);
   const genderValues = Object.values(Gender);
-  const currentFilter = useSelector(
-    (state: RootState) => state.productSettings.filter
-  );
+  const filter = useSelector((state: RootState) => state.productList.filter);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (currentFilter.gender.length === 0) {
+    if (filter.gender.length === 0) {
       setChecked([false, false]);
     }
-  }, [currentFilter.gender]);
+  }, [filter.gender]);
 
   const handleCheck = (index: number, event: ChangeEvent<HTMLInputElement>) => {
     const updatedChecked = checked.map((item, idx) =>
@@ -28,8 +26,8 @@ export const GenderFilter = ({ isLgScreen = true }: LgScreenProps) => {
     const genders = updatedChecked
       .map((check, idx) => (check ? genderValues[idx] : null))
       .filter((value): value is Gender => value !== null);
-    const newFilter = { ...currentFilter, gender: genders, page: 1 };
-    dispatch(setProductFilter(newFilter));
+    const updatedFilter = { ...filter, gender: genders, page: 1 };
+    dispatch(setProductsFilter(updatedFilter));
     setChecked(updatedChecked);
   };
 

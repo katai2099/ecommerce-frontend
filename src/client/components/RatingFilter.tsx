@@ -9,31 +9,29 @@ import {
 import { ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../reducers/combineReducer";
-import { setProductFilter } from "../../reducers/productSettingsReducer";
+import { setProductsFilter } from "../../reducers/productListReducer";
 import { LgScreenProps } from "./MobileFilter";
 import { FilterHeader } from "./common/FilterHeader";
 
 const values: number[] = [4, 3, 2, 1];
 
 export const RatingFilter = ({ isLgScreen = true }: LgScreenProps) => {
-  const currentFilter = useSelector(
-    (state: RootState) => state.productSettings.filter
-  );
+  const filter = useSelector((state: RootState) => state.productList.filter);
   const dispatch = useDispatch();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newFilter = {
-      ...currentFilter,
+    const updatedFilter = {
+      ...filter,
       rating: Number(event.target.value),
       page: 1,
     };
-    dispatch(setProductFilter(newFilter));
+    dispatch(setProductsFilter(updatedFilter));
   };
 
   return (
     <Box>
       {isLgScreen && <FilterHeader title="Rating" />}
-      <RadioGroup value={currentFilter.rating} onChange={handleChange}>
+      <RadioGroup value={filter.rating} onChange={handleChange}>
         {values.map((value) => (
           <FormControlLabel
             key={value}

@@ -35,9 +35,7 @@ export const Navbar = () => {
     return accumulator + currentValue.quantity;
   }, 0);
   const dispatch = useAppDispatch();
-  const filter = useSelector(
-    (state: RootState) => state.productSettings.filter
-  );
+  const filter = useSelector((state: RootState) => state.productList.filter);
   const [searchValue, setSearchValue] = useState<string>("");
   const navigate = useNavigate();
   const location = useLocation();

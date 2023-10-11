@@ -1,7 +1,5 @@
-import { Star } from "@mui/icons-material";
 import {
   Box,
-  Chip,
   FormControl,
   InputLabel,
   MenuItem,
@@ -13,28 +11,24 @@ import {
 import { useSelector } from "react-redux";
 import { productSort, productSortName } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
-import { setProductFilter } from "../../reducers/productSettingsReducer";
+import { setProductsFilter } from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
-import { FilterSectionProps } from "./FilterSection";
+import { AppliedFilterChips } from "./AppliedFilterChips";
 
 interface SearchProps {
   totalItems?: number;
-  isTopCategory?: boolean;
 }
 
-export const CategoryHeader = ({
-  isSearch = false,
-  totalItems = 0,
-  isTopCategory = false,
-}: FilterSectionProps & SearchProps) => {
-  const filter = useSelector(
-    (state: RootState) => state.productSettings.filter
-  );
+export const CategoryHeader = ({ totalItems = 0 }: SearchProps) => {
+  const productList = useSelector((state: RootState) => state.productList);
+  const filter = productList.filter;
+  const isSearch = productList.isSearch;
+  const isTopCategory = productList.isTopCategory;
   const dispatch = useAppDispatch();
 
   const sortChangeHandler = (event: SelectChangeEvent<string>) => {
     const updatedFilter = { ...filter, sort: event.target.value, page: 1 };
-    dispatch(setProductFilter(updatedFilter));
+    dispatch(setProductsFilter(updatedFilter));
   };
 
   return (
@@ -70,69 +64,7 @@ export const CategoryHeader = ({
             </FormControl>
           </Box>
         </Box>
-        <Box display="flex" gap="8px">
-          {(isSearch || isTopCategory) && (
-            <>
-              {!!(filter.gender && filter.gender.length > 0) &&
-                filter.gender.map((sex, idx) => (
-                  <Chip
-                    key={sex}
-                    label={sex}
-                    onDelete={() => {
-                      const updatedGender = filter.gender.filter(
-                        (_, index) => idx !== index
-                      );
-                      dispatch(
-                        setProductFilter({ ...filter, gender: updatedGender })
-                      );
-                    }}
-                  />
-                ))}
-            </>
-          )}
-          {!!(
-            filter.category.length > 0 &&
-            filter.category[0].toLowerCase() !== "all"
-          ) &&
-            filter.category.map((cat, idx) => (
-              <Chip
-                key={cat}
-                label={cat}
-                onDelete={() => {
-                  const updatedCategories = filter.category.filter(
-                    (_, index) => idx !== index
-                  );
-                  dispatch(
-                    setProductFilter({
-                      ...filter,
-                      category: updatedCategories,
-                    })
-                  );
-                }}
-              />
-            ))}
-          {!!(
-            filter.pmin !== undefined &&
-            filter.pmax &&
-            (filter.pmin !== 0 || filter.pmax !== 100)
-          ) && (
-            <Chip
-              label={`${filter.pmin} - ${filter.pmax} $`}
-              onDelete={() => {
-                dispatch(setProductFilter({ ...filter, pmin: 0, pmax: 100 }));
-              }}
-            />
-          )}
-          {!!(filter.rating !== undefined && filter.rating !== 0) && (
-            <Chip
-              label={`${filter.rating}`}
-              icon={<Star fontSize="small" color="warning" />}
-              onDelete={() => {
-                dispatch(setProductFilter({ ...filter, rating: 0 }));
-              }}
-            />
-          )}
-        </Box>
+        <AppliedFilterChips />
       </Box>
     </Paper>
   );

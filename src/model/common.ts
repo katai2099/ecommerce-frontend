@@ -5,9 +5,10 @@ import { GuiReduxState, IGuiReduxState } from "./gui";
 import { HomepageReduxState, IHomepageReduxState } from "./homepage";
 import { IProductReduxState, ProductReduxState } from "./product";
 import {
-  IProductSettingsReduxState,
-  ProductSettingsReduxState,
-} from "./productSettings";
+  IProductAttributesReduxState,
+  ProductAttributesReduxState,
+} from "./productAttributes";
+import { IProductListReduxState, ProductListReduxState } from "./productList";
 import { IUserReduxState, UserReduxtState } from "./user";
 
 export class MainState implements IMainState {
@@ -16,10 +17,11 @@ export class MainState implements IMainState {
     public user: IUserReduxState = new UserReduxtState(),
     public admin: IAdminReduxState = new adminReduxState(),
     public gui: IGuiReduxState = new GuiReduxState(),
-    public productSettings: IProductSettingsReduxState = new ProductSettingsReduxState(),
+    public productAttributes: IProductAttributesReduxState = new ProductAttributesReduxState(),
     public cart: ICartReduxState = new CartReduxState(),
     public checkout: ICheckoutReduxState = new CheckoutReduxState(),
-    public homepage: IHomepageReduxState = new HomepageReduxState()
+    public homepage: IHomepageReduxState = new HomepageReduxState(),
+    public productList: IProductListReduxState = new ProductListReduxState()
   ) {}
 }
 
@@ -28,10 +30,11 @@ export interface IMainState {
   user: IUserReduxState;
   admin: IAdminReduxState;
   gui: IGuiReduxState;
-  productSettings: IProductSettingsReduxState;
+  productAttributes: IProductAttributesReduxState;
   cart: ICartReduxState;
   checkout: ICheckoutReduxState;
   homepage: IHomepageReduxState;
+  productList: IProductListReduxState;
 }
 
 export interface IIdName {

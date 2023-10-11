@@ -14,20 +14,19 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { IIdName } from "../../model/common";
 import { RootState } from "../../reducers/combineReducer";
-import { setProductFilter } from "../../reducers/productSettingsReducer";
-import { FilterSectionProps } from "./FilterSection";
+import { setProductsFilter } from "../../reducers/productListReducer";
 import { LgScreenProps } from "./MobileFilter";
 import { FilterHeader } from "./common/FilterHeader";
 
-export const CategoryFilter = ({
-  isSearch = false,
-  isLgScreen = true,
-}: FilterSectionProps & LgScreenProps) => {
-  const productSettings = useSelector(
-    (state: RootState) => state.productSettings
+export const CategoryFilter = ({ isLgScreen = true }: LgScreenProps) => {
+  const isSearch = useSelector(
+    (state: RootState) => state.productList.isSearch
   );
-  const categories = productSettings.categories;
-  const filter = productSettings.filter;
+  const productAttributes = useSelector(
+    (state: RootState) => state.productAttributes
+  );
+  const categories = productAttributes.categories;
+  const filter = useSelector((state: RootState) => state.productList.filter);
   const displayCategories: IIdName[] = [{ id: 0, name: "All" }, ...categories];
   const dispatch = useDispatch();
 
@@ -45,7 +44,7 @@ export const CategoryFilter = ({
 
   const updateFilter = (newCategories: string[]) => {
     const newFilter = { ...filter, category: newCategories, page: 1 };
-    dispatch(setProductFilter(newFilter));
+    dispatch(setProductsFilter(newFilter));
   };
 
   return (
@@ -80,9 +79,8 @@ export const CategoryFilter = ({
             {isLgScreen ? (
               <Select
                 value={
-                  productSettings.filter.category &&
-                  productSettings.filter.category.length > 0
-                    ? productSettings.filter.category[0]
+                  filter.category && filter.category.length > 0
+                    ? filter.category[0]
                     : displayCategories[0].name
                 }
                 onChange={updateSingleCategory}
@@ -112,7 +110,7 @@ export const CategoryFilter = ({
                       label={category.name}
                       onChange={() => {
                         dispatch(
-                          setProductFilter({
+                          setProductsFilter({
                             ...filter,
                             category: [category.name],
                           })

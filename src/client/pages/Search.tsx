@@ -8,9 +8,9 @@ import { PageNumberSection } from "../../admin/components/PageNumberSection";
 import { IProduct } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
-  setProductFilter,
+  setProductsFilter,
   startNewFilter,
-} from "../../reducers/productSettingsReducer";
+} from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
@@ -23,9 +23,7 @@ function useQuery() {
 
 export const Search = () => {
   const dispatch = useAppDispatch();
-  const filter = useSelector(
-    (state: RootState) => state.productSettings.filter
-  );
+  const filter = useSelector((state: RootState) => state.productList.filter);
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [currentPageTotalItem, setCurrentPageTotalItem] = useState<number>(0);
@@ -87,7 +85,7 @@ export const Search = () => {
 
   const updateFilter = (field: string, value: any) => {
     const updatedFilter = { ...filter, [field]: value };
-    dispatch(setProductFilter(updatedFilter));
+    dispatch(setProductsFilter(updatedFilter));
   };
 
   const handleLoadMoreClick = () => {
@@ -100,16 +98,12 @@ export const Search = () => {
       <Grid container>
         <Grid item md={2}></Grid>
         <Grid item md={10}>
-          <CategoryHeader
-            isSearch={!!q}
-            totalItems={totalItem}
-            isTopCategory={!!category}
-          />
+          <CategoryHeader totalItems={totalItem} />
         </Grid>
       </Grid>
       <Grid container spacing={2}>
         <Grid item md={2}>
-          <FilterSection isSearch={true} />
+          <FilterSection />
         </Grid>
         <Grid item md={10}>
           <ProductList

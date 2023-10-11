@@ -8,9 +8,9 @@ import { PageNumberSection } from "../../admin/components/PageNumberSection";
 import { Gender, IProduct } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
-  setProductFilter,
+  setProductsFilter,
   startNewFilter,
-} from "../../reducers/productSettingsReducer";
+} from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
@@ -20,9 +20,7 @@ import { ProductList } from "../components/ProductList";
 export const GenderSection = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
-  const filter = useSelector(
-    (state: RootState) => state.productSettings.filter
-  );
+  const filter = useSelector((state: RootState) => state.productList.filter);
   const [page, setPage] = useState<number>(1);
   const [currentPageTotalItem, setCurrentPageTotalItem] = useState<number>(0);
   const [totalItem, SetTotalItem] = useState<number>(0);
@@ -34,7 +32,7 @@ export const GenderSection = () => {
 
   const updateFilter = (field: string, value: any) => {
     const updatedFilter = { ...filter, [field]: value };
-    dispatch(setProductFilter(updatedFilter));
+    dispatch(setProductsFilter(updatedFilter));
   };
 
   const getGender = (key: string | undefined): Gender | null => {

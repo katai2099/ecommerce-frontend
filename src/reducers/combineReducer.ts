@@ -9,15 +9,16 @@ import { logoutAction } from "../actions/userActions";
 import { CheckoutReduxState } from "../model/checkout";
 import { IMainState, MainState } from "../model/common";
 import { GuiReduxState } from "../model/gui";
-import { Filter } from "../model/product";
+import { ProductListReduxState } from "../model/productList";
 import { BASE_NAME } from "../store/configureStore";
 import adminReducer from "./adminReducer";
 import cartReducer from "./cartReducer";
 import checkoutReducer from "./checkoutReducer";
 import guiReducer from "./guiReducer";
 import homepageReducer from "./homepageReducer";
+import productAttributesReducer from "./productAttributesReducer";
+import productListReducer from "./productListReducer";
 import productReducer from "./productReducer";
-import productSettingsReducer from "./productSettingsReducer";
 import userReducer from "./userReducer";
 
 const appReducer = combineReducers<IMainState>({
@@ -25,10 +26,11 @@ const appReducer = combineReducers<IMainState>({
   user: userReducer,
   admin: adminReducer,
   gui: guiReducer,
-  productSettings: productSettingsReducer,
+  productAttributes: productAttributesReducer,
   cart: cartReducer,
   checkout: checkoutReducer,
   homepage: homepageReducer,
+  productList: productListReducer,
 });
 
 const initialState: IMainState = new MainState();
@@ -51,10 +53,7 @@ export const getAppInitialState = () => {
       ...initialState,
       gui: new GuiReduxState(),
       cart: { ...initialState.cart, open: false },
-      productSettings: {
-        ...initialState.productSettings,
-        filter: { ...new Filter() },
-      },
+      productList: new ProductListReduxState(),
       checkout: new CheckoutReduxState(),
     };
     return updatedInitialState;

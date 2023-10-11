@@ -14,14 +14,15 @@ import { productSort, productSortName } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
   setMobileFilterDrawerOpen,
-  setProductFilter,
-} from "../../reducers/productSettingsReducer";
+  setProductsFilter,
+} from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import {
   EAccordion,
   EAccordionDetails,
   EAccordionSummary,
 } from "../../styles/common";
+import { AppliedFilterChips } from "./AppliedFilterChips";
 import { CategoryFilter } from "./CategoryFilter";
 import { GenderFilter } from "./GenderFilter";
 import { PriceRangeFilter } from "./PriceRangeFilter";
@@ -31,32 +32,28 @@ export interface LgScreenProps {
   isLgScreen?: boolean;
 }
 
-interface MobileFilterProps {
-  isSearch?: boolean;
-}
-
-export const MobileFilter = ({ isSearch = false }: MobileFilterProps) => {
+export const MobileFilter = () => {
   const dispatch = useAppDispatch();
-  const open = useSelector(
-    (state: RootState) => state.productSettings.mobileFilterDrawerOpen
-  );
-  const filter = useSelector(
-    (state: RootState) => state.productSettings.filter
-  );
-  const categories = useSelector(
-    (state: RootState) => state.productSettings.categories
-  );
+  const productList = useSelector((state: RootState) => state.productList);
+  const open = productList.mobileFilterDrawerOpen;
+  const isSearch = productList.isSearch;
+  const filter = useSelector((state: RootState) => state.productList.filter);
 
   return (
     <Box mt="12px" mb="24px">
-      <Box textAlign="end">
-        <IconButton
-          onClick={() => {
-            dispatch(setMobileFilterDrawerOpen(true));
-          }}
-        >
-          <FilterList />
-        </IconButton>
+      <Box display="flex" justifyContent="space-between">
+        <Box mt="8px">
+          <AppliedFilterChips />
+        </Box>
+        <Box textAlign="end">
+          <IconButton
+            onClick={() => {
+              dispatch(setMobileFilterDrawerOpen(true));
+            }}
+          >
+            <FilterList />
+          </IconButton>
+        </Box>
       </Box>
       <Drawer
         open={open}
@@ -103,7 +100,9 @@ export const MobileFilter = ({ isSearch = false }: MobileFilterProps) => {
                         control={<Radio size="small" />}
                         label={productSortName[idx]}
                         onChange={() => {
-                          dispatch(setProductFilter({ ...filter, sort: sort }));
+                          dispatch(
+                            setProductsFilter({ ...filter, sort: sort })
+                          );
                         }}
                       />
                     ))}
