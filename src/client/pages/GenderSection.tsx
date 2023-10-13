@@ -2,10 +2,10 @@ import { Box, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getProductsAction } from "../../actions/productActions";
-import { fetchProductSetttingsCategoriesAction } from "../../actions/productSettingsActions";
+import { fetchProductAttributesCategoriesAction } from "../../actions/productSettingsActions";
 import { PageNumberSection } from "../../admin/components/PageNumberSection";
-import { Gender, IProduct } from "../../model/product";
+import { getProducts } from "../../controllers/product";
+import { Gender } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
   setProductsFilter,
@@ -16,11 +16,17 @@ import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
 import { MobileFilter } from "../components/MobileFilter";
 import { ProductList } from "../components/ProductList";
+import { ProductListSkeletonLoading } from "../components/SkeletonLoading";
 
 export const GenderSection = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const products = useSelector(
+    (state: RootState) => state.productList.products
+  );
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const filter = useSelector((state: RootState) => state.productList.filter);
+  const loading = useSelector(
+    (state: RootState) => state.productList.isLoading
+  );
   const [page, setPage] = useState<number>(1);
   const [currentPageTotalItem, setCurrentPageTotalItem] = useState<number>(0);
   const [totalItem, SetTotalItem] = useState<number>(0);
@@ -53,20 +59,17 @@ export const GenderSection = () => {
   }, [gender]);
 
   useEffect(() => {
-    dispatch(fetchProductSetttingsCategoriesAction());
+    dispatch(fetchProductAttributesCategoriesAction());
   }, []);
 
   useEffect(() => {
     if (filter.gender.length > 0) {
-      dispatch(getProductsAction(filter))
-        .unwrap()
+      if (filter.page && filter.page === 1) {
+        setFirstLoad(true);
+      }
+      getProducts(filter)
         .then((res) => {
           setFirstLoad(false);
-          if (res.currentPage != 1) {
-            setProducts((prev) => [...prev, ...res.data]);
-          } else {
-            setProducts(res.data);
-          }
           setPage(res.currentPage);
           setTotalPage(res.totalPage);
           SetTotalItem(res.totalItem);
@@ -124,7 +127,10 @@ export const GenderSection = () => {
             itemName="products"
             handleLoadMoreClick={handleLoadMoreClick}
             firstLoad={firstLoad}
-          />
+            itemsLoading={loading}
+          >
+            <ProductListSkeletonLoading amount={4} />
+          </PageNumberSection>
         </Grid>
       </Grid>
     </Box>

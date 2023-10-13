@@ -1,5 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { IProduct } from "../../model/product";
+import { ProductListSkeletonLoading } from "./SkeletonLoading";
 import { NoContentFound } from "./common/NoContentFound";
 import { ProductItem } from "./homepage/productList/ProductItem";
 
@@ -17,6 +18,7 @@ export const ProductList = ({
   firstLoad,
   totalItem,
 }: ProductListProps & ListLoadProps) => {
+  if (firstLoad) return <ProductListSkeletonLoading amount={12} />;
   return (
     <Grid container spacing={2}>
       {!firstLoad && totalItem !== 0 && (

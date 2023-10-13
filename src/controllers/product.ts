@@ -1,5 +1,5 @@
 import { addToCartAction } from "../actions/cartActions";
-import { addProductAction } from "../actions/productActions";
+import { addProductAction, getProductsAction } from "../actions/productActions";
 import { IAddToCartRequest } from "../model/cart";
 import { IIdName } from "../model/common";
 import {
@@ -42,6 +42,14 @@ export function addToCart(
       );
       return Promise.resolve(res);
     })
+    .catch((err) => Promise.reject(err));
+}
+
+export function getProducts(filter: IProductFilter) {
+  return store
+    .dispatch(getProductsAction(filter))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }
 
@@ -136,7 +144,11 @@ export function isFilterEmpty(
   if (filter.gender.length > 0 && !isGender) {
     return false;
   }
-  if (filter.category.length > 0 && !isTop) {
+  if (
+    filter.category.length > 0 &&
+    filter.category[0].toLowerCase() !== "all" &&
+    !isTop
+  ) {
     return false;
   }
   if (

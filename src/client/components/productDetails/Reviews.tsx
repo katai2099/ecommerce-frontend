@@ -1,6 +1,7 @@
 import { Box, Button, Rating, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { submitReviewAction } from "../../../actions/productActions";
 import { PageNumberSection } from "../../../admin/components/PageNumberSection";
 import { IPaginationFilterData } from "../../../model/common";
@@ -108,9 +109,11 @@ export const Reviews = (props: ReviewsProps) => {
             {ownerReview ? "Update " : "Write a"} review
           </Button>
         ) : (
-          <Typography variant="h3" color="GrayText">
-            Log in to review
-          </Typography>
+          <Link to="/login">
+            <Typography variant="h3" color="GrayText">
+              Log in to review
+            </Typography>
+          </Link>
         )}
       </Box>
       {ownerReview && <ReviewItem review={ownerReview} />}

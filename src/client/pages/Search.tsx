@@ -2,10 +2,9 @@ import { Box, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { getProductsAction } from "../../actions/productActions";
-import { fetchProductSetttingsCategoriesAction } from "../../actions/productSettingsActions";
+import { fetchProductAttributesCategoriesAction } from "../../actions/productSettingsActions";
 import { PageNumberSection } from "../../admin/components/PageNumberSection";
-import { IProduct } from "../../model/product";
+import { getProducts } from "../../controllers/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
   setProductsFilter,
@@ -16,6 +15,7 @@ import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
 import { MobileFilter } from "../components/MobileFilter";
 import { ProductList } from "../components/ProductList";
+import { ProductListSkeletonLoading } from "../components/SkeletonLoading";
 
 function useQuery() {
   const { search } = useLocation();
@@ -24,13 +24,16 @@ function useQuery() {
 
 export const Search = () => {
   const dispatch = useAppDispatch();
-  const filter = useSelector((state: RootState) => state.productList.filter);
+
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [currentPageTotalItem, setCurrentPageTotalItem] = useState<number>(0);
   const [totalItem, SetTotalItem] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const productList = useSelector((state: RootState) => state.productList);
+  const filter = productList.filter;
+  const loading = productList.isLoading;
+  const products = productList.products;
 
   let query = useQuery();
 
@@ -52,20 +55,17 @@ export const Search = () => {
   }, [q]);
 
   useEffect(() => {
-    dispatch(fetchProductSetttingsCategoriesAction());
+    dispatch(fetchProductAttributesCategoriesAction());
   }, []);
 
   useEffect(() => {
     if (category && category !== "") {
-      dispatch(getProductsAction(filter))
-        .unwrap()
+      if (filter.page && filter.page === 1) {
+        setFirstLoad(true);
+      }
+      getProducts(filter)
         .then((res) => {
           setFirstLoad(false);
-          if (filter.page !== 1) {
-            setProducts((prev) => [...prev, ...res.data]);
-          } else {
-            setProducts(res.data);
-          }
           setPage(res.currentPage);
           setTotalPage(res.totalPage);
           SetTotalItem(res.totalItem);
@@ -86,15 +86,12 @@ export const Search = () => {
 
   useEffect(() => {
     if (filter.q) {
-      dispatch(getProductsAction(filter))
-        .unwrap()
+      if (filter.page && filter.page === 1) {
+        setFirstLoad(true);
+      }
+      getProducts(filter)
         .then((res) => {
           setFirstLoad(false);
-          if (filter.page !== 1) {
-            setProducts((prev) => [...prev, ...res.data]);
-          } else {
-            setProducts(res.data);
-          }
           setPage(res.currentPage);
           setTotalPage(res.totalPage);
           SetTotalItem(res.totalItem);
@@ -158,7 +155,10 @@ export const Search = () => {
             itemName="products"
             handleLoadMoreClick={handleLoadMoreClick}
             firstLoad={firstLoad}
-          />
+            itemsLoading={loading}
+          >
+            <ProductListSkeletonLoading amount={4} />
+          </PageNumberSection>
         </Grid>
       </Grid>
     </Box>

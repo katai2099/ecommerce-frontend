@@ -9,6 +9,7 @@ import { logoutAction } from "../actions/userActions";
 import { CheckoutReduxState } from "../model/checkout";
 import { IMainState, MainState } from "../model/common";
 import { GuiReduxState } from "../model/gui";
+import { ProductAttributesReduxState } from "../model/productAttributes";
 import { ProductListReduxState } from "../model/productList";
 import { BASE_NAME } from "../store/configureStore";
 import adminReducer from "./adminReducer";
@@ -55,6 +56,7 @@ export const getAppInitialState = () => {
       cart: { ...initialState.cart, open: false },
       productList: new ProductListReduxState(),
       checkout: new CheckoutReduxState(),
+      productAttributes: new ProductAttributesReduxState(),
     };
     return updatedInitialState;
   }

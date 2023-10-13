@@ -1,7 +1,6 @@
 import { FormControl } from "@mui/base";
 import { Close, ExpandMore, FilterList, Star } from "@mui/icons-material";
 import {
-  Button,
   Drawer,
   FormControlLabel,
   IconButton,
@@ -28,6 +27,7 @@ import { CategoryFilter } from "./CategoryFilter";
 import { GenderFilter } from "./GenderFilter";
 import { PriceRangeFilter } from "./PriceRangeFilter";
 import { RatingFilter } from "./RatingFilter";
+import { LoadingButton } from "./common/LoadingButton";
 
 export interface LgScreenProps {
   isLgScreen?: boolean;
@@ -40,6 +40,7 @@ export const MobileFilter = () => {
   const isSearch = productList.isSearch;
   const isTop = productList.isTopCategory;
   const filter = useSelector((state: RootState) => state.productList.filter);
+  const loading = productList.isLoading;
 
   return (
     <Box mt="12px" mb="24px" width="100%">
@@ -211,15 +212,14 @@ export const MobileFilter = () => {
             </EAccordion>
           </Box>
           <Box mt="12px">
-            <Button
-              variant="contained"
+            <LoadingButton
               fullWidth
               onClick={() => {
                 dispatch(setMobileFilterDrawerOpen(false));
               }}
-            >
-              See results
-            </Button>
+              title="See results"
+              loading={loading}
+            />
           </Box>
         </Box>
       </Drawer>

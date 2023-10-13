@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { getProductsAction } from "../actions/productActions";
 import { Filter, IProductFilter, productSort } from "../model/product";
 import {
   IProductListReduxState,
@@ -69,6 +70,24 @@ const productListSlice = createSlice({
       };
       return { ...state, filter: resetFilter };
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getProductsAction.pending, (state) => {
+      return { ...state, isLoading: true };
+    });
+    builder.addCase(getProductsAction.fulfilled, (state, payload) => {
+      const res = payload.payload;
+      let products;
+      if (res.currentPage != 1) {
+        products = [...state.products, ...res.data];
+      } else {
+        products = res.data;
+      }
+      return { ...state, isLoading: false, isError: false, products: products };
+    });
+    builder.addCase(getProductsAction.rejected, (state) => {
+      return { ...state, isLoading: false, isError: true };
+    });
   },
 });
 

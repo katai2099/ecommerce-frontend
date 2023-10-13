@@ -3,7 +3,7 @@ import { IIdName } from "../model/common";
 import { setCategories } from "../reducers/productAttributesReducer";
 import { getAdminCategoriesWorker } from "./adminActions";
 
-export const fetchProductSetttingsCategoriesAction = createAsyncThunk<
+export const fetchProductAttributesCategoriesAction = createAsyncThunk<
   IIdName[]
 >("productSettings/category", (_, thunkApi) => {
   return getAdminCategoriesWorker()

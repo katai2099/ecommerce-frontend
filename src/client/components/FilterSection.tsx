@@ -5,6 +5,7 @@ import { CategoryFilter } from "./CategoryFilter";
 import { GenderFilter } from "./GenderFilter";
 import { PriceRangeFilter } from "./PriceRangeFilter";
 import { RatingFilter } from "./RatingFilter";
+import { FilterSkeletonLoading } from "./SkeletonLoading";
 
 export const FilterSection = () => {
   const isSearch = useSelector(
@@ -13,14 +14,21 @@ export const FilterSection = () => {
   const isTop = useSelector(
     (state: RootState) => state.productList.isTopCategory
   );
+  const isCategoriesLoading = useSelector(
+    (state: RootState) => state.productAttributes.categoriesLoading
+  );
   return (
     <Paper sx={{ p: "32px" }}>
-      <Stack spacing={4}>
-        {(isSearch || isTop) && <GenderFilter />}
-        {!isTop && <CategoryFilter />}
-        <PriceRangeFilter />
-        <RatingFilter />
-      </Stack>
+      {isCategoriesLoading ? (
+        <FilterSkeletonLoading />
+      ) : (
+        <Stack spacing={4}>
+          {(isSearch || isTop) && <GenderFilter />}
+          {!isTop && <CategoryFilter />}
+          <PriceRangeFilter />
+          <RatingFilter />
+        </Stack>
+      )}
     </Paper>
   );
 };

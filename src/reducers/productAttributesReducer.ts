@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { fetchProductAttributesCategoriesAction } from "../actions/productSettingsActions";
 import { IIdName } from "../model/common";
 import {
   IProductAttributesReduxState,
@@ -15,6 +16,23 @@ const productAttributesSlice = createSlice({
     setCategories(state, payload: PayloadAction<IIdName[]>) {
       return { ...state, categories: payload.payload };
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchProductAttributesCategoriesAction.pending, (state) => {
+      return { ...state, categoriesLoading: true };
+    });
+    builder.addCase(
+      fetchProductAttributesCategoriesAction.fulfilled,
+      (state) => {
+        return { ...state, categoriesLoading: false, categoriesError: false };
+      }
+    );
+    builder.addCase(
+      fetchProductAttributesCategoriesAction.rejected,
+      (state) => {
+        return { ...state, categoriesLoading: false, categoriesError: true };
+      }
+    );
   },
 });
 

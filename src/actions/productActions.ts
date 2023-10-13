@@ -53,13 +53,9 @@ export const getProductsAction = createAsyncThunk<
     },
     thunkApi
   ) => {
-    thunkApi.dispatch(setLoading(true));
     return fetchProductsWorker(filter)
       .then((res) => Promise.resolve(res))
-      .catch((err) => thunkApi.rejectWithValue(err))
-      .finally(() => {
-        thunkApi.dispatch(setLoading(false));
-      });
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
