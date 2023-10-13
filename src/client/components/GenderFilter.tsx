@@ -16,6 +16,12 @@ export const GenderFilter = ({ isLgScreen = true }: LgScreenProps) => {
   useEffect(() => {
     if (filter.gender.length === 0) {
       setChecked([false, false]);
+    } else if (filter.gender.length === 1) {
+      if (filter.gender[0] === Gender.MEN) {
+        setChecked([true, false]);
+      } else {
+        setChecked([false, true]);
+      }
     }
   }, [filter.gender]);
 

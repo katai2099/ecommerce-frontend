@@ -10,6 +10,7 @@ import {
   IProductFilterParams,
   IProductSize,
   ProductMode,
+  productSort,
 } from "../model/product";
 import { addToCartState } from "../reducers/cartReducer";
 import {
@@ -122,4 +123,31 @@ function processGender(genders: Gender[]): string {
 function processCategory(categories: string[]): string {
   const selectedCategories = categories.join("::");
   return selectedCategories;
+}
+
+export function isFilterEmpty(
+  filter: IProductFilter,
+  isTop: boolean = false,
+  isGender: boolean = true
+) {
+  if (filter.sort !== undefined && filter.sort !== productSort[0]) {
+    return false;
+  }
+  if (filter.gender.length > 0 && !isGender) {
+    return false;
+  }
+  if (filter.category.length > 0 && !isTop) {
+    return false;
+  }
+  if (
+    filter.pmin !== undefined &&
+    filter.pmax !== undefined &&
+    (filter.pmin !== 0 || filter.pmax !== 100)
+  ) {
+    return false;
+  }
+  if (filter.rating !== undefined && filter.rating !== 0) {
+    return false;
+  }
+  return true;
 }

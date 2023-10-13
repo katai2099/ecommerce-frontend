@@ -56,7 +56,36 @@ export const Search = () => {
   }, []);
 
   useEffect(() => {
-    if (filter.q || filter.category.length > 0) {
+    if (category && category !== "") {
+      dispatch(getProductsAction(filter))
+        .unwrap()
+        .then((res) => {
+          setFirstLoad(false);
+          if (filter.page !== 1) {
+            setProducts((prev) => [...prev, ...res.data]);
+          } else {
+            setProducts(res.data);
+          }
+          setPage(res.currentPage);
+          setTotalPage(res.totalPage);
+          SetTotalItem(res.totalItem);
+          setCurrentPageTotalItem(res.data.length);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [
+    filter.page,
+    filter.sort,
+    filter.pmax,
+    filter.pmin,
+    filter.rating,
+    filter.gender,
+  ]);
+
+  useEffect(() => {
+    if (filter.q) {
       dispatch(getProductsAction(filter))
         .unwrap()
         .then((res) => {

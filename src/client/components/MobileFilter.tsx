@@ -38,6 +38,7 @@ export const MobileFilter = () => {
   const productList = useSelector((state: RootState) => state.productList);
   const open = productList.mobileFilterDrawerOpen;
   const isSearch = productList.isSearch;
+  const isTop = productList.isTopCategory;
   const filter = useSelector((state: RootState) => state.productList.filter);
 
   return (
@@ -118,7 +119,7 @@ export const MobileFilter = () => {
               </EAccordionDetails>
             </EAccordion>
           </Box>
-          {isSearch && (
+          {(isSearch || isTop) && (
             <Box mt="12px">
               <EAccordion>
                 <EAccordionSummary
@@ -140,30 +141,32 @@ export const MobileFilter = () => {
               </EAccordion>
             </Box>
           )}
-          <Box mt="12px">
-            <EAccordion>
-              <EAccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-label="Expand"
-                aria-controls="-content"
-                id="-header"
-              >
-                <Typography>
-                  Category:{" "}
-                  {isSearch
-                    ? filter.category.length > 1
-                      ? `${filter.category.length} selected`
-                      : filter.category
-                    : filter.category[0]
-                    ? filter.category[0]
-                    : "All"}
-                </Typography>
-              </EAccordionSummary>
-              <EAccordionDetails>
-                <CategoryFilter isLgScreen={false} />
-              </EAccordionDetails>
-            </EAccordion>
-          </Box>
+          {!isTop && (
+            <Box mt="12px">
+              <EAccordion>
+                <EAccordionSummary
+                  expandIcon={<ExpandMore />}
+                  aria-label="Expand"
+                  aria-controls="-content"
+                  id="-header"
+                >
+                  <Typography>
+                    Category:{" "}
+                    {isSearch
+                      ? filter.category.length > 1
+                        ? `${filter.category.length} selected`
+                        : filter.category
+                      : filter.category[0]
+                      ? filter.category[0]
+                      : "All"}
+                  </Typography>
+                </EAccordionSummary>
+                <EAccordionDetails>
+                  <CategoryFilter isLgScreen={false} />
+                </EAccordionDetails>
+              </EAccordion>
+            </Box>
+          )}
           <Box mt="12px">
             <EAccordion>
               <EAccordionSummary

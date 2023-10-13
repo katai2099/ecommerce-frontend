@@ -10,11 +10,14 @@ export const FilterSection = () => {
   const isSearch = useSelector(
     (state: RootState) => state.productList.isSearch
   );
+  const isTop = useSelector(
+    (state: RootState) => state.productList.isTopCategory
+  );
   return (
     <Paper sx={{ p: "32px" }}>
       <Stack spacing={4}>
-        {isSearch && <GenderFilter />}
-        <CategoryFilter />
+        {(isSearch || isTop) && <GenderFilter />}
+        {!isTop && <CategoryFilter />}
         <PriceRangeFilter />
         <RatingFilter />
       </Stack>

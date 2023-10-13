@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Filter, IProductFilter } from "../model/product";
+import { Filter, IProductFilter, productSort } from "../model/product";
 import {
   IProductListReduxState,
   ProductListReduxState,
@@ -21,8 +21,8 @@ const productListSlice = createSlice({
       return {
         ...state,
         filter: updatedFilter,
-        ...(key === "category" && { isTopCategory: true, isSearch: true }),
-        ...(key === "q" && { isSearch: true }),
+        ...(key === "category" && { isTopCategory: true, isSearch: false }),
+        ...(key === "q" && { isSearch: true, isTopCategory: false }),
         ...(key === "gender" && { isSearch: false, isTopCategory: false }),
       };
     },
@@ -38,6 +38,7 @@ const productListSlice = createSlice({
     resetSearchFilter(state) {
       const resetFilter: IProductFilter = {
         ...state.filter,
+        sort: productSort[0],
         category: [],
         gender: [],
         pmin: undefined,
@@ -49,7 +50,19 @@ const productListSlice = createSlice({
     resetGenderSectionFilter(state) {
       const resetFilter: IProductFilter = {
         ...state.filter,
+        sort: productSort[0],
         category: [],
+        pmin: undefined,
+        pmax: undefined,
+        rating: 0,
+      };
+      return { ...state, filter: resetFilter };
+    },
+    resetTopCategoryFilter(state) {
+      const resetFilter: IProductFilter = {
+        ...state.filter,
+        sort: productSort[0],
+        gender: [],
         pmin: undefined,
         pmax: undefined,
         rating: 0,
@@ -67,5 +80,6 @@ export const {
   setIsSearch,
   resetSearchFilter,
   resetGenderSectionFilter,
+  resetTopCategoryFilter,
 } = productListSlice.actions;
 export default productListSlice.reducer;

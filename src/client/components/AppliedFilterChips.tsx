@@ -1,10 +1,13 @@
 import { Star } from "@mui/icons-material";
 import { Box, Button, Chip } from "@mui/material";
 import { useSelector } from "react-redux";
+import { isFilterEmpty } from "../../controllers/product";
+import { productSort } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
   resetGenderSectionFilter,
   resetSearchFilter,
+  resetTopCategoryFilter,
   setProductsFilter,
 } from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
@@ -15,8 +18,34 @@ export const AppliedFilterChips = () => {
   const filter = productList.filter;
   const isSearch = productList.isSearch;
   const isTopCategory = productList.isTopCategory;
+  const filterEmpty = isFilterEmpty(
+    filter,
+    isTopCategory,
+    !isTopCategory && !isSearch
+  );
+
+  const handleDeleteCategoryFilter = (idx: number) => {
+    const updatedCategories = filter.category.filter(
+      (_, index) => idx !== index
+    );
+    dispatch(
+      setProductsFilter({
+        ...filter,
+        category: updatedCategories,
+      })
+    );
+  };
+
   return (
     <Box display="flex" gap="8px" flexWrap="wrap">
+      {filter.sort !== undefined && filter.sort !== productSort[0] && (
+        <Chip
+          label={`Sort by: ${filter.sort}`}
+          onDelete={() => {
+            dispatch(setProductsFilter({ ...filter, sort: productSort[0] }));
+          }}
+        ></Chip>
+      )}
       {(isSearch || isTopCategory) && (
         <>
           {!!(filter.gender && filter.gender.length > 0) &&
@@ -44,16 +73,9 @@ export const AppliedFilterChips = () => {
             key={cat}
             label={cat}
             onDelete={() => {
-              const updatedCategories = filter.category.filter(
-                (_, index) => idx !== index
-              );
-              dispatch(
-                setProductsFilter({
-                  ...filter,
-                  category: updatedCategories,
-                })
-              );
+              handleDeleteCategoryFilter(idx);
             }}
+            disabled={isTopCategory}
           />
         ))}
       {!!(
@@ -77,22 +99,26 @@ export const AppliedFilterChips = () => {
           }}
         />
       )}
-      <Button
-        sx={{
-          textDecoration: "underline",
-          textTransform: "none",
-          ":hover": { textDecoration: "underline" },
-        }}
-        onClick={() => {
-          if (isSearch) {
-            dispatch(resetSearchFilter());
-          } else {
-            dispatch(resetGenderSectionFilter());
-          }
-        }}
-      >
-        Reset Filters
-      </Button>
+      {!filterEmpty && (
+        <Button
+          sx={{
+            textDecoration: "underline",
+            textTransform: "none",
+            ":hover": { textDecoration: "underline" },
+          }}
+          onClick={() => {
+            if (isSearch) {
+              dispatch(resetSearchFilter());
+            } else if (isTopCategory) {
+              dispatch(resetTopCategoryFilter());
+            } else {
+              dispatch(resetGenderSectionFilter());
+            }
+          }}
+        >
+          Reset Filters
+        </Button>
+      )}
     </Box>
   );
 };
