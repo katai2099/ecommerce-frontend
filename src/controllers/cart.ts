@@ -42,9 +42,9 @@ export function removeItemFromCart(
     })
     .catch((err) => {
       if (axios.isAxiosError(err) && err.response?.status === 400) {
-        showSnackBar(err.response.data.message);
+        showSnackBar(err.response.data.message, "error");
       } else {
-        showSnackBar("something went wrong");
+        showSnackBar("something went wrong", "error");
       }
     })
     .finally(() => {
@@ -75,9 +75,9 @@ export function updateCart(
     })
     .catch((err) => {
       if (axios.isAxiosError(err) && err.response?.status === 400) {
-        showSnackBar(err.response.data.message);
+        showSnackBar(err.response.data.message, "error");
       } else {
-        showSnackBar("something went wrong");
+        showSnackBar("something went wrong", "error");
       }
     })
     .finally(() => {

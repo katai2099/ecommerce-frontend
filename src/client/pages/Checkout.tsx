@@ -42,7 +42,7 @@ export const Checkout = () => {
       .catch((err) => {
         setError(true);
         if (axios.isAxiosError(err) && err.response?.status === 400) {
-          showSnackBar(OUT_OF_STOCK_MESSAGE);
+          showSnackBar(OUT_OF_STOCK_MESSAGE, "error");
           navigate("/cart", { replace: true });
         }
       })

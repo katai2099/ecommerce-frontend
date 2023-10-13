@@ -9,6 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { AxiosError } from "axios";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -16,8 +17,9 @@ import {
   getProductReviewsAction,
 } from "../../actions/productActions";
 import { addToCart } from "../../controllers/product";
-import { formatPrice } from "../../controllers/utils";
+import { formatPrice, showSnackBar } from "../../controllers/utils";
 import {
+  IErrorResponse,
   IPaginationFilterData,
   PaginationFilterData,
 } from "../../model/common";
@@ -61,10 +63,15 @@ export const ProductDetail = () => {
     setIsAddToCart(true);
     addToCart(product, selectedSizeIndex)
       .then((res) => {
-        console.log(res);
+        showSnackBar("Added to Cart", "success");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err: AxiosError) => {
+        if (err.status !== 500) {
+          showSnackBar(
+            (err.response?.data! as IErrorResponse).message,
+            "error"
+          );
+        }
       })
       .finally(() => {
         setIsAddToCart(false);
@@ -180,6 +187,7 @@ export const ProductDetail = () => {
                 </Typography>
               </Box>
             )}
+
             <LoadingButton
               disabled={
                 product.productSizes.length > 0 &&

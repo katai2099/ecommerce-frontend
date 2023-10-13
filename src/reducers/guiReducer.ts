@@ -14,7 +14,11 @@ const guiSlice = createSlice({
       return { ...state, ...action.payload };
     },
     resetSnackbarState(state) {
-      return { ...state, showSnackbar: false, snackbarText: "" };
+      return {
+        ...state,
+        showSnackbar: false,
+        snackbarText: "",
+      };
     },
   },
 });

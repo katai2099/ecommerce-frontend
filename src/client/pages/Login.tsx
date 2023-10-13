@@ -31,7 +31,6 @@ export const Login = () => {
   const isLogin = useSelector((state: RootState) => state.user.loggedIn);
   const role = useSelector((state: RootState) => state.user.role);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLoginData({
       ...loginData,
@@ -139,7 +138,7 @@ export const Login = () => {
             <Box ml={1}>
               <Typography color={colors.grey[800]}>
                 {errorResponse.status === 401
-                  ? "Incorrect username or password"
+                  ? "Incorrect email or password"
                   : "Something went wrong"}
               </Typography>
               <Typography color={colors.grey[800]}>

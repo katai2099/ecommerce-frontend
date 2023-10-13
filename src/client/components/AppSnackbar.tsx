@@ -21,7 +21,7 @@ export const AppSnackbar = () => {
       sx={{ minWidth: "15%", mt: "50px" }}
     >
       <Alert
-        severity="error"
+        severity={guiState.snackbarSevirity}
         onClose={() => {
           dispatch(resetSnackbarState());
         }}

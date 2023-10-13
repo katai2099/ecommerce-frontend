@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material";
+
 export interface IGuiReduxState {
   loading: boolean;
   showSnackbar: boolean;
@@ -5,6 +7,7 @@ export interface IGuiReduxState {
   snackbarVerticalPos: "top" | "bottom";
   snackbarHorizontalPos: "left" | "right";
   snackbarExtraMargin: boolean;
+  snackbarSevirity: AlertColor;
 }
 
 export class GuiReduxState implements IGuiReduxState {
@@ -14,6 +17,7 @@ export class GuiReduxState implements IGuiReduxState {
     public snackbarText = "",
     public snackbarVerticalPos: "top" | "bottom" = "top",
     public snackbarHorizontalPos: "left" | "right" = "right",
+    public snackbarSevirity: AlertColor = "error",
     public snackbarExtraMargin = false
   ) {}
 }
@@ -21,6 +25,7 @@ export class GuiReduxState implements IGuiReduxState {
 export interface ISnackbarProps {
   showSnackbar: boolean;
   snackbarText: string;
+  snackbarSevirity?: AlertColor;
   snackbarVerticalPos?: "top" | "bottom";
   snackbarHorizontalPos?: "left" | "right";
 }

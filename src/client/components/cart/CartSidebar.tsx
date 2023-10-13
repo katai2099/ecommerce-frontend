@@ -63,7 +63,7 @@ export const CartSidebar = ({
           toggleDrawer(false);
           navigate("/checkout");
         } else {
-          showSnackBar(OUT_OF_STOCK_MESSAGE);
+          showSnackBar(OUT_OF_STOCK_MESSAGE, "error");
         }
       })
       .catch((err) => {

@@ -25,7 +25,7 @@ import {
   setStep,
 } from "../../reducers/checkoutReducer";
 import { RootState } from "../../reducers/combineReducer";
-import { setLoading, setSnackbarState } from "../../reducers/guiReducer";
+import { setLoading } from "../../reducers/guiReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { CheckoutAddress } from "./CheckoutAddress";
 import { CheckoutPayment } from "./CheckoutPayment";
@@ -126,21 +126,16 @@ export const CheckoutForm = () => {
         } else {
           dispatch(setPlaceOrderError(true));
           if (err instanceof PaymentError) {
-            dispatch(
-              setSnackbarState({
-                snackbarText: err.isCardError
-                  ? `${err.message}. Please update your payment info`
-                  : "something went wrong. Please start the step over again",
-                showSnackbar: true,
-              })
+            showSnackBar(
+              err.isCardError
+                ? `${err.message}. Please update your payment info`
+                : "something went wrong. Please start the step over again",
+              "error"
             );
           } else {
-            dispatch(
-              setSnackbarState({
-                snackbarText:
-                  "something went wrong. Please start the step over again",
-                showSnackbar: true,
-              })
+            showSnackBar(
+              "something went wrong. Please start the step over again",
+              "error"
             );
           }
         }
@@ -212,7 +207,7 @@ export const CheckoutForm = () => {
           handleGoToNextStep();
         })
         .catch((err) => {
-          showSnackBar(err.message);
+          showSnackBar(err.message, "error");
           dispatch(setCheckoutPaymentError(err.message));
         })
         .finally(() => setCreatePaymentLoading(false));

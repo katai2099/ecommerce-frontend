@@ -1,3 +1,4 @@
+import { AlertColor } from "@mui/material";
 import { setSnackbarState } from "../reducers/guiReducer";
 import { store } from "../store/configureStore";
 
@@ -73,6 +74,7 @@ export function isRecordValueEmpty<T>(
 
 export function showSnackBar(
   text: string,
+  severity: AlertColor,
   snackbarVerticalPos?: "top" | "bottom",
   snackbarHorizontalPos?: "left" | "right"
 ) {
@@ -80,6 +82,7 @@ export function showSnackBar(
     setSnackbarState({
       showSnackbar: true,
       snackbarText: text,
+      snackbarSevirity: severity,
       snackbarVerticalPos: snackbarVerticalPos ? snackbarVerticalPos : "top",
       snackbarHorizontalPos: snackbarHorizontalPos
         ? snackbarHorizontalPos

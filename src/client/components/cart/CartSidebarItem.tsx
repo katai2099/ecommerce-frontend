@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { Add, CloseOutlined, Remove } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { removeItemFromCart, updateCart } from "../../../controllers/cart";
@@ -23,9 +24,22 @@ export const CartSidebarItem = ({
 }: CartItemDetailProps) => {
   const carts = useSelector((state: RootState) => state.cart.carts);
   const dispatch = useAppDispatch();
-
+  const [isTooltipOpen, setIsTooltipOpen] = useState<boolean>(false);
   const handleRemoveCartItem = () => {
     removeItemFromCart(cartItem.id, carts, index, true);
+  };
+
+  const handleTooltipOpen = () => {
+    if (
+      cartItem.product.productSizes[0]?.stockCount &&
+      cartItem.quantity === cartItem.product.productSizes[0].stockCount
+    ) {
+      setIsTooltipOpen(true);
+    }
+  };
+
+  const handleTooltipClose = () => {
+    setIsTooltipOpen(false);
   };
 
   const handleUpdateCartItemQuantity = (quantityChange: number) => {
@@ -103,20 +117,30 @@ export const CartSidebarItem = ({
               <Remove />
             </IconButton>
             <Typography>{cartItem.quantity}</Typography>
-            <IconButton
-              color="primary"
-              onClick={() => {
-                handleUpdateCartItemQuantity(1);
-              }}
-              disabled={
-                cartItem.product.productSizes[0]?.stockCount
-                  ? cartItem.quantity ===
-                    cartItem.product.productSizes[0].stockCount
-                  : false
-              }
+            <Tooltip
+              title="Quantity is not available"
+              placement="top"
+              open={isTooltipOpen}
+              onOpen={handleTooltipOpen}
+              onClose={handleTooltipClose}
             >
-              <Add />
-            </IconButton>
+              <span>
+                <IconButton
+                  color="primary"
+                  onClick={() => {
+                    handleUpdateCartItemQuantity(1);
+                  }}
+                  disabled={
+                    cartItem.product.productSizes[0]?.stockCount
+                      ? cartItem.quantity ===
+                        cartItem.product.productSizes[0].stockCount
+                      : false
+                  }
+                >
+                  <Add />
+                </IconButton>
+              </span>
+            </Tooltip>
           </Box>
         </FlexBox>
       </Box>
