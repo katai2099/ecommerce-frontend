@@ -53,7 +53,7 @@ export const Cart = () => {
         Shopping bag
       </Typography>
       <Grid container mt="32px" gap="32px">
-        <Grid item md={7}>
+        <Grid item xs={12} md={7}>
           <Paper sx={{ width: "100%", padding: "32px" }}>
             <Box display="flex" alignItems="center" mb="16px">
               <Typography variant="h3">Shopping Bag &nbsp;</Typography>
@@ -83,7 +83,7 @@ export const Cart = () => {
           </Paper>
         </Grid>
 
-        <Grid item md={4}>
+        <Grid item xs={12} md={4}>
           <Paper sx={{ width: "100%", padding: "32px" }}>
             <Box padding=" 8px 20px 8px">
               <Box display="flex" justifyContent="space-between">

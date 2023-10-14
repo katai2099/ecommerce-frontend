@@ -16,10 +16,7 @@ import { setLoading } from "../reducers/guiReducer";
 import { showSnackBar } from "./utils";
 
 export function getCart() {
-  store.dispatch(setLoading(true));
-  store
-    .dispatch(getCartAction())
-    .finally(() => store.dispatch(setLoading(false)));
+  store.dispatch(getCartAction());
 }
 
 export function removeItemFromCart(

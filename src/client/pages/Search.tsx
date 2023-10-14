@@ -127,7 +127,7 @@ export const Search = () => {
       <Grid container sx={{ display: { xs: "none", md: "flex " } }}>
         <Grid item md={3} lg={2.5}></Grid>
         <Grid item md={9} lg={9.5}>
-          <CategoryHeader totalItems={totalItem} />
+          <CategoryHeader />
         </Grid>
       </Grid>
       {matchMobile && <MobileFilter />}

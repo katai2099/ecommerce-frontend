@@ -8,6 +8,7 @@ export interface IProductListReduxState {
   isLoading: boolean;
   isError: boolean;
   products: IProduct[];
+  totalItems: number;
 }
 
 export class ProductListReduxState {
@@ -18,6 +19,7 @@ export class ProductListReduxState {
     public isTopCategory = false,
     public isLoading = false,
     public isError = false,
-    public products = []
+    public products = [],
+    public totalItems = 0
   ) {}
 }

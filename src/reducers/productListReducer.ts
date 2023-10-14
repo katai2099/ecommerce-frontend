@@ -78,12 +78,18 @@ const productListSlice = createSlice({
     builder.addCase(getProductsAction.fulfilled, (state, payload) => {
       const res = payload.payload;
       let products;
-      if (res.currentPage != 1) {
+      if (res.currentPage !== 1) {
         products = [...state.products, ...res.data];
       } else {
         products = res.data;
       }
-      return { ...state, isLoading: false, isError: false, products: products };
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        products: products,
+        totalItems: res.totalItem,
+      };
     });
     builder.addCase(getProductsAction.rejected, (state) => {
       return { ...state, isLoading: false, isError: true };

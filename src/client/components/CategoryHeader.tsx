@@ -6,6 +6,7 @@ import {
   Paper,
   Select,
   SelectChangeEvent,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -15,16 +16,14 @@ import { setProductsFilter } from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { AppliedFilterChips } from "./AppliedFilterChips";
 
-interface SearchProps {
-  totalItems?: number;
-}
-
-export const CategoryHeader = ({ totalItems = 0 }: SearchProps) => {
+export const CategoryHeader = () => {
   const productList = useSelector((state: RootState) => state.productList);
   const filter = productList.filter;
   const isSearch = productList.isSearch;
   const isTopCategory = productList.isTopCategory;
+  const loading = productList.isLoading;
   const dispatch = useAppDispatch();
+  const totalItems = productList.totalItems;
 
   const sortChangeHandler = (event: SelectChangeEvent<string>) => {
     const updatedFilter = { ...filter, sort: event.target.value, page: 1 };
@@ -41,7 +40,7 @@ export const CategoryHeader = ({ totalItems = 0 }: SearchProps) => {
                 Searching for "{isTopCategory ? filter.category[0] : filter.q}"
               </Typography>
               <Typography variant="h4" fontWeight="300">
-                {totalItems} results found
+                {loading ? <Skeleton /> : `${totalItems} results found`}
               </Typography>
             </Box>
           ) : (
