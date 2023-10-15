@@ -66,9 +66,7 @@ export const CartSidebar = ({
           showSnackBar(OUT_OF_STOCK_MESSAGE, "error");
         }
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch((err) => {})
       .finally(() => setCheckStock(false));
   }
 
@@ -80,6 +78,12 @@ export const CartSidebar = ({
         toggleDrawer(false);
       }}
       sx={{ position: "relative" }}
+      PaperProps={{
+        sx: {
+          minWidth: { xs: "60%", md: "30%" },
+          maxWidth: { xs: "60%", md: "30%" },
+        },
+      }}
     >
       <Backdrop
         open={isUpdate}
@@ -92,7 +96,7 @@ export const CartSidebar = ({
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Box sx={{ width: "max(400px)" }} role="presentation">
+      <Box>
         <Box
           display="flex"
           flexDirection="column"

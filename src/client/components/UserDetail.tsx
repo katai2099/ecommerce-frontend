@@ -1,26 +1,20 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, Paper, TextField, Typography } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
-  updatePasswordAction,
-  updateUserDetailsAction,
-} from "../../actions/userActions";
+  updatePassword,
+  updateUserDetails,
+  validateFirstname,
+  validateLastname,
+  validatePassword,
+  validateRetypePassword,
+} from "../../controllers/user";
+import { showSnackBar } from "../../controllers/utils";
 import { IUserDetailsRequest } from "../../model/user";
 import { RootState } from "../../reducers/combineReducer";
-import { useAppDispatch } from "../../store/configureStore";
+import { EPasswordField } from "./EPasswordField";
+import { ETextField } from "./common/ETextField";
+import { LoadingButton } from "./common/LoadingButton";
 
 interface ILoginDetails {
   password: string;
@@ -32,23 +26,23 @@ export const UserDetail = () => {
     firstname: "",
     lastname: "",
   });
-
+  const [userDetailsError, setUserDetailsError] = useState<IUserDetailsRequest>(
+    {
+      firstname: "",
+      lastname: "",
+    }
+  );
+  const [updateUserDetail, setUpdateUserDetail] = useState<boolean>(false);
   const [loginDetails, setLoginDetails] = useState<ILoginDetails>({
     password: "",
     confirmPassword: "",
   });
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState<boolean>(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleClickShowConfirmPassword = () =>
-    setShowConfirmPassword((show) => !show);
-
-  const dispatch = useAppDispatch();
-
+  const [loginDetailsError, setLoginDetailsError] = useState<ILoginDetails>({
+    password: "",
+    confirmPassword: "",
+  });
+  const [updateLoginDetail, setUpdateLoginDetail] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user);
-
   const detailsDisable =
     user.firstname === userDetails.firstname &&
     user.lastname === userDetails.lastname;
@@ -63,6 +57,7 @@ export const UserDetail = () => {
 
   const handleUserDetailsChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUserDetails({ ...userDetails, [event.target.name]: event.target.value });
+    setUserDetailsError({ ...userDetailsError, [event.target.name]: "" });
   };
 
   const handleLoginDetailsChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -70,18 +65,58 @@ export const UserDetail = () => {
       ...loginDetails,
       [event.target.name]: event.target.value,
     });
+    setLoginDetailsError({
+      ...loginDetailsError,
+      [event.target.name]: "",
+    });
   };
 
   const handleUserDetailSubmit = () => {
-    dispatch(updateUserDetailsAction(userDetails));
+    let errorEmpty = true;
+    const firstnameError = validateFirstname(userDetails.firstname);
+    const lastnameError = validateLastname(userDetails.lastname);
+    if (firstnameError !== "" || lastnameError !== "") {
+      setUserDetailsError({
+        firstname: firstnameError,
+        lastname: lastnameError,
+      });
+      return;
+    }
+    setUpdateUserDetail(true);
+    updateUserDetails(userDetails)
+      .then(() => {
+        showSnackBar("user details updated", "success");
+      })
+      .catch((err) => {})
+      .finally(() => {
+        setUpdateUserDetail(false);
+      });
   };
 
   const handleUpdatePasswordSubmit = () => {
-    dispatch(updatePasswordAction(loginDetails.password))
+    const errorPassword = validatePassword(loginDetails.password);
+    const errorConfirmPassword = validateRetypePassword(
+      loginDetails.confirmPassword,
+      loginDetails.password,
+      "Confirm password is required"
+    );
+    if (errorPassword !== "" || errorConfirmPassword !== "") {
+      setLoginDetailsError({
+        password: errorPassword,
+        confirmPassword: errorConfirmPassword,
+      });
+      return;
+    }
+    setUpdateLoginDetail(true);
+    updatePassword(loginDetails.password)
       .then(() => {
         setLoginDetails({ password: "", confirmPassword: "" });
+        showSnackBar("Login details updated", "success");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setUpdateLoginDetail(false);
+      });
   };
 
   return (
@@ -89,7 +124,11 @@ export const UserDetail = () => {
       <Typography variant="h3" mb="24px">
         Details
       </Typography>
-      <Paper sx={{ padding: "16px 32px 32px" }}>
+      <Box
+        sx={{
+          padding: { xs: "16px 0px 32px", sm: "16px 32px 32px" },
+        }}
+      >
         <Typography
           fontSize="24px"
           fontWeight="bold"
@@ -98,38 +137,45 @@ export const UserDetail = () => {
         >
           Update Details
         </Typography>
-        <Box width="50%">
+        <Box sx={{ width: { xs: "100%", md: "50%" } }}>
           <form>
             <Box mb="16px">
-              <TextField
+              <ETextField
                 label="First Name"
                 fullWidth
                 name="firstname"
                 value={userDetails.firstname}
+                error={userDetailsError.firstname}
                 onChange={handleUserDetailsChange}
               />
             </Box>
             <Box mb="32px">
-              <TextField
+              <ETextField
                 label="Last Name"
                 name="lastname"
                 fullWidth
                 value={userDetails.lastname}
+                error={userDetailsError.lastname}
                 onChange={handleUserDetailsChange}
               />
             </Box>
-            <Button
-              variant="contained"
+            <LoadingButton
               fullWidth
+              loading={updateUserDetail}
+              title="Update my details"
               disabled={detailsDisable}
               onClick={handleUserDetailSubmit}
-            >
-              Update my details
-            </Button>
+            ></LoadingButton>
           </form>
         </Box>
-      </Paper>
-      <Paper sx={{ mt: "36px", padding: "16px 32px 32px" }}>
+      </Box>
+      <Divider sx={{ width: "100%" }} />
+      <Box
+        sx={{
+          mt: "36px",
+          padding: { xs: "16px 0px 32px", sm: "16px 32px 32px" },
+        }}
+      >
         <Typography
           fontSize="24px"
           fontWeight="bold"
@@ -138,68 +184,38 @@ export const UserDetail = () => {
         >
           Update Login Details
         </Typography>
-        <Box width="50%">
+        <Box sx={{ width: { xs: "100%", md: "50%" } }}>
           <form>
             <Box mb="16px">
               <TextField label="Email" fullWidth disabled value={user.email} />
             </Box>
             <Box mb="16px">
-              <FormControl fullWidth>
-                <InputLabel>Password</InputLabel>
-                <OutlinedInput
-                  type={showPassword ? "text" : "password"}
-                  label="Password"
-                  value={loginDetails.password}
-                  name="password"
-                  onChange={handleLoginDetailsChange}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleClickShowPassword} edge="end">
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-                <FormHelperText></FormHelperText>
-              </FormControl>
+              <EPasswordField
+                label="Password"
+                name={"password"}
+                value={loginDetails.password}
+                error={loginDetailsError.password}
+                onChange={handleLoginDetailsChange}
+              />
             </Box>
             <Box mb="32px">
-              <FormControl fullWidth>
-                <InputLabel>Confirm Password</InputLabel>
-                <OutlinedInput
-                  type={showConfirmPassword ? "text" : "password"}
-                  label="Confirm Password"
-                  value={loginDetails.confirmPassword}
-                  name="confirmPassword"
-                  onChange={handleLoginDetailsChange}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleClickShowConfirmPassword}
-                        edge="end"
-                      >
-                        {showConfirmPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-                <FormHelperText></FormHelperText>
-              </FormControl>
+              <EPasswordField
+                label="Confirm Password"
+                name={"confirmPassword"}
+                value={loginDetails.confirmPassword}
+                error={loginDetailsError.confirmPassword}
+                onChange={handleLoginDetailsChange}
+              />
             </Box>
-            <Button
-              variant="contained"
+            <LoadingButton
               fullWidth
               onClick={handleUpdatePasswordSubmit}
-            >
-              Update login details
-            </Button>
+              title="Update login details"
+              loading={updateLoginDetail}
+            />
           </form>
         </Box>
-      </Paper>
+      </Box>
     </Paper>
   );
 };

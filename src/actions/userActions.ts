@@ -22,15 +22,12 @@ import { store } from "../store/configureStore";
 export const updatePasswordAction = createAsyncThunk<string, string>(
   "update_password",
   (password, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
-    //TODO: encode should go to controller
     const encodedUpdatePasswordRequest: IUpdatePasswordRequest = {
-      password: btoa(password),
+      password: password,
     };
     return updatePasswordWorker(encodedUpdatePasswordRequest)
       .then((res) => Promise.resolve(res))
-      .catch((err) => thunkApi.rejectWithValue(err))
-      .finally(() => thunkApi.dispatch(setLoading(false)));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -44,16 +41,12 @@ export const updateUserDetailsAction = createAsyncThunk<
   string,
   IUserDetailsRequest
 >("update_user_details", (user, thunkApi) => {
-  thunkApi.dispatch(setLoading(true));
   return updateUserDetailsWorker(user)
     .then((res) => {
       thunkApi.dispatch(updateUserDetails(user));
       return Promise.resolve(res);
     })
-    .catch((err) => thunkApi.rejectWithValue(err))
-    .finally(() => {
-      thunkApi.dispatch(setLoading(false));
-    });
+    .catch((err) => thunkApi.rejectWithValue(err));
 });
 
 function updateUserDetailsWorker(userDetails: IUserDetailsRequest) {

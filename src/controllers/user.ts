@@ -3,13 +3,15 @@ import {
   loginAction,
   registerAction,
   setDefaultAddressAction,
+  updatePasswordAction,
+  updateUserDetailsAction,
 } from "../actions/userActions";
 import {
   LoginPostData,
   RegistrationForm,
   RegistrationPostData,
 } from "../model/authentication";
-import { IAddress } from "../model/user";
+import { IAddress, IUserDetailsRequest } from "../model/user";
 import { store } from "../store/configureStore";
 import { validateEmailRegex } from "./utils";
 
@@ -19,6 +21,22 @@ export function login(email: string, password: string) {
   data.email = btoa(email.trim());
   return store
     .dispatch(loginAction(data))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function updatePassword(password: string) {
+  return store
+    .dispatch(updatePasswordAction(btoa(password)))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function updateUserDetails(userDetails: IUserDetailsRequest) {
+  return store
+    .dispatch(updateUserDetailsAction(userDetails))
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
@@ -87,10 +105,11 @@ export function validateLastname(lastname: string) {
 
 export function validateRetypePassword(
   retypePassword: string,
-  password: string
+  password: string,
+  errorText?: string
 ) {
   if (retypePassword.trim().length === 0) {
-    return "Retype password is required";
+    return errorText ? errorText : "Retype password is required";
   }
   if (
     password.trim().length !== 0 &&

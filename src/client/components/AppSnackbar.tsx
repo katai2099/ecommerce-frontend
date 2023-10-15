@@ -8,7 +8,7 @@ export const AppSnackbar = () => {
   const guiState = useSelector((state: RootState) => state.gui);
   const dispatch = useAppDispatch();
   const theme = useTheme();
-  const matchMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const matchMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Snackbar
       open={guiState.showSnackbar}
