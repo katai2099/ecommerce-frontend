@@ -50,8 +50,8 @@ export const Account = () => {
               <Route path="/orders/:id" element={<OrderDetailComp />} />
               <Route path="" element={<OrderHistory />} />
             </Route>
-            <Route path="/address" element={<AddressBook />} />
             <Route path="/details" element={<UserDetail />} />
+            <Route path="/address" element={<AddressBook />} />
           </Routes>
         </Grid>
       </Grid>

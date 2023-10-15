@@ -256,3 +256,15 @@ export const OrderReviewSkeletonLoading = () => {
     </Paper>
   );
 };
+
+export const AddressBookSkeletonLoading = () => {
+  return (
+    <Grid container spacing={3}>
+      {Array.from(Array(6)).map((_, idx) => (
+        <Grid item xs={12} sm={6} key={idx}>
+          <Skeleton height="200px" variant="rectangular" />
+        </Grid>
+      ))}
+    </Grid>
+  );
+};

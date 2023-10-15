@@ -15,7 +15,6 @@ import {
   IUpdatePasswordRequest,
   IUserDetailsRequest,
 } from "../model/user";
-import { setLoading } from "../reducers/guiReducer";
 import { setLogin, updateUserDetails } from "../reducers/userReducer";
 import { store } from "../store/configureStore";
 
@@ -73,11 +72,9 @@ function getAddressesWorker(): Promise<IAddress[]> {
 export const addAddressAction = createAsyncThunk<number, IAddress>(
   "add_address",
   (address, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
     return addAddressWorker(address)
       .then((res) => Promise.resolve(res))
-      .catch((err) => thunkApi.rejectWithValue(err))
-      .finally(() => thunkApi.dispatch(setLoading(false)));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -90,11 +87,9 @@ function addAddressWorker(address: IAddress): Promise<number> {
 export const setDefaultAddressAction = createAsyncThunk<string, number>(
   "set_default_address",
   (addressId, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
     return setDefaultAddressWorker(addressId)
       .then((res) => Promise.resolve(res))
-      .catch((err) => thunkApi.rejectWithValue(err))
-      .finally(() => thunkApi.dispatch(setLoading(false)));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -109,11 +104,9 @@ function setDefaultAddressWorker(addressId: number): Promise<string> {
 export const updateAddressAction = createAsyncThunk<string, IAddress>(
   "update_address",
   (address, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
     return updateAddressWorker(address)
       .then((res) => Promise.resolve(res))
-      .catch((err) => thunkApi.rejectWithValue(err))
-      .finally(() => thunkApi.dispatch(setLoading(false)));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -128,11 +121,9 @@ function updateAddressWorker(address: IAddress): Promise<string> {
 export const deleteAddressAction = createAsyncThunk<string, number>(
   "delete_address",
   (addressId, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
     return deleteAddressWorker(addressId)
       .then((res) => Promise.resolve(res))
-      .catch((err) => thunkApi.rejectWithValue(err))
-      .finally(() => thunkApi.dispatch(setLoading(false)));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -151,10 +142,7 @@ export const registerAction = createAsyncThunk<
       window.localStorage.setItem("jwt", res.token);
       return Promise.resolve(res);
     })
-    .catch((error) => {
-      console.log(error);
-      return thunkApi.rejectWithValue(error);
-    });
+    .catch((error) => thunkApi.rejectWithValue(error));
 });
 
 function registerWorker(

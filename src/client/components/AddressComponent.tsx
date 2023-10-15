@@ -35,7 +35,7 @@ export const AddressComponent = ({
               />
             ) : (
               <Chip
-                label="Set as Default Address"
+                label="Set as Default"
                 color="primary"
                 variant="outlined"
                 sx={{ height: "18px", fontWeight: "bold" }}

@@ -1,7 +1,6 @@
 import { Close } from "@mui/icons-material";
 import {
   Box,
-  Button,
   Checkbox,
   Dialog,
   DialogContent,
@@ -9,10 +8,13 @@ import {
   FormControlLabel,
   FormGroup,
   IconButton,
-  TextField,
 } from "@mui/material";
-import { ChangeEvent, SyntheticEvent } from "react";
+import { SyntheticEvent } from "react";
+import { useSelector } from "react-redux";
 import { IAddress } from "../../model/user";
+import { RootState } from "../../reducers/combineReducer";
+import { AddressForm } from "./AddressForm";
+import { LoadingButton } from "./common/LoadingButton";
 
 interface NewAddressDialogProps {
   isEdit?: boolean;
@@ -20,6 +22,7 @@ interface NewAddressDialogProps {
   disableDefault: boolean;
   onAddressChange: (field: string, value: any) => void;
   onSubmit: () => void;
+  addressError: Record<keyof IAddress, string>;
 }
 
 export interface DialogProps {
@@ -35,14 +38,15 @@ export const NewAddressDialog = ({
   handleDialogState,
   onAddressChange,
   onSubmit,
+  addressError,
 }: NewAddressDialogProps & DialogProps) => {
   const handleAddressUpdate = (field: string, value: any) => {
     onAddressChange(field, value);
   };
 
-  const handleAddressChange = (event: ChangeEvent<HTMLInputElement>) => {
-    handleAddressUpdate(event.currentTarget.name, event.currentTarget.value);
-  };
+  const addressLoading = useSelector(
+    (state: RootState) => state.account.addressesLoading
+  );
 
   return (
     <Dialog
@@ -53,6 +57,7 @@ export const NewAddressDialog = ({
     >
       <DialogTitle>{isEdit ? "Edit address" : "Add new address"}</DialogTitle>
       <IconButton
+        disabled={addressLoading}
         onClick={() => {
           handleDialogState(false);
         }}
@@ -66,106 +71,12 @@ export const NewAddressDialog = ({
         <Close />
       </IconButton>
       <DialogContent sx={{ mx: "12px" }}>
-        <form>
-          <Box mb="16px">
-            <TextField
-              // error
-              variant="outlined"
-              helperText="please enter"
-              label="First Name"
-              name="firstname"
-              value={selectedAddress.firstname}
-              required
-              fullWidth
-              onChange={handleAddressChange}
-            />
-          </Box>
-          <Box mb="16px">
-            <TextField
-              // error
-              variant="outlined"
-              helperText="please enter"
-              label="Last Name"
-              name="lastname"
-              value={selectedAddress.lastname}
-              required
-              fullWidth
-              onChange={handleAddressChange}
-            />
-          </Box>
-          <Box mb="16px">
-            <TextField
-              // error
-              variant="outlined"
-              helperText="please enter"
-              label="Phone Number"
-              name="phoneNumber"
-              value={selectedAddress.phoneNumber}
-              required
-              fullWidth
-              onChange={handleAddressChange}
-            />
-          </Box>
-          <Box mb="16px" display="flex">
-            <TextField
-              // error
-              variant="outlined"
-              helperText="please enter"
-              label="Steet name"
-              name="street"
-              value={selectedAddress.street}
-              required
-              fullWidth
-              onChange={handleAddressChange}
-            />
-            <TextField
-              variant="outlined"
-              label="House no"
-              name="houseNumber"
-              value={selectedAddress.houseNumber}
-              required
-              onChange={handleAddressChange}
-            />
-          </Box>
-          <Box mb="16px">
-            <TextField
-              // error
-              variant="outlined"
-              helperText="please enter"
-              label="Zip Code"
-              name="zipCode"
-              value={selectedAddress.zipCode}
-              required
-              fullWidth
-              onChange={handleAddressChange}
-            />
-          </Box>
-          <Box mb="16px">
-            <TextField
-              // error
-              variant="outlined"
-              helperText="please enter"
-              label="City"
-              name="city"
-              value={selectedAddress.city}
-              required
-              fullWidth
-              onChange={handleAddressChange}
-            />
-          </Box>
-          <Box mb="16px">
-            <TextField
-              // error
-              variant="outlined"
-              helperText="please enter"
-              label="Country"
-              name="country"
-              value={selectedAddress.country}
-              required
-              fullWidth
-              onChange={handleAddressChange}
-            />
-          </Box>
+        <Box>
+          <AddressForm
+            selectedAddress={selectedAddress}
+            onAddressChange={handleAddressUpdate}
+            error={addressError}
+          />
           <Box mb="16px">
             <FormGroup>
               <FormControlLabel
@@ -180,17 +91,15 @@ export const NewAddressDialog = ({
               />
             </FormGroup>
           </Box>
-          <Button
+          <LoadingButton
             fullWidth
-            variant="contained"
             onClick={() => {
-              console.log(selectedAddress);
               onSubmit();
             }}
-          >
-            {isEdit ? "Update Address" : "Save Address"}
-          </Button>
-        </form>
+            title={isEdit ? "Update Address" : "Save Address"}
+            loading={addressLoading}
+          />
+        </Box>
       </DialogContent>
     </Dialog>
   );

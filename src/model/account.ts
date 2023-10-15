@@ -11,6 +11,7 @@ export interface IAccountReduxState {
   addresses: IAddress[];
   addressesLoading: boolean;
   addressesError: boolean;
+  addressDialogOpen: boolean;
   mobileMenuOpen: boolean;
 }
 
@@ -25,6 +26,7 @@ export class AccountReduxState implements IAccountReduxState {
     public addresses = [],
     public addressesLoading = true,
     public addressesError = false,
+    public addressDialogOpen = false,
     public mobileMenuOpen = false
   ) {}
 }

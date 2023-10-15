@@ -1,5 +1,5 @@
 import { Star } from "@mui/icons-material";
-import { Box, Button, Chip } from "@mui/material";
+import { Box, Button, Chip, colors } from "@mui/material";
 import { useSelector } from "react-redux";
 import { isFilterEmpty } from "../../controllers/product";
 import { productSort } from "../../model/product";
@@ -105,6 +105,7 @@ export const AppliedFilterChips = () => {
             textDecoration: "underline",
             textTransform: "none",
             ":hover": { textDecoration: "underline" },
+            color: colors.blue[700],
           }}
           onClick={() => {
             if (isSearch) {

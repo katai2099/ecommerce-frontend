@@ -1,41 +1,54 @@
 import { Add } from "@mui/icons-material";
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
-  addAddressAction,
-  deleteAddressAction,
-  getAddressesAction,
-  updateAddressAction,
-} from "../../actions/userActions";
-import { setAddressAsDefault } from "../../controllers/user";
-import { clone } from "../../controllers/utils";
-import { Address, IAddress } from "../../model/user";
+  addNewAddress,
+  deleteAddress,
+  getAddresses,
+  setAddressAsDefault,
+  updateAddress,
+  validateAddress,
+} from "../../controllers/user";
+import {
+  clone,
+  isRecordValueEmpty,
+  showSnackBar,
+} from "../../controllers/utils";
+import { Address, IAddress, initializeAddressError } from "../../model/user";
+import {
+  setAddressDialogOpen,
+  setAddresses,
+} from "../../reducers/accountReducer";
+import { RootState } from "../../reducers/combineReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { AddressComponent } from "./AddressComponent";
 import { NewAddressDialog } from "./NewAddressDialog";
+import { AddressBookSkeletonLoading } from "./SkeletonLoading";
 
 export const AddressBook = () => {
-  const [addresses, setAddresses] = useState<IAddress[]>([]);
+  const accountData = useSelector((state: RootState) => state.account);
+  const addresses = accountData.addresses;
+  const addressesLoading = accountData.addressesLoading;
+  const addressError = accountData.addressesError;
   const [selectedAddress, setSelectedAddress] = useState<IAddress>(
     new Address()
   );
-  const [isAddressDialogOpen, setIsAddressDialogOpen] =
-    useState<boolean>(false);
+  const addressDialogOpen = accountData.addressDialogOpen;
+  const [addressErrorInfo, setAddressErrorInfo] = useState<
+    Record<keyof IAddress, string>
+  >(initializeAddressError());
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isDefaultDisable, setIsDefaultDisable] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getAddressesAction())
-      .unwrap()
-      .then((res) => setAddresses(res))
-      .catch((err) => {
-        console.log(err);
-      });
+    getAddresses()
+      .then(() => {})
+      .catch((err) => {});
   }, []);
   const handleOnDelete = (deletedAddress: IAddress) => {
-    dispatch(deleteAddressAction(deletedAddress.id))
-      .unwrap()
+    deleteAddress(deletedAddress.id)
       .then(() => {
         let updatedAddresses = addresses.filter(
           (address) => address.id !== deletedAddress.id
@@ -49,10 +62,10 @@ export const AddressBook = () => {
             address.id === minId ? { ...address, isDefault: true } : address
           );
         }
-        setAddresses(updatedAddresses);
+        dispatch(setAddresses(updatedAddresses));
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        showSnackBar("something went wrong", "error");
       });
   };
   const handleOnSetAsDefault = (defaultAddressId: number) => {
@@ -63,23 +76,30 @@ export const AddressBook = () => {
             ? { ...address, isDefault: true }
             : { ...address, isDefault: false }
         );
-        setAddresses(updatedAddresses);
+        dispatch(setAddresses(updatedAddresses));
+
         return Promise.resolve(res);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {});
   };
   const handleAddressUpdate = (field: string, value: any) => {
     setSelectedAddress({ ...selectedAddress, [field]: value });
+    setAddressErrorInfo({ ...addressErrorInfo, [field]: "" });
   };
 
   const handleAddressDialogState = (open: boolean) => {
-    setIsAddressDialogOpen(open);
+    dispatch(setAddressDialogOpen(open));
   };
 
   const handleOnSubmit = () => {
+    const error = validateAddress(selectedAddress);
+    const isAddressEmpty = isRecordValueEmpty(error, ["id", "isDefault"]);
+    if (!isAddressEmpty) {
+      setAddressErrorInfo(error);
+      return;
+    }
     if (isEdit) {
-      dispatch(updateAddressAction(selectedAddress))
-        .unwrap()
+      updateAddress(selectedAddress)
         .then(() => {
           let updatedAddresses = [...addresses];
           const updatedAddressIndex = updatedAddresses.findIndex(
@@ -93,17 +113,13 @@ export const AddressBook = () => {
             }));
             updatedAddresses[updatedAddressIndex] = selectedAddress;
           }
-          setAddresses(updatedAddresses);
+          dispatch(setAddresses(updatedAddresses));
         })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setIsAddressDialogOpen(false);
+        .catch(() => {
+          showSnackBar("something went wrong", "error");
         });
     } else {
-      dispatch(addAddressAction(selectedAddress))
-        .unwrap()
+      addNewAddress(selectedAddress)
         .then((newAddressId) => {
           const newAddress: IAddress = { ...selectedAddress, id: newAddressId };
           let updatedAddresses = [...addresses];
@@ -113,10 +129,10 @@ export const AddressBook = () => {
             });
           }
           updatedAddresses.push(newAddress);
-          setAddresses(updatedAddresses);
+          dispatch(setAddresses(updatedAddresses));
         })
-        .finally(() => {
-          setIsAddressDialogOpen(false);
+        .catch(() => {
+          showSnackBar("something went wrong", "error");
         });
     }
   };
@@ -136,7 +152,8 @@ export const AddressBook = () => {
     setIsDefaultDisable(addresses.length === 0 || address.isDefault);
     tmpAddress.isDefault = addresses.length === 0 ? true : tmpAddress.isDefault;
     setSelectedAddress(tmpAddress);
-    setIsAddressDialogOpen(true);
+    setAddressErrorInfo(initializeAddressError());
+    handleAddressDialogState(true);
   };
 
   return (
@@ -148,41 +165,50 @@ export const AddressBook = () => {
         mb="24px"
       >
         <Typography variant="h3">Address Book</Typography>
-        <Button
-          variant="outlined"
-          onClick={handleAddNewAddress}
-          startIcon={<Add />}
-          // sx={{
-          //   "&:hover": {
-          //     backgroundColor: "black",
-          //     color: "white",
-          //   },
-          // }}
-        >
-          Add new Address
-        </Button>
+        {!addressesLoading && !addressError && (
+          <Button
+            variant="outlined"
+            onClick={handleAddNewAddress}
+            startIcon={<Add />}
+          >
+            Add new Address
+          </Button>
+        )}
       </Box>
       <NewAddressDialog
-        open={isAddressDialogOpen}
+        open={addressDialogOpen}
         isEdit={isEdit}
         selectedAddress={selectedAddress}
         handleDialogState={handleAddressDialogState}
         onAddressChange={handleAddressUpdate}
         onSubmit={handleOnSubmit}
         disableDefault={isDefaultDisable}
+        addressError={addressErrorInfo}
       />
-      <Grid container spacing={3}>
-        {addresses.map((address, idx) => (
-          <Grid item md={6} key={address.id}>
-            <AddressComponent
-              address={address}
-              onDelete={handleOnDelete}
-              onSetAsDefault={handleOnSetAsDefault}
-              onEdit={handleOnEdit}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      {addressesLoading ? (
+        <AddressBookSkeletonLoading />
+      ) : (
+        <>
+          {addresses.length === 0 ? (
+            <Typography variant="h3" textAlign="center">
+              No active address
+            </Typography>
+          ) : (
+            <Grid container spacing={3}>
+              {addresses.map((address, idx) => (
+                <Grid item xs={12} sm={6} key={address.id}>
+                  <AddressComponent
+                    address={address}
+                    onDelete={handleOnDelete}
+                    onSetAsDefault={handleOnSetAsDefault}
+                    onEdit={handleOnEdit}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </>
+      )}
     </Paper>
   );
 };

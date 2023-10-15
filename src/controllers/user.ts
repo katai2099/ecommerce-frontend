@@ -1,8 +1,11 @@
 import {
+  addAddressAction,
+  deleteAddressAction,
   getAddressesAction,
   loginAction,
   registerAction,
   setDefaultAddressAction,
+  updateAddressAction,
   updatePasswordAction,
   updateUserDetailsAction,
 } from "../actions/userActions";
@@ -21,6 +24,14 @@ export function login(email: string, password: string) {
   data.email = btoa(email.trim());
   return store
     .dispatch(loginAction(data))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function getAddresses() {
+  return store
+    .dispatch(getAddressesAction())
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
@@ -58,6 +69,30 @@ export function register(registrationForm: RegistrationForm) {
 export function setAddressAsDefault(addressId: number): Promise<string> {
   return store
     .dispatch(setDefaultAddressAction(addressId))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function addNewAddress(address: IAddress) {
+  return store
+    .dispatch(addAddressAction(address))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function updateAddress(address: IAddress) {
+  return store
+    .dispatch(updateAddressAction(address))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function deleteAddress(addressId: number) {
+  return store
+    .dispatch(deleteAddressAction(addressId))
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
@@ -151,28 +186,28 @@ export function validateAddress(
     isDefault: "",
   };
   if (address.firstname.trim().length === 0) {
-    error.firstname = "Firstname cannot be empty";
+    error.firstname = "Firstname is required";
   }
   if (address.lastname.trim().length === 0) {
-    error.lastname = "Lastname cannot be empty";
+    error.lastname = "Lastname is required";
   }
   if (address.phoneNumber.trim().length === 0) {
-    error.phoneNumber = "Phone number cannot be empty";
+    error.phoneNumber = "Phone number is required";
   }
   if (address.street.trim().length === 0) {
-    error.street = "Street cannot be empty";
+    error.street = "Street is required";
   }
   if (address.houseNumber.trim().length === 0) {
-    error.houseNumber = "House number cannot be empty";
+    error.houseNumber = "House number is required";
   }
   if (address.city.trim().length === 0) {
-    error.city = "City cannot be empty";
+    error.city = "City is required";
   }
   if (address.country.trim().length === 0) {
-    error.country = "Country cannot be empty";
+    error.country = "Country is required";
   }
   if (address.zipCode.trim().length === 0) {
-    error.zipCode = "Zip cannot be empty";
+    error.zipCode = "Zip is required";
   }
   return error;
 }
