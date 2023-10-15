@@ -1,162 +1,29 @@
-import styled from "@emotion/styled";
-import { ExpandMore } from "@mui/icons-material";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Chip,
-  Paper,
-  Typography,
-  colors,
-} from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { OrderSummaryItemProps } from "../../client/components/OrderSummaryItem";
+import { useSelector } from "react-redux";
+import { OrderItem } from "../../client/components/OrderItem";
+import { OrdersSkeletonLoading } from "../../client/components/SkeletonLoading";
 import { getUserOrders } from "../../controllers/order";
-import { formatPrice } from "../../controllers/utils";
 import {
   IPaginationFilterData,
   PaginationFilterData,
 } from "../../model/common";
-import { IOrder } from "../../model/order";
+import { RootState } from "../../reducers/combineReducer";
 import { PageNumberSection } from "./PageNumberSection";
-
-const OrderAccordion = styled(Accordion)(({ theme }) => ({
-  ...theme,
-  padding: "8px 16px",
-  margin: "1rem 0",
-}));
-
-interface OrderItemProps {
-  order: IOrder;
-}
-
-const PurchasedItem = ({ orderSummary }: OrderSummaryItemProps) => {
-  return (
-    <Box display="flex" gap="24px" width="100%" alignItems="flex-start">
-      <Box>
-        <img
-          style={{ objectFit: "contain" }}
-          width="64px"
-          height="64px"
-          alt=""
-          src={orderSummary.productImg}
-        />
-      </Box>
-      <Box
-        display="flex"
-        alignItems="flex-start"
-        justifyContent="space-between"
-        width="100%"
-        flexWrap="wrap"
-        mt="6px"
-      >
-        <div className="flex-grow">
-          <Typography color={colors.grey[800]}>
-            {orderSummary.productName}
-          </Typography>
-          <Typography fontWeight="bold">
-            {formatPrice(orderSummary.priceAtPurchase)}
-          </Typography>
-        </div>
-        <Typography color="GrayText" fontSize="12px" className="flex-grow">
-          Qty: {orderSummary.quantity}
-        </Typography>
-        <Typography color="GrayText" fontSize="12px" className="flex-grow">
-          Size: {orderSummary.sizeLabel}
-        </Typography>
-      </Box>
-    </Box>
-  );
-};
-
-const OrderItem = ({ order }: OrderItemProps) => {
-  const navigate = useNavigate();
-  return (
-    <OrderAccordion>
-      <AccordionSummary
-        expandIcon={<ExpandMore />}
-        aria-label="Expand"
-        aria-controls="-content"
-        id="-header"
-      >
-        <Box display="flex" alignItems="center" flexWrap="wrap" width="100%">
-          <Typography
-            className="flex-grow"
-            overflow="hidden"
-            textOverflow="ellipsis"
-          >
-            {order.id}
-          </Typography>
-          <Box className="flex-grow">
-            <Chip
-              label={order.status}
-              color={
-                order.status === "ORDER PLACED"
-                  ? "info"
-                  : order.status === "PROCESSING"
-                  ? "primary"
-                  : order.status === "OUT FOR DELIVERY"
-                  ? "warning"
-                  : "success"
-              }
-              sx={{
-                ...(order.status === "PROCESSING" && {
-                  bgcolor: "#B2AA8F",
-                }),
-              }}
-            />
-          </Box>
-          <Typography className="flex-grow">
-            {new Date(order.orderDate).toDateString()}
-          </Typography>
-          <Typography className="flex-grow">
-            {formatPrice(order.totalPrice)}
-          </Typography>
-        </Box>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Box display="flex" justifyContent="space-between">
-          <Box width="90%">
-            {order.orderDetails.map((orderSummary, idx) => (
-              <PurchasedItem key={idx} orderSummary={orderSummary} />
-            ))}
-          </Box>
-          <Box mr="24px" mb="12px" alignSelf="flex-end">
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                navigate(`/account/orders/${order.id}`);
-              }}
-            >
-              See more details
-            </Button>
-          </Box>
-        </Box>
-      </AccordionDetails>
-    </OrderAccordion>
-  );
-};
 
 export const OrderHistory = () => {
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [paginationFilterData, setPaginationFilterData] =
     useState<IPaginationFilterData>(new PaginationFilterData());
-  const [orders, setOrders] = useState<IOrder[]>([]);
+  const accountData = useSelector((state: RootState) => state.account);
+  const orders = accountData.orders;
+  const ordersLoading = accountData.orderLoading;
   const [filterPage, setFilterPage] = useState<number>(1);
 
   useEffect(() => {
     getUserOrders(filterPage)
       .then((res) => {
         setFirstLoad(false);
-        if (res.currentPage !== 1) {
-          setOrders((prev) => [...prev, ...res.data]);
-        } else {
-          setOrders(res.data);
-        }
         const updatedPaginationData: IPaginationFilterData = {
           page: res.currentPage,
           totalPage: res.totalPage,
@@ -165,9 +32,7 @@ export const OrderHistory = () => {
         };
         setPaginationFilterData(updatedPaginationData);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, [filterPage]);
 
   const handleLoadMoreClick = () => {
@@ -175,37 +40,60 @@ export const OrderHistory = () => {
   };
 
   return (
-    <Paper sx={{ padding: "16px 32px 32px" }}>
+    <Paper sx={{ padding: { xs: "16px 0px 32px", sm: "16px 32px 32px" } }}>
       <Typography variant="h3" mb="24px">
         Orders
       </Typography>
-      <Box display="flex" flexWrap="wrap" alignItems="center" padding="0 16px">
-        <Typography className="flex-grow" fontSize="16px" fontWeight="bold">
-          Order #
-        </Typography>
-        <Typography className="flex-grow" fontSize="16px" fontWeight="bold">
-          Status
-        </Typography>
-        <Typography className="flex-grow" fontSize="16px" fontWeight="bold">
-          Date purchased
-        </Typography>
-        <Typography className="flex-grow" fontSize="16px" fontWeight="bold">
-          Total
-        </Typography>
-      </Box>
-      {orders.map((order) => (
-        <OrderItem key={order.id} order={order} />
-      ))}
-      <PageNumberSection
-        showbar={false}
-        currentPageTotalItem={paginationFilterData.currentPageTotalItem}
-        totalPage={paginationFilterData.totalPage}
-        totalItem={paginationFilterData.totalItem}
-        itemPerPage={20}
-        page={filterPage}
-        handleLoadMoreClick={handleLoadMoreClick}
-        firstLoad={false}
-      />
+      {firstLoad && ordersLoading && (
+        <Box width="100%">
+          <OrdersSkeletonLoading amount={10} />
+        </Box>
+      )}
+      {!firstLoad && !ordersLoading && orders.length > 0 && (
+        <>
+          <Box
+            sx={{ display: { xs: "none", sm: "flex" } }}
+            flexWrap="wrap"
+            alignItems="center"
+            padding="0 16px"
+          >
+            <Typography className="flex-grow" fontSize="16px" fontWeight="bold">
+              Order #
+            </Typography>
+            <Typography className="flex-grow" fontSize="16px" fontWeight="bold">
+              Status
+            </Typography>
+            <Typography className="flex-grow" fontSize="16px" fontWeight="bold">
+              Date purchased
+            </Typography>
+            <Typography className="flex-grow" fontSize="16px" fontWeight="bold">
+              Total
+            </Typography>
+          </Box>
+          {orders.map((order) => (
+            <OrderItem key={order.id} order={order} />
+          ))}
+          <PageNumberSection
+            showbar={false}
+            currentPageTotalItem={paginationFilterData.currentPageTotalItem}
+            totalPage={paginationFilterData.totalPage}
+            totalItem={paginationFilterData.totalItem}
+            itemPerPage={20}
+            page={filterPage}
+            handleLoadMoreClick={handleLoadMoreClick}
+            firstLoad={firstLoad}
+            itemsLoading={ordersLoading}
+          />
+        </>
+      )}
+
+      {!firstLoad && !ordersLoading && orders.length === 0 && (
+        <Box>
+          <Typography variant="h2" mt="36px">
+            No orders for this account
+          </Typography>
+        </Box>
+      )}
     </Paper>
   );
 };

@@ -1,6 +1,8 @@
 import {
   Box,
+  Divider,
   Grid,
+  Paper,
   Skeleton,
   Stack,
   Typography,
@@ -189,5 +191,68 @@ export const ProductDetailSkeletonLoading = () => {
         </Box>
       </Grid>
     </Grid>
+  );
+};
+
+export const OrdersSkeletonLoading = ({ amount }: skeletonCountProps) => {
+  return (
+    <Box>
+      {Array.from(Array(amount)).map((_, idx) => (
+        <Box key={idx} display="flex" padding="0 16px">
+          <Typography fontSize="48px" flex="1 1 0">
+            <Skeleton />
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
+export const OrderReviewSkeletonLoading = () => {
+  return (
+    <Paper sx={{ padding: "16px 32px 32px" }}>
+      <Typography variant="h2" fontWeight="bold">
+        <Skeleton width="70%" />
+      </Typography>
+      <Grid container mt="20px" spacing={2}>
+        <Grid item xs={12} md={4}>
+          <Skeleton variant="rectangular" height="200px" />
+        </Grid>
+        <Grid xs={12} item md={8}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Skeleton variant="rectangular" height="200px" />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Skeleton variant="rectangular" height="200px" />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Box mt="36px">
+        <Typography variant="h2" mb="20px" fontWeight="bold">
+          <Skeleton width="30%" />
+        </Typography>
+        <Divider sx={{ mb: "16px" }} />
+        <Box mb="16px" display="flex" flexDirection="column" gap="10px">
+          <Skeleton variant="rectangular" height="100px" />
+          <Skeleton variant="rectangular" height="100px" />
+          <Skeleton variant="rectangular" height="100px" />
+        </Box>
+        <Divider />
+
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="flex-end"
+          alignItems="flex-end"
+          mt="16px"
+        >
+          <Box width="30%">
+            <Skeleton variant="rectangular" height="80px" />
+          </Box>
+        </Box>
+      </Box>
+    </Paper>
   );
 };

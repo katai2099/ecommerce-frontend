@@ -6,6 +6,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import { logoutAction } from "../actions/userActions";
+import { AccountReduxState } from "../model/account";
 import { CheckoutReduxState } from "../model/checkout";
 import { IMainState, MainState } from "../model/common";
 import { GuiReduxState } from "../model/gui";
@@ -16,6 +17,7 @@ import {
 import { ProductAttributesReduxState } from "../model/productAttributes";
 import { ProductListReduxState } from "../model/productList";
 import { BASE_NAME } from "../store/configureStore";
+import accountReducer from "./accountReducer";
 import adminReducer from "./adminReducer";
 import cartReducer from "./cartReducer";
 import checkoutReducer from "./checkoutReducer";
@@ -40,6 +42,7 @@ const appReducer = combineReducers<IMainState>({
   productList: productListReducer,
   productDetail: productDetailReducer,
   productReview: productReviewReducer,
+  account: accountReducer,
 });
 
 const initialState: IMainState = new MainState();
@@ -67,6 +70,7 @@ export const getAppInitialState = () => {
       productAttributes: new ProductAttributesReduxState(),
       productReview: new ProductReviewReduxState(),
       productDetail: new ProductDetailReduxState(),
+      account: new AccountReduxState(),
     };
     return updatedInitialState;
   }

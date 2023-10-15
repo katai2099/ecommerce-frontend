@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { formatPrice } from "../../controllers/utils";
 import { IOrderSummary } from "../../model/order";
 
@@ -7,45 +7,53 @@ export interface OrderSummaryItemProps {
 }
 
 export const OrderSummaryItem = ({ orderSummary }: OrderSummaryItemProps) => {
+  const theme = useTheme();
+  const matchSm = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <Box
-      p="0px 0 24px"
-      display="flex"
-      justifyContent="space-between"
-      alignItems="flex-start"
-    >
-      <Box display="flex" gap="24px" width="100%">
+    <Box p="0px 0 24px">
+      <Box
+        display="flex"
+        gap="24px"
+        width="100%"
+        alignItems={matchSm ? "center" : "flex-start"}
+        flexDirection={matchSm ? "column" : "row"}
+      >
         <Box>
           <img
-            width="96px"
-            height="96px"
+            width={matchSm ? "80px" : "96px"}
+            height={matchSm ? "80px" : "96px"}
             alt=""
             src={orderSummary.productImg}
           />
         </Box>
-        <Box width="70%">
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography fontWeight="bold" fontSize="16px">
+        <Box width="100%" display="flex" justifyContent="space-between">
+          <Box>
+            <Typography
+              fontWeight="bold"
+              fontSize="16px"
+              textOverflow="ellipsis"
+              overflow="hidden"
+            >
               {orderSummary.productName}
             </Typography>
-            <Typography>
-              {`Total: ${formatPrice(
+            <Typography color="GrayText">
+              {formatPrice(orderSummary.priceAtPurchase)}
+            </Typography>
+
+            <Typography color="GrayText">
+              Size: {orderSummary.sizeLabel}
+            </Typography>
+            <Typography>Qty: {orderSummary.quantity}</Typography>
+          </Box>
+          <Box alignSelf={matchSm ? "flex-end" : "flex-start"} display="flex">
+            <Typography>Total: </Typography>
+            <Typography fontWeight="bold">
+              &nbsp;
+              {formatPrice(
                 orderSummary.priceAtPurchase * orderSummary.quantity
-              )}`}
+              )}
             </Typography>
           </Box>
-          <Typography color="GrayText">
-            {formatPrice(orderSummary.priceAtPurchase)}
-          </Typography>
-
-          <Typography color="GrayText">
-            Size: {orderSummary.sizeLabel}
-          </Typography>
-          <Typography>Qty: {orderSummary.quantity}</Typography>
         </Box>
       </Box>
     </Box>

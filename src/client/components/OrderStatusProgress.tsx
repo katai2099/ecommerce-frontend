@@ -1,82 +1,20 @@
-import styled from "@emotion/styled";
-import { DoneAll, LocalShipping, Paid, Settings } from "@mui/icons-material";
 import {
   Paper,
+  Skeleton,
   Step,
-  StepConnector,
-  StepIconProps,
   StepLabel,
   Stepper,
   Typography,
-  stepConnectorClasses,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-
-const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
-  [`&.${stepConnectorClasses.alternativeLabel}`]: {
-    top: 22,
-  },
-  [`&.${stepConnectorClasses.active}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage:
-        "linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)",
-    },
-  },
-  [`&.${stepConnectorClasses.completed}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage:
-        "linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)",
-    },
-  },
-  [`& .${stepConnectorClasses.line}`]: {
-    height: 3,
-    border: 0,
-    backgroundColor: "#eaeaf0",
-    borderRadius: 1,
-  },
-}));
-
-const ColorlibStepIconRoot = styled("div")<{
-  ownerState: { completed?: boolean; active?: boolean };
-}>(({ theme, ownerState }) => ({
-  backgroundColor: "#ccc",
-  zIndex: 1,
-  color: "#fff",
-  width: 50,
-  height: 50,
-  display: "flex",
-  borderRadius: "50%",
-  justifyContent: "center",
-  alignItems: "center",
-  ...(ownerState.active && {
-    backgroundImage:
-      "linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)",
-    boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
-  }),
-  ...(ownerState.completed && {
-    backgroundImage:
-      "linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)",
-  }),
-}));
-
-function ColorlibStepIcon(props: StepIconProps) {
-  const { active, completed, className } = props;
-
-  const icons: { [index: string]: React.ReactElement } = {
-    1: <Paid />,
-    2: <Settings />,
-    3: <LocalShipping />,
-    4: <DoneAll />,
-  };
-
-  return (
-    <ColorlibStepIconRoot
-      ownerState={{ completed, active }}
-      className={className}
-    >
-      {icons[String(props.icon)]}
-    </ColorlibStepIconRoot>
-  );
-}
+import { useSelector } from "react-redux";
+import { RootState } from "../../reducers/combineReducer";
+import {
+  ColorlibConnector,
+  ColorlibStepIcon,
+  MobileColorlibConnector,
+} from "../../styles/common";
 
 interface OrderStatusProgressProps {
   status: string;
@@ -86,22 +24,65 @@ const steps = ["Order placed", "Processing", "Out for delivery", "Delivered"];
 
 export const OrderStatusProgress = ({ status }: OrderStatusProgressProps) => {
   const step = steps.findIndex((element) => element.toUpperCase() === status);
+  const orderDetailLoading = useSelector(
+    (state: RootState) => state.account.selectedOrderLoading
+  );
+  const theme = useTheme();
+  const matchSm = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if (orderDetailLoading) {
+    return (
+      <Paper sx={{ padding: "16px 32px 32px" }}>
+        <Skeleton
+          variant="rectangular"
+          sx={{ height: { xs: "300px", sm: "180px" } }}
+        />
+      </Paper>
+    );
+  }
   return (
-    <Paper sx={{ padding: "16px 32px 32px" }}>
+    <Paper
+      sx={{
+        padding: "16px 32px 32px",
+      }}
+    >
       <Typography variant="h3" mb="24px">
         Order Details
       </Typography>
+
       <Stepper
-        alternativeLabel
+        sx={{
+          ...(matchSm && { display: "flex" }),
+          ...(matchSm && { alignItems: "center" }),
+        }}
+        orientation={matchSm ? "vertical" : "horizontal"}
+        alternativeLabel={!matchSm}
         activeStep={step}
-        connector={<ColorlibConnector />}
+        connector={
+          matchSm ? <MobileColorlibConnector /> : <ColorlibConnector />
+        }
       >
         {steps.map((label) => (
           <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+            <StepLabel
+              StepIconComponent={ColorlibStepIcon}
+              sx={{ ...(matchSm && { padding: 0 }) }}
+            >
+              {!matchSm && label}
+            </StepLabel>
           </Step>
         ))}
       </Stepper>
+      {matchSm && (
+        <Typography
+          pt="16px"
+          textAlign="center"
+          fontSize="16px"
+          fontWeight="bold"
+        >
+          {steps[step]}
+        </Typography>
+      )}
     </Paper>
   );
 };

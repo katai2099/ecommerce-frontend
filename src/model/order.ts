@@ -10,7 +10,7 @@ export interface IOrder {
   orderDetails: IOrderSummary[];
 }
 
-class Order implements IOrder {
+export class Order implements IOrder {
   constructor(
     public id = "",
     public status = "",

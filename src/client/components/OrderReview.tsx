@@ -1,23 +1,39 @@
 import { Divider, Grid, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { useSelector } from "react-redux";
 import { formatPrice } from "../../controllers/utils";
 import { IOrderDetail } from "../../model/order";
+import { RootState } from "../../reducers/combineReducer";
 import { SubHeader } from "../pages/OrderSuccess";
 import { AddressDetails } from "./AddressDetails";
 import { OrderSummaryItem } from "./OrderSummaryItem";
+import { OrderReviewSkeletonLoading } from "./SkeletonLoading";
 
 interface OrderReviewProps {
   orderDetail: IOrderDetail;
 }
 
 export const OrderReview = ({ orderDetail }: OrderReviewProps) => {
+  const orderDetailLoading = useSelector(
+    (state: RootState) => state.account.selectedOrderLoading
+  );
+
+  if (orderDetailLoading) {
+    return <OrderReviewSkeletonLoading />;
+  }
+
   return (
     <Paper sx={{ padding: "16px 32px 32px" }}>
-      <Typography variant="h3" fontWeight="bold">
+      <Typography
+        variant="h3"
+        fontWeight="bold"
+        textOverflow="ellipsis"
+        overflow="hidden"
+      >
         Order ID - {orderDetail.order.id}
       </Typography>
-      <Grid container mt="20px">
-        <Grid item md={5}>
+      <Grid container mt="20px" spacing={1}>
+        <Grid item xs={12} sm={4}>
           <Box mb="16px">
             <SubHeader>Fullname</SubHeader>
             <Typography color="GrayText">{`${orderDetail.user.firstname} ${orderDetail.user.lastname}`}</Typography>
@@ -31,15 +47,15 @@ export const OrderReview = ({ orderDetail }: OrderReviewProps) => {
             {new Date(orderDetail.order.orderDate).toDateString()}
           </Typography>
         </Grid>
-        <Grid item md={7}>
-          <Grid container>
-            <Grid item md={6}>
+        <Grid item xs={12} sm={8}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={6}>
               <Box mb="8px">
                 <SubHeader>Delivery Address</SubHeader>
                 <AddressDetails address={orderDetail.order.deliveryAddress} />
               </Box>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} sm={6}>
               <Box>
                 <SubHeader>Billing Address</SubHeader>
                 <AddressDetails address={orderDetail.order.billingAddress} />
@@ -64,7 +80,7 @@ export const OrderReview = ({ orderDetail }: OrderReviewProps) => {
           alignItems="flex-end"
           mt="16px"
         >
-          <Box width="30%">
+          <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
             <Box
               display="flex"
               justifyContent="space-between"

@@ -19,7 +19,7 @@ export const Subscribe = () => {
       </IconButton>
       <Typography variant="h5">Subscribe To Our Newsletter</Typography>
       <Typography>
-        and receive 20$ coupon for your first order when you checkout
+        to keep up with our latest products, news and events
       </Typography>
       <Box
         width="75%"

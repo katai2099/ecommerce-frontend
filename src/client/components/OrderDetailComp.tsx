@@ -1,26 +1,21 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { getOrderDetail } from "../../controllers/order";
-import { IOrderDetail, OrderDetail } from "../../model/order";
+import { RootState } from "../../reducers/combineReducer";
 import { OrderReview } from "./OrderReview";
 import { OrderStatusProgress } from "./OrderStatusProgress";
 
 export const OrderDetailComp = () => {
   const { id } = useParams();
-  const [orderDetail, setOrderDetail] = useState<IOrderDetail>(
-    new OrderDetail()
+  const orderDetail = useSelector(
+    (state: RootState) => state.account.selectedOrder
   );
   useEffect(() => {
-    console.log(id);
     getOrderDetail(id!)
-      .then((res) => {
-        setOrderDetail(res);
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .then((res) => {})
+      .catch((err) => {});
   }, []);
   return (
     <Box display="flex" flexDirection="column" gap="32px">

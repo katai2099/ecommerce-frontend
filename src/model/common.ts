@@ -1,3 +1,4 @@
+import { AccountReduxState, IAccountReduxState } from "./account";
 import { IAdminReduxState, adminReduxState } from "./admin";
 import { CartReduxState, ICartReduxState } from "./cart";
 import { CheckoutReduxState, ICheckoutReduxState } from "./checkout";
@@ -30,7 +31,8 @@ export class MainState implements IMainState {
     public homepage: IHomepageReduxState = new HomepageReduxState(),
     public productList: IProductListReduxState = new ProductListReduxState(),
     public productDetail: IProductDetailReduxState = new ProductDetailReduxState(),
-    public productReview: IProductReviewReduxState = new ProductReviewReduxState()
+    public productReview: IProductReviewReduxState = new ProductReviewReduxState(),
+    public account: IAccountReduxState = new AccountReduxState()
   ) {}
 }
 
@@ -46,6 +48,7 @@ export interface IMainState {
   productList: IProductListReduxState;
   productDetail: IProductDetailReduxState;
   productReview: IProductReviewReduxState;
+  account: IAccountReduxState;
 }
 
 export interface IIdName {

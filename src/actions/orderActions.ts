@@ -2,7 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getRequest } from "../controllers/clientRequest";
 import { IPaginationResponse } from "../model/common";
 import { IOrder, IOrderDetail, IOrderFilterParams } from "../model/order";
-import { setLoading } from "../reducers/guiReducer";
 
 export const getUserOrdersAction = createAsyncThunk<
   IPaginationResponse<IOrder>,
@@ -26,11 +25,9 @@ function getUserOrdersWorker(page: number) {
 export const getOrderAction = createAsyncThunk<IOrderDetail, string>(
   "get_order",
   (orderId, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
     return getOrderWorker(orderId)
       .then((res) => Promise.resolve(res))
-      .catch((err) => thunkApi.rejectWithValue(err))
-      .finally(() => thunkApi.dispatch(setLoading(false)));
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
