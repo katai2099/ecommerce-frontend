@@ -1,5 +1,13 @@
 import { addToCartAction } from "../actions/cartActions";
-import { addProductAction, getProductsAction } from "../actions/productActions";
+import {
+  addProductAction,
+  deleteReviewAction,
+  getProductAction,
+  getProductReviewsAction,
+  getProductUserReviewAction,
+  getProductsAction,
+  submitReviewAction,
+} from "../actions/productActions";
 import { IAddToCartRequest } from "../model/cart";
 import { IIdName } from "../model/common";
 import {
@@ -12,6 +20,7 @@ import {
   ProductMode,
   productSort,
 } from "../model/product";
+import { INewReview } from "../model/review";
 import { addToCartState } from "../reducers/cartReducer";
 import {
   setEditedProduct,
@@ -48,6 +57,46 @@ export function addToCart(
 export function getProducts(filter: IProductFilter) {
   return store
     .dispatch(getProductsAction(filter))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function getProduct(productId: string) {
+  return store
+    .dispatch(getProductAction(productId))
+    .unwrap()
+    .then((data) => Promise.resolve(data))
+    .catch((err) => Promise.reject(err));
+}
+
+export function getProductUserReview(productId: string) {
+  return store
+    .dispatch(getProductUserReviewAction(productId))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function getProductReviews(productId: number, page: number) {
+  return store
+    .dispatch(getProductReviewsAction({ productId, page }))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function submitReview(productId: number, review: INewReview) {
+  return store
+    .dispatch(submitReviewAction({ productId, newReview: review }))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function deleteReview(reviewId: number) {
+  return store
+    .dispatch(deleteReviewAction(reviewId.toString()))
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));

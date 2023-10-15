@@ -9,6 +9,10 @@ import { logoutAction } from "../actions/userActions";
 import { CheckoutReduxState } from "../model/checkout";
 import { IMainState, MainState } from "../model/common";
 import { GuiReduxState } from "../model/gui";
+import {
+  ProductDetailReduxState,
+  ProductReviewReduxState,
+} from "../model/product";
 import { ProductAttributesReduxState } from "../model/productAttributes";
 import { ProductListReduxState } from "../model/productList";
 import { BASE_NAME } from "../store/configureStore";
@@ -18,8 +22,10 @@ import checkoutReducer from "./checkoutReducer";
 import guiReducer from "./guiReducer";
 import homepageReducer from "./homepageReducer";
 import productAttributesReducer from "./productAttributesReducer";
+import productDetailReducer from "./productDetailReducer";
 import productListReducer from "./productListReducer";
 import productReducer from "./productReducer";
+import productReviewReducer from "./productReviewReducer";
 import userReducer from "./userReducer";
 
 const appReducer = combineReducers<IMainState>({
@@ -32,6 +38,8 @@ const appReducer = combineReducers<IMainState>({
   checkout: checkoutReducer,
   homepage: homepageReducer,
   productList: productListReducer,
+  productDetail: productDetailReducer,
+  productReview: productReviewReducer,
 });
 
 const initialState: IMainState = new MainState();
@@ -57,6 +65,8 @@ export const getAppInitialState = () => {
       productList: new ProductListReduxState(),
       checkout: new CheckoutReduxState(),
       productAttributes: new ProductAttributesReduxState(),
+      productReview: new ProductReviewReduxState(),
+      productDetail: new ProductDetailReduxState(),
     };
     return updatedInitialState;
   }

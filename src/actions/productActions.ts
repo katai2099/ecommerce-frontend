@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  deleteRequest,
   getRequest,
   postRequest,
   putRequest,
@@ -8,7 +9,7 @@ import { processProductFilter } from "../controllers/product";
 import { ICategory } from "../model/category";
 import { IPaginationResponse } from "../model/common";
 import { INewProductRequest, IProduct, IProductFilter } from "../model/product";
-import { INewReview, IProductReview } from "../model/review";
+import { INewReview, IReview } from "../model/review";
 import { setLoading } from "../reducers/guiReducer";
 
 export const getTopCategoriesAction = createAsyncThunk<ICategory[]>(
@@ -78,13 +79,9 @@ export const productsLoad = (
 export const getProductAction = createAsyncThunk<IProduct, string>(
   "get_product",
   (productId, thunkApi) => {
-    thunkApi.dispatch(setLoading(true));
     return getProductWorker(productId)
       .then((res) => Promise.resolve(res))
-      .catch((err) => thunkApi.rejectWithValue(err))
-      .finally(() => {
-        thunkApi.dispatch(setLoading(false));
-      });
+      .catch((err) => thunkApi.rejectWithValue(err));
   }
 );
 
@@ -112,8 +109,42 @@ function addProductWorker(product: INewProductRequest) {
     .catch((err) => Promise.reject(err));
 }
 
+export const deleteReviewAction = createAsyncThunk<string, string>(
+  "delete_review",
+  (reviewId, thunkApi) => {
+    return deleteReviewWorker(reviewId)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
+
+function deleteReviewWorker(reviewId: string) {
+  return deleteRequest<string>(`/products/user-review/${reviewId}`, {
+    auth: true,
+  })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const getProductUserReviewAction = createAsyncThunk<IReview, string>(
+  "get_product_user_review",
+  (productId, thunkApi) => {
+    return getProductUserReviewWorker(productId)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
+
+function getProductUserReviewWorker(productId: string) {
+  return getRequest<IReview>(`/products/${productId}/user-review`, {
+    auth: true,
+  })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
 export const getProductReviewsAction = createAsyncThunk<
-  IProductReview,
+  IPaginationResponse<IReview>,
   { productId: number; page: number }
 >("get_product_review", (data, thunkApi) => {
   return getProductReviewsWorker(data.productId, data.page)
@@ -122,7 +153,7 @@ export const getProductReviewsAction = createAsyncThunk<
 });
 
 function getProductReviewsWorker(productId: number, page: number = 1) {
-  return getRequest<IProductReview>(
+  return getRequest<IPaginationResponse<IReview>>(
     `/products/${productId}/reviews?page=${page}`,
     {
       auth: localStorage.getItem("jwt") !== null ? true : false,

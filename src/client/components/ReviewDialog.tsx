@@ -14,24 +14,28 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { INewReview, IReview } from "../../model/review";
+import { useSelector } from "react-redux";
+import { INewReview } from "../../model/review";
+import { RootState } from "../../reducers/combineReducer";
 import { DialogProps } from "./NewAddressDialog";
 
 interface ReviewDialogProps {
-  ownerReview: IReview;
   handleReviewChange: (key: string, value: any) => void;
   handleSubmitButtonClick: (newReview: INewReview) => void;
   newReview: INewReview;
+  newReviewError: INewReview;
 }
 
 export const ReviewDialog = ({
-  ownerReview,
   open,
   handleDialogState,
   handleReviewChange,
   handleSubmitButtonClick,
   newReview,
+  newReviewError,
 }: ReviewDialogProps & DialogProps) => {
+  const reviewData = useSelector((state: RootState) => state.productReview);
+
   return (
     <Dialog
       open={open}
@@ -40,7 +44,9 @@ export const ReviewDialog = ({
       }}
       fullWidth
     >
-      <DialogTitle>{ownerReview ? "Update " : "Write a"} review</DialogTitle>
+      <DialogTitle>
+        {reviewData.isNoOwnerReview ? "Write a" : "Update "} review
+      </DialogTitle>
       <IconButton
         onClick={() => {
           handleDialogState(false);
@@ -60,9 +66,6 @@ export const ReviewDialog = ({
             <Box display="flex">
               <Typography variant="h4" fontWeight="bold">
                 Overall Rating
-              </Typography>
-              <Typography variant="h4" color="error">
-                &nbsp; *
               </Typography>
             </Box>
             <Rating
@@ -91,15 +94,18 @@ export const ReviewDialog = ({
                 value={newReview.title}
                 fullWidth
                 required
+                error={!!newReviewError.title}
                 placeholder="Review title here"
                 onChange={(event) => {
                   handleReviewChange(event.target.name, event.target.value);
                 }}
               />
-              <FormHelperText error>required</FormHelperText>
+              {!!newReviewError.title && (
+                <FormHelperText error>{newReviewError.title}</FormHelperText>
+              )}
             </FormControl>
           </Box>
-          <Box>
+          <Box mb="8px">
             <Box display="flex" my="8px">
               <Typography variant="h4" fontWeight="bold">
                 Product review
@@ -114,6 +120,7 @@ export const ReviewDialog = ({
                 name="review"
                 value={newReview.review}
                 multiline
+                error={!!newReviewError.review}
                 rows={8}
                 fullWidth
                 required
@@ -122,7 +129,9 @@ export const ReviewDialog = ({
                   handleReviewChange(event.target.name, event.target.value);
                 }}
               />
-              <FormHelperText error>required</FormHelperText>
+              {!!newReviewError.review && (
+                <FormHelperText error>{newReviewError.review}</FormHelperText>
+              )}
             </FormControl>
           </Box>
         </form>
@@ -142,7 +151,7 @@ export const ReviewDialog = ({
             handleSubmitButtonClick(newReview);
           }}
         >
-          Submit
+          {reviewData.isNoOwnerReview ? "Submit" : "Update"}
         </Button>
       </DialogActions>
     </Dialog>

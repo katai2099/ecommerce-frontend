@@ -48,9 +48,7 @@ function axiosRequest<T>(
   const config = fillAxiosConfig(url, requestType, data, options);
   return axios(config)
     .then((response) => Promise.resolve(response.data))
-    .catch((err: AxiosError) => {
-      return Promise.reject(err);
-    });
+    .catch((err: AxiosError) => Promise.reject(err));
 }
 
 export function getRequest<T>(
@@ -59,10 +57,7 @@ export function getRequest<T>(
 ): Promise<T> {
   return axiosRequest<T>(url, "GET", undefined, options)
     .then((response) => Promise.resolve(response))
-    .catch((err: AxiosError) => {
-      console.log(err);
-      return Promise.reject(err);
-    });
+    .catch((err: AxiosError) => Promise.reject(err));
 }
 
 export function postRequest<T>(
@@ -72,9 +67,7 @@ export function postRequest<T>(
 ): Promise<T> {
   return axiosRequest<T>(url, "POST", postData, options)
     .then((res) => Promise.resolve(res))
-    .catch((err: AxiosError) => {
-      return Promise.reject(err);
-    });
+    .catch((err: AxiosError) => Promise.reject(err));
 }
 
 export function putRequest<T>(
@@ -93,8 +86,5 @@ export function deleteRequest<T>(
 ): Promise<T> {
   return axiosRequest<T>(url, "DELETE", undefined, options)
     .then((res) => Promise.resolve(res))
-    .catch((err: AxiosError) => {
-      console.log(err.response);
-      return Promise.reject(err);
-    });
+    .catch((err: AxiosError) => Promise.reject(err));
 }

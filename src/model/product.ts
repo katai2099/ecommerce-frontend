@@ -1,4 +1,5 @@
 import { IIdName } from "./common";
+import { IReview, Review } from "./review";
 
 export enum Gender {
   MEN = "MEN",
@@ -135,5 +136,37 @@ export class ProductReduxState implements IProductReduxState {
     public editedProduct: Product = new Product(),
     public mode: ProductMode = ProductMode.CREATE,
     public submitData: boolean = false
+  ) {}
+}
+
+export interface IProductDetailReduxState {
+  product: IProduct;
+  isLoading: boolean;
+  isError: boolean;
+}
+
+export class ProductDetailReduxState implements IProductDetailReduxState {
+  constructor(
+    public product = new Product(),
+    public isLoading = true,
+    public isError = false
+  ) {}
+}
+
+export interface IProductReviewReduxState {
+  productReviews: IReview[];
+  isReviewsLoading: boolean;
+  isReviewsError: boolean;
+  ownerReview: IReview;
+  isNoOwnerReview: boolean;
+}
+
+export class ProductReviewReduxState implements IProductReviewReduxState {
+  constructor(
+    public productReviews = [],
+    public isReviewsLoading = true,
+    public isReviewsError = false,
+    public ownerReview = new Review(),
+    public isNoOwnerReview = true
   ) {}
 }
