@@ -117,7 +117,7 @@ export const Register = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          minWidth: "310px",
+          minWidth: { sm: "510px" },
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
@@ -152,7 +152,7 @@ export const Register = () => {
         )}
         <Box component="form" sx={{ width: "100%" }}>
           <Grid container spacing={2}>
-            <Grid item>
+            <Grid item xs={12} sm={6}>
               <ETextField
                 fullWidth={true}
                 label="First name"
@@ -164,7 +164,7 @@ export const Register = () => {
                 error={registrationError.firstname}
               />
             </Grid>
-            <Grid item>
+            <Grid item xs={12} sm={6}>
               <ETextField
                 fullWidth={true}
                 label="Last name"

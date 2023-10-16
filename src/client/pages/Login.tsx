@@ -110,7 +110,7 @@ export const Login = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          minWidth: { lg: "510px" },
+          minWidth: { sm: "510px" },
           minHeight: "50vh",
         }}
       >
