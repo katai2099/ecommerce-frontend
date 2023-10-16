@@ -64,7 +64,12 @@ export const getAppInitialState = () => {
     const updatedInitialState: IMainState = {
       ...initialState,
       gui: new GuiReduxState(),
-      cart: { ...initialState.cart, open: false },
+      cart: {
+        ...initialState.cart,
+        open: false,
+        cartLoading: true,
+        cartError: false,
+      },
       productList: new ProductListReduxState(),
       checkout: new CheckoutReduxState(),
       productAttributes: new ProductAttributesReduxState(),

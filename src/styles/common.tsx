@@ -13,16 +13,19 @@ import {
   Paper,
   StepConnector,
   StepIconProps,
+  styled as materialStyle,
   stepConnectorClasses,
 } from "@mui/material";
 
 import { ReactNode } from "react";
 
-export const AppBox = styled(Box)(({ theme }) => ({
-  ...theme,
+export const AppBox = materialStyle(Box)(({ theme }) => ({
   maxWidth: "1280px",
   minHeight: "84vh",
   padding: "40px 24px",
+  [theme.breakpoints.down("sm")]: {
+    padding: "40px 0px",
+  },
   margin: "80px auto 0",
 }));
 

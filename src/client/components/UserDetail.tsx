@@ -113,7 +113,7 @@ export const UserDetail = () => {
         setLoginDetails({ password: "", confirmPassword: "" });
         showSnackBar("Login details updated", "success");
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {})
       .finally(() => {
         setUpdateLoginDetail(false);
       });

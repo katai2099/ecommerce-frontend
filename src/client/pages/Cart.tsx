@@ -1,5 +1,5 @@
 import { ShoppingBagOutlined } from "@mui/icons-material";
-import { Box, Divider, Grid, Paper, Typography } from "@mui/material";
+import { Box, Divider, Grid, Paper, Skeleton, Typography } from "@mui/material";
 import { MouseEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,12 +9,20 @@ import { IStockCountCheck } from "../../model/cart";
 import { OUT_OF_STOCK_MESSAGE } from "../../model/constant";
 import { RootState } from "../../reducers/combineReducer";
 import { AppBox } from "../../styles/common";
+import {
+  CartSkeletonLoading,
+  CartTotalSkeletonLoading,
+} from "../components/SkeletonLoading";
 import { CartItemDetail } from "../components/cart/CartItemDetail";
 import { LoadingButton } from "../components/common/LoadingButton";
 
 export const Cart = () => {
-  const carts = useSelector((state: RootState) => state.cart.carts);
+  const cartData = useSelector((state: RootState) => state.cart);
+  const carts = cartData.carts;
+  const cartLoading = cartData.cartLoading;
+  let totalItems = 0;
   const totalPrice = carts.reduce((accumulator, currentValue) => {
+    totalItems += currentValue.quantity;
     return accumulator + currentValue.quantity * currentValue.product.price;
   }, 0);
   const [checkStock, setCheckStock] = useState<boolean>(false);
@@ -41,9 +49,7 @@ export const Cart = () => {
           showSnackBar(OUT_OF_STOCK_MESSAGE, "error");
         }
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch((err) => {})
       .finally(() => setCheckStock(false));
   }
 
@@ -54,20 +60,33 @@ export const Cart = () => {
       </Typography>
       <Grid container mt="32px" gap="32px">
         <Grid item xs={12} md={7}>
-          <Paper sx={{ width: "100%", padding: "32px" }}>
+          <Paper
+            sx={{
+              width: "100%",
+              padding: { xs: "32px 16px 16px", sm: "32px 32px 16px" },
+            }}
+          >
             <Box display="flex" alignItems="center" mb="16px">
               <Typography variant="h3">Shopping Bag &nbsp;</Typography>
-              <Typography color="GrayText">({carts.length} item)</Typography>
+              <Typography color="GrayText">
+                {cartLoading ? (
+                  <Skeleton width="100px" />
+                ) : (
+                  `(${totalItems} items)`
+                )}
+              </Typography>
             </Box>
-            {carts.map((cartItem, idx) => (
-              <CartItemDetail
-                key={idx}
-                cartItem={cartItem}
-                index={idx}
-                stockCheck={stockCheckResponse}
-              />
-            ))}
-            {carts.length === 0 && (
+            {!cartLoading &&
+              carts.map((cartItem, idx) => (
+                <CartItemDetail
+                  key={idx}
+                  cartItem={cartItem}
+                  index={idx}
+                  stockCheck={stockCheckResponse}
+                />
+              ))}
+            {cartLoading && <CartSkeletonLoading amount={4} />}
+            {!cartLoading && carts.length === 0 && (
               <Box textAlign="center">
                 <ShoppingBagOutlined
                   sx={{ fontSize: "96px", color: "grayText", opacity: "0.7" }}
@@ -85,32 +104,38 @@ export const Cart = () => {
 
         <Grid item xs={12} md={4}>
           <Paper sx={{ width: "100%", padding: "32px" }}>
-            <Box padding=" 8px 20px 8px">
-              <Box display="flex" justifyContent="space-between">
-                <Typography>Subtotal:</Typography>
-                <Typography>{formatPrice(totalPrice)}</Typography>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Typography>Shipping</Typography>
-                <Typography>-</Typography>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Typography fontWeight="bold" fontSize="16px">
-                  Total
-                </Typography>
-                <Typography fontWeight="bold" fontSize="16px">
-                  {formatPrice(totalPrice)}
-                </Typography>
-              </Box>
-            </Box>
-            <Divider sx={{ mb: "32px" }} />
-            <LoadingButton
-              title={"Proceed to checkout"}
-              fullWidth={true}
-              disabled={carts.length === 0}
-              onClick={handleProceedClick}
-              loading={checkStock}
-            />
+            {cartLoading ? (
+              <CartTotalSkeletonLoading />
+            ) : (
+              <>
+                <Box padding=" 8px 0px 8px">
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography>Subtotal:</Typography>
+                    <Typography>{formatPrice(totalPrice)}</Typography>
+                  </Box>
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography>Shipping</Typography>
+                    <Typography>-</Typography>
+                  </Box>
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography fontWeight="bold" fontSize="16px">
+                      Total
+                    </Typography>
+                    <Typography fontWeight="bold" fontSize="16px">
+                      {formatPrice(totalPrice)}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Divider sx={{ mb: { xs: "16px", md: "32px" } }} />
+                <LoadingButton
+                  title={"Proceed to checkout"}
+                  fullWidth={true}
+                  disabled={carts.length === 0}
+                  onClick={handleProceedClick}
+                  loading={checkStock}
+                />
+              </>
+            )}
           </Paper>
         </Grid>
       </Grid>

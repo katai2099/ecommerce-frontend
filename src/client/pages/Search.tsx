@@ -71,9 +71,7 @@ export const Search = () => {
           SetTotalItem(res.totalItem);
           setCurrentPageTotalItem(res.data.length);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   }, [
     filter.page,
@@ -97,9 +95,7 @@ export const Search = () => {
           SetTotalItem(res.totalItem);
           setCurrentPageTotalItem(res.data.length);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   }, [
     filter.page,

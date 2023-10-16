@@ -55,9 +55,7 @@ export const Product = () => {
           dispatch(setEditedProduct(res));
           dispatch(setSelectedProduct(res));
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   }, []);
 

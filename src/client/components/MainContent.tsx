@@ -20,7 +20,13 @@ export const MainContent = () => {
     <Box>
       <Navbar />
       <LoadingBackDrop />
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        sx={{
+          paddingLeft: { xs: "0", md: "16px" },
+          paddingRight: { xs: "0", md: "16px" },
+        }}
+      >
         <AppSnackbar />
         <Routes>
           <Route path="/" element={<Home />} />

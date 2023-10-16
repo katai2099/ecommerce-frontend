@@ -36,6 +36,7 @@ export function removeItemFromCart(
         (_, idx) => idx !== cartItemIndex
       );
       store.dispatch(updateCarts(updatedCarts));
+      showSnackBar("Removed from cart", "success");
     })
     .catch((err) => {
       if (axios.isAxiosError(err) && err.response?.status === 400) {
@@ -69,6 +70,7 @@ export function updateCart(
         idx === cartItemIndex ? { ...cartItem, quantity: quantity } : cartItem
       );
       store.dispatch(updateCarts(updatedCarts));
+      showSnackBar("Cart updated", "success");
     })
     .catch((err) => {
       if (axios.isAxiosError(err) && err.response?.status === 400) {

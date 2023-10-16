@@ -5,13 +5,17 @@ export interface ICartReduxState {
   carts: ICartItem[];
   open: boolean;
   isUpdate: boolean;
+  cartLoading: boolean;
+  cartError: boolean;
 }
 
 export class CartReduxState implements ICartReduxState {
   constructor(
     public carts: ICartItem[] = [],
     public open: boolean = false,
-    public isUpdate = false
+    public isUpdate = false,
+    public cartLoading = true,
+    public cartError = false
   ) {}
 }
 

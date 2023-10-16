@@ -268,3 +268,72 @@ export const AddressBookSkeletonLoading = () => {
     </Grid>
   );
 };
+
+export const CartSkeletonLoading = ({ amount }: skeletonCountProps) => {
+  return (
+    <Box>
+      {Array.from(Array(amount)).map((_, idx) => (
+        <Box p="0px 0 16px" key={idx}>
+          <Box display="flex" gap="24px" width="100%" alignItems="flex-start">
+            <Skeleton
+              sx={{
+                height: {
+                  xs: "80px",
+                  sm: "120px",
+                },
+                width: { xs: "35%", sm: "20%" },
+              }}
+              variant="rectangular"
+            />
+            <Box sx={{ width: { xs: "100%", sm: "80%" } }}>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="flex-start"
+              >
+                <Box width="100%">
+                  <Box display="flex" justifyContent="space-between">
+                    <Skeleton width="40%" />
+                    <Skeleton
+                      variant="rectangular"
+                      sx={{ width: { xs: "8%", sm: "5%" } }}
+                    />
+                  </Box>
+                  <Typography>
+                    <Skeleton sx={{ width: { xs: "20%", sm: "15%" } }} />
+                  </Typography>
+                  <Box display="flex" justifyContent="space-between">
+                    <Skeleton sx={{ width: { xs: "16%", sm: "10%" } }} />
+                    <Skeleton sx={{ width: { xs: "25%", sm: "15%" } }} />
+                  </Box>
+                </Box>
+              </Box>
+              <Box
+                sx={{ display: { xs: "none", sm: "flex" } }}
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Skeleton width="25%" height="40px" />
+              </Box>
+            </Box>
+          </Box>
+          <Skeleton height="36px" />
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
+export const CartTotalSkeletonLoading = () => {
+  return (
+    <Box>
+      <Box mb="8px">
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </Box>
+      <Divider sx={{ mb: "8px" }} />
+      <Skeleton height="40px" />
+    </Box>
+  );
+};

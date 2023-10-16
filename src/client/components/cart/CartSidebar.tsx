@@ -80,8 +80,8 @@ export const CartSidebar = ({
       sx={{ position: "relative" }}
       PaperProps={{
         sx: {
-          minWidth: { xs: "60%", md: "30%" },
-          maxWidth: { xs: "60%", md: "30%" },
+          minWidth: { xs: "80%", sm: "50%", md: "35%", lg: "30%" },
+          maxWidth: { xs: "80%", sm: "50%", md: "35%", lg: "30%" },
         },
       }}
     >

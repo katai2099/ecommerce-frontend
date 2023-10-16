@@ -34,11 +34,8 @@ export const OrderSuccess = () => {
     getOrderDetail(orderId!)
       .then((res) => {
         setOrderDetail(res);
-        console.log(res);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, []);
   return (
     <AppBox>

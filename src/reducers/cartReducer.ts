@@ -61,7 +61,18 @@ export const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getCartAction.fulfilled, (state, action) => {
-      return { ...state, carts: action.payload };
+      return {
+        ...state,
+        carts: action.payload,
+        cartLoading: false,
+        cartError: false,
+      };
+    });
+    builder.addCase(getCartAction.pending, (state) => {
+      return { ...state, cartLoading: true, cartError: false };
+    });
+    builder.addCase(getCartAction.rejected, (state) => {
+      return { ...state, cartLoading: false, cartError: true };
     });
     builder.addCase(checkoutAction.fulfilled, (state, action) => {
       return { ...state, carts: action.payload.carts };

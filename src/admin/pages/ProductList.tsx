@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { productsLoad } from "../../actions/productActions";
 import { IProduct, ProductMode } from "../../model/product";
+import { setProductMode } from "../../reducers/productReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { ProductTable } from "../components/product/ProductTable";
-import { setProductMode } from "../../reducers/productReducer";
 
 export const ProductList = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -22,9 +22,7 @@ export const ProductList = () => {
         setTotalItems(data.totalItem);
         setProducts(data.data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, []);
   const navigate = useNavigate();
   return (
