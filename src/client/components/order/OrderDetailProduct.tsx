@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { formatPrice } from "../../../controllers/utils";
 import { ICartItem } from "../../../model/cart";
 
@@ -7,19 +7,16 @@ interface OrderDetailProductProps {
 }
 
 export const OrderDetailProduct = ({ cartItem }: OrderDetailProductProps) => {
+  const theme = useTheme();
+  const matchSm = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <Box
-      p="0px 0 24px"
-      display="flex"
-      justifyContent="space-between"
-      alignItems="flex-start"
-    >
+    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
       <Box display="flex" gap="24px" width="100%">
         <Box>
           <img
             style={{ objectFit: "contain" }}
-            width="96px"
-            height="96px"
+            width={matchSm ? "80px" : "96px"}
+            height={matchSm ? "80px" : "96px"}
             alt=""
             src={cartItem.product.images[0].imageUrl}
           />

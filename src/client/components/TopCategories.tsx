@@ -13,10 +13,11 @@ const TopCategoryItem = ({ category }: CategoryProps) => {
         position="relative"
         display="flex"
         flexDirection="column"
+        alignItems="center"
         width="100%"
         bgcolor="rgba(64,64,64,0.1)"
       >
-        <img width="100%" src={category.categoryImage} />
+        <img className="img-300 img-contain" src={category.categoryImage} />
         <Box
           alignSelf="center"
           position="absolute"

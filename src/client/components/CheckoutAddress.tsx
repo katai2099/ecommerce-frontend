@@ -98,7 +98,7 @@ export const CheckoutAddress = () => {
 
   return (
     <Box>
-      <Typography variant="h3" mb="8px">
+      <Typography variant="h3" mb="8px" pl="16px">
         1. Delivery
       </Typography>
 

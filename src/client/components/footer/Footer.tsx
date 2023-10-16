@@ -1,6 +1,11 @@
 import { Box, Grid, Typography } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 export const Footer = () => {
+  const location = useLocation();
+  if (location.pathname.includes("checkout")) {
+    return null;
+  }
   return (
     <Box sx={{ bgcolor: "#f2f2f2" }}>
       <Box p="40px 24px 40px" maxWidth="1280px" margin="80px auto 0">

@@ -1,4 +1,4 @@
-import { Box, Grid, useMediaQuery, useTheme } from "@mui/material";
+import { Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ import {
   startNewFilter,
 } from "../../reducers/productListReducer";
 import { useAppDispatch } from "../../store/configureStore";
+import { AppBox } from "../../styles/common";
 import { CategoryHeader } from "../components/CategoryHeader";
 import { FilterSection } from "../components/FilterSection";
 import { MobileFilter } from "../components/MobileFilter";
@@ -93,7 +94,7 @@ export const GenderSection = () => {
   };
 
   return (
-    <Box minHeight="84vh" margin="80px auto 0">
+    <AppBox>
       <Grid container sx={{ display: { xs: "none", md: "flex " } }}>
         <Grid item md={3} lg={2.5}></Grid>
         <Grid item md={9} lg={9.5}>
@@ -131,6 +132,6 @@ export const GenderSection = () => {
           </PageNumberSection>
         </Grid>
       </Grid>
-    </Box>
+    </AppBox>
   );
 };

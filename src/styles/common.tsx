@@ -23,10 +23,12 @@ export const AppBox = materialStyle(Box)(({ theme }) => ({
   maxWidth: "1280px",
   minHeight: "84vh",
   padding: "40px 24px",
-  [theme.breakpoints.down("sm")]: {
-    padding: "40px 0px",
+
+  margin: "60px auto 0",
+  [theme.breakpoints.down("md")]: {
+    padding: "40px 16px",
+    margin: "40px auto 0",
   },
-  margin: "80px auto 0",
 }));
 
 export const OrderAccordion = styled(Accordion)(({ theme }) => ({

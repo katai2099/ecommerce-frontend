@@ -58,6 +58,9 @@ export const cartSlice = createSlice({
     resetCart() {
       return new CartReduxState();
     },
+    setCartLoading(state, payload: PayloadAction<boolean>) {
+      return { ...state, cartLoading: payload.payload };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCartAction.fulfilled, (state, action) => {
@@ -80,6 +83,12 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { setOpen, addToCartState, updateCarts, setIsUpdate, resetCart } =
-  cartSlice.actions;
+export const {
+  setOpen,
+  addToCartState,
+  updateCarts,
+  setIsUpdate,
+  resetCart,
+  setCartLoading,
+} = cartSlice.actions;
 export default cartSlice.reducer;

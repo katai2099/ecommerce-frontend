@@ -251,8 +251,8 @@ export const CheckoutForm = () => {
           </Step>
         ))}
       </Stepper>
-      <Grid container mt="32px" spacing={3}>
-        <Grid item md={8}>
+      <Grid container sx={{ mt: { xs: "8px", md: "32px" } }} spacing={3}>
+        <Grid item xs={12} md={8}>
           <CheckoutPayment />
           {checkoutInfo.step === 0 && <CheckoutAddress />}
           {checkoutInfo.step === 2 && (
@@ -279,7 +279,12 @@ export const CheckoutForm = () => {
             />
           </Paper>
         </Grid>
-        <Grid item mt="32px" md={4}>
+        <Grid
+          item
+          xs={12}
+          md={4}
+          sx={{ order: { xs: -1, md: 1 }, mt: { md: "32px", xs: "0" } }}
+        >
           <Box position="sticky" top="100px">
             <CheckoutSummary
               step={checkoutInfo.step}

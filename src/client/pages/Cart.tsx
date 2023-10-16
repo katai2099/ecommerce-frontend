@@ -7,7 +7,9 @@ import { getCart, stockCheck } from "../../controllers/cart";
 import { formatPrice, showSnackBar } from "../../controllers/utils";
 import { IStockCountCheck } from "../../model/cart";
 import { OUT_OF_STOCK_MESSAGE } from "../../model/constant";
+import { setCartLoading } from "../../reducers/cartReducer";
 import { RootState } from "../../reducers/combineReducer";
+import { useAppDispatch } from "../../store/configureStore";
 import { AppBox } from "../../styles/common";
 import {
   CartSkeletonLoading,
@@ -31,10 +33,12 @@ export const Cart = () => {
   >([]);
   const isLogin = useSelector((state: RootState) => state.user.loggedIn);
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (isLogin) {
       getCart();
+    } else {
+      dispatch(setCartLoading(false));
     }
   }, []);
 

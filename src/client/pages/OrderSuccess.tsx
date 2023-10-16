@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
 import { CheckCircleOutline } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { Box, Button, Skeleton, Typography } from "@mui/material";
+import { useEffect, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getOrderDetail } from "../../controllers/order";
-import { IOrderDetail, OrderDetail } from "../../model/order";
 import { resetCheckoutState } from "../../reducers/checkoutReducer";
+import { RootState } from "../../reducers/combineReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { AppBox } from "../../styles/common";
 import { OrderReview } from "../components/OrderReview";
@@ -23,8 +24,11 @@ export const SubHeader = styled(Typography)(({ theme }) => ({
 
 export const OrderSuccess = () => {
   let query = useQuery();
-  const [orderDetail, setOrderDetail] = useState<IOrderDetail>(
-    new OrderDetail()
+  const orderDetail = useSelector(
+    (state: RootState) => state.account.selectedOrder
+  );
+  const orderDetailLoading = useSelector(
+    (state: RootState) => state.account.selectedOrderLoading
   );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -32,9 +36,7 @@ export const OrderSuccess = () => {
     const orderId = query.get("order");
     dispatch(resetCheckoutState());
     getOrderDetail(orderId!)
-      .then((res) => {
-        setOrderDetail(res);
-      })
+      .then((res) => {})
       .catch((err) => {});
   }, []);
   return (
@@ -48,13 +50,17 @@ export const OrderSuccess = () => {
         <CheckCircleOutline sx={{ fontSize: "86px", color: "green" }} />
         <Typography variant="h3">Thanks for your order!</Typography>
         <Typography color="GrayText">
-          The order confirmation will be sent to {orderDetail.user.email}
+          {orderDetailLoading ? (
+            <Skeleton />
+          ) : (
+            `The order confirmation will be sent to ${orderDetail.user.email}`
+          )}
         </Typography>
       </Box>
       <Box mt="48px">
         <OrderReview orderDetail={orderDetail} />
       </Box>
-      <Box mt="48px">
+      <Box mt="48px" sx={{ padding: { xs: "0 16px", sm: "0" } }}>
         <Button
           variant="contained"
           fullWidth

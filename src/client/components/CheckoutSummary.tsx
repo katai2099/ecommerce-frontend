@@ -53,8 +53,10 @@ export const CheckoutSummary = ({
       </Box>
 
       {step === 2 && (
-        <Box padding=" 8px 20px 16px">
-          {/* <Typography>Payment Details</Typography> */}
+        <Box
+          padding=" 8px 20px 16px"
+          sx={{ display: { xs: "none", md: "block" } }}
+        >
           <Button
             variant="contained"
             fullWidth

@@ -1,4 +1,4 @@
-import { Box, Paper, TextField, Typography } from "@mui/material";
+import { Box, FormLabel, Paper, TextField, Typography } from "@mui/material";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { ChangeEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -33,13 +33,14 @@ export const CheckoutPayment = () => {
   };
   return (
     <Box display={step !== 1 ? "none" : "default"}>
-      <Typography variant="h3" mb="8px">
+      <Typography variant="h3" mb="8px" pl="16px">
         2. Payment
       </Typography>
       <Paper sx={{ padding: "16px 20px 16px", mb: "16px" }}>
         <Typography variant="h3" mb="8px">
           Payment Details
         </Typography>
+        <FormLabel color="primary">Name on Card</FormLabel>
         <TextField
           placeholder="Smith"
           sx={{ mb: "8px" }}

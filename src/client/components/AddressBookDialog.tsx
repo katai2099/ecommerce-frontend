@@ -104,6 +104,7 @@ export const AddressBookDialog = ({
       onClose={() => {
         handleDialogState(false);
       }}
+      PaperProps={{ sx: { minWidth: { xs: "70%", md: "450px" } } }}
     >
       <DialogTitle>Address Book</DialogTitle>
       <IconButton
@@ -119,8 +120,8 @@ export const AddressBookDialog = ({
       >
         <Close />
       </IconButton>
-      <DialogContent>
-        <Box minWidth={{ lg: "450px" }}>
+      <DialogContent sx={{ pt: 0 }}>
+        <Box>
           {addresses.map((address, idx) => (
             <AddressSelect
               key={address.id}
