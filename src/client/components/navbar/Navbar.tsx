@@ -64,7 +64,9 @@ export const Navbar = () => {
   const permitPath =
     !location.pathname.includes("checkout") &&
     !location.pathname.includes("login") &&
-    !location.pathname.includes("register");
+    !location.pathname.includes("register") &&
+    !location.pathname.includes("forgetpassword") &&
+    !location.pathname.includes("resetpassword");
 
   return (
     <AppBar position="fixed" sx={{ bgcolor: "rgba(255,255,255,0.95)" }}>

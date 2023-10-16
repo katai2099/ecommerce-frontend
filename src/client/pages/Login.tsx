@@ -16,7 +16,6 @@ import { LoadingButton } from "../components/common/LoadingButton";
 import { Navbar } from "../components/navbar/Navbar";
 
 export const Login = () => {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loginData, setLoginData] = useState<LoginPostData>(
     new LoginPostData()
   );
@@ -166,7 +165,7 @@ export const Login = () => {
             fullWidth={true}
             error={loginErrorData.password}
           />
-          <Link to="#">
+          <Link to="/forgetpassword">
             <Box display="flex" justifyContent="flex-end" mb="16px">
               Forgot your password?
             </Box>

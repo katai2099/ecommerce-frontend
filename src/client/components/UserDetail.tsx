@@ -16,7 +16,7 @@ import { EPasswordField } from "./EPasswordField";
 import { ETextField } from "./common/ETextField";
 import { LoadingButton } from "./common/LoadingButton";
 
-interface ILoginDetails {
+export interface ILoginDetails {
   password: string;
   confirmPassword: string;
 }
