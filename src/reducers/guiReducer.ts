@@ -20,9 +20,20 @@ const guiSlice = createSlice({
         snackbarText: "",
       };
     },
+    setMbGenderMenuOpen(state, payload: PayloadAction<boolean>) {
+      return { ...state, mbGenderMenuOpen: payload.payload };
+    },
+    setMbSearchBarOpen(state, payload: PayloadAction<boolean>) {
+      return { ...state, mbSearchBarOpen: payload.payload };
+    },
   },
 });
 
-export const { setLoading, setSnackbarState, resetSnackbarState } =
-  guiSlice.actions;
+export const {
+  setLoading,
+  setSnackbarState,
+  resetSnackbarState,
+  setMbGenderMenuOpen,
+  setMbSearchBarOpen,
+} = guiSlice.actions;
 export default guiSlice.reducer;

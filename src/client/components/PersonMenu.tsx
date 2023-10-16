@@ -2,166 +2,192 @@ import { ChevronRight, PersonOutline } from "@mui/icons-material";
 import {
   Box,
   Button,
+  ClickAwayListener,
   Divider,
+  Grow,
   IconButton,
-  Popover,
+  Paper,
+  Popper,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { logoutAction } from "../../actions/userActions";
 import { RootState } from "../../reducers/combineReducer";
+import {
+  setMbGenderMenuOpen,
+  setMbSearchBarOpen,
+} from "../../reducers/guiReducer";
 import { useAppDispatch } from "../../store/configureStore";
 
 export const PersonMenu = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const anchorRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const matchSmallNav = useMediaQuery(theme.breakpoints.down("bigNav"));
+  const user = useSelector((state: RootState) => state.user);
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+  const handleClose = (event: Event | React.SyntheticEvent) => {
+    setOpen(false);
+  };
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const handleClick = (
     event:
       | React.MouseEvent<HTMLButtonElement>
       | React.MouseEvent<HTMLDivElement>
   ) => {
-    if (anchorEl !== event.currentTarget) {
-      setAnchorEl(event.currentTarget);
+    if (matchSmallNav) {
+      dispatch(setMbGenderMenuOpen(false));
+      dispatch(setMbSearchBarOpen(false));
+
+      if (user.loggedIn) {
+        navigate("/account");
+      } else {
+        navigate("/login");
+      }
+      return;
     }
+    handleToggle();
   };
-  const popoverAnchor = useRef(null);
-
-  const handlePaperClose = (event: React.MouseEvent<HTMLDivElement>) => {
-    setAnchorEl(null);
-  };
-  const handleClose = (
-    event:
-      | React.MouseEvent<HTMLButtonElement>
-      | React.MouseEvent<HTMLDivElement>
-  ) => {
-    setAnchorEl(null);
-  };
-
-  const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user);
-  const dispatch = useAppDispatch();
 
   return (
     <div>
       <IconButton
-        ref={popoverAnchor}
+        ref={anchorRef}
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        onMouseLeave={handleClose}
-        // onClick={() => {
-        //   navigate("/login");
-        // }}
       >
         <PersonOutline />
       </IconButton>
-      <Popover
-        className="popover"
-        classes={{ paper: "popover-content" }}
-        id="basic-menu"
-        anchorEl={popoverAnchor.current}
+      <Popper
         open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: 70,
-        }}
-        slotProps={{
-          paper: {
-            onMouseEnter: handleClick,
-            onMouseLeave: handlePaperClose,
-          },
-        }}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        placement="bottom-start"
+        transition
+        disablePortal
       >
-        <Box p="12px" minWidth="300px">
-          <Typography
-            variant="h3"
-            ml="8px"
-            mb="16px"
-            mt="8px"
-            fontWeight="bold"
-            overflow="hidden"
-            textOverflow="ellipsis"
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === "bottom-start" ? "left top" : "left bottom",
+            }}
           >
-            {user.loggedIn
-              ? `Welcome ${user.firstname} ${user.lastname}`
-              : "Welcome"}
-          </Typography>
+            <Paper sx={{ p: "12px", minWidth: "300px" }}>
+              <ClickAwayListener onClickAway={handleClose}>
+                <Box>
+                  <Typography
+                    variant="h3"
+                    ml="8px"
+                    mb="16px"
+                    mt="8px"
+                    fontWeight="bold"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                  >
+                    {user.loggedIn
+                      ? `Welcome ${user.firstname} ${user.lastname}`
+                      : "Welcome"}
+                  </Typography>
 
-          {user.loggedIn ? (
-            <>
-              <Button
-                endIcon={<ChevronRight />}
-                fullWidth
-                sx={{ display: "flex", justifyContent: "space-between" }}
-                onClick={() => {
-                  navigate("/account/orders");
-                  setAnchorEl(null);
-                }}
-              >
-                Orders
-              </Button>
-              <Divider />
-              <Button
-                endIcon={<ChevronRight />}
-                fullWidth
-                sx={{ display: "flex", justifyContent: "space-between" }}
-                onClick={() => {
-                  navigate("/account/details");
-                  setAnchorEl(null);
-                }}
-              >
-                Manage Account
-              </Button>
-              <Divider />
-              <Button
-                endIcon={<ChevronRight />}
-                fullWidth
-                sx={{ display: "flex", justifyContent: "space-between" }}
-                onClick={() => {
-                  dispatch(logoutAction());
-                  setAnchorEl(null);
-                  navigate("/login");
-                }}
-              >
-                Log out
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                endIcon={<ChevronRight />}
-                fullWidth
-                sx={{ display: "flex", justifyContent: "space-between" }}
-                onClick={() => {
-                  navigate("/register");
-                }}
-              >
-                Create An Account
-              </Button>
-              <Divider />
-              <Button
-                endIcon={<ChevronRight />}
-                fullWidth
-                sx={{ display: "flex", justifyContent: "space-between" }}
-                onClick={() => {
-                  navigate("/login");
-                }}
-              >
-                Login
-              </Button>
-            </>
-          )}
-        </Box>
-      </Popover>
+                  {user.loggedIn ? (
+                    <>
+                      <Button
+                        endIcon={<ChevronRight />}
+                        fullWidth
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                        onClick={(event) => {
+                          handleClose(event);
+                          navigate("/account/orders");
+                        }}
+                      >
+                        Orders
+                      </Button>
+                      <Divider />
+                      <Button
+                        endIcon={<ChevronRight />}
+                        fullWidth
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                        onClick={(event) => {
+                          handleClose(event);
+                          navigate("/account/details");
+                        }}
+                      >
+                        Manage Account
+                      </Button>
+                      <Divider />
+                      <Button
+                        endIcon={<ChevronRight />}
+                        fullWidth
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                        onClick={(event) => {
+                          dispatch(logoutAction());
+                          handleClose(event);
+                          navigate("/login");
+                        }}
+                      >
+                        Log out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        endIcon={<ChevronRight />}
+                        fullWidth
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                        onClick={() => {
+                          navigate("/register");
+                        }}
+                      >
+                        Create An Account
+                      </Button>
+                      <Divider />
+                      <Button
+                        endIcon={<ChevronRight />}
+                        fullWidth
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                        onClick={() => {
+                          navigate("/login");
+                        }}
+                      >
+                        Login
+                      </Button>
+                    </>
+                  )}
+                </Box>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
     </div>
   );
 };

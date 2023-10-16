@@ -1,5 +1,11 @@
-import { Box, Container } from "@mui/material";
+import { Box, Container, useMediaQuery, useTheme } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
+import {
+  setMbGenderMenuOpen,
+  setMbSearchBarOpen,
+} from "../../reducers/guiReducer";
 import { Account } from "../pages/Account";
 import { Cart } from "../pages/Cart";
 import { Checkout } from "../pages/Checkout";
@@ -16,6 +22,20 @@ import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
 
 export const MainContent = () => {
+  const theme = useTheme();
+  const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
+  const matchBigNav = useMediaQuery(theme.breakpoints.up("bigNav"));
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (matchSm) {
+      dispatch(setMbGenderMenuOpen(false));
+    }
+  }, [matchSm]);
+  useEffect(() => {
+    if (matchBigNav) {
+      dispatch(setMbSearchBarOpen(false));
+    }
+  }, [matchBigNav]);
   return (
     <Box>
       <Navbar />

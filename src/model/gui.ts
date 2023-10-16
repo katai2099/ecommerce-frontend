@@ -8,6 +8,8 @@ export interface IGuiReduxState {
   snackbarHorizontalPos: "left" | "right";
   snackbarExtraMargin: boolean;
   snackbarSevirity: AlertColor;
+  mbGenderMenuOpen: boolean;
+  mbSearchBarOpen: boolean;
 }
 
 export class GuiReduxState implements IGuiReduxState {
@@ -18,7 +20,9 @@ export class GuiReduxState implements IGuiReduxState {
     public snackbarVerticalPos: "top" | "bottom" = "top",
     public snackbarHorizontalPos: "left" | "right" = "right",
     public snackbarSevirity: AlertColor = "error",
-    public snackbarExtraMargin = false
+    public snackbarExtraMargin = false,
+    public mbGenderMenuOpen = false,
+    public mbSearchBarOpen = false
   ) {}
 }
 

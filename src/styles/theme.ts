@@ -1,5 +1,17 @@
 import { createTheme } from "@mui/material";
 
+declare module "@mui/material/styles" {
+  interface BreakpointOverrides {
+    xs: true; // removes the `xs` breakpoint
+    sm: true;
+    md: true;
+    lg: true;
+    xl: true;
+    bigNav: true;
+    smartphone: true;
+  }
+}
+
 export const shades = {
   primary: {
     100: "#cccccc",
@@ -63,6 +75,17 @@ export const theme = createTheme({
     h4: {
       fontFamily: ["Lato", "sans-serif"].join(","),
       fontSize: 14,
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+      bigNav: 760,
+      smartphone: 424,
     },
   },
 });

@@ -1,4 +1,6 @@
 import {
+  Close,
+  Menu,
   SearchOutlined,
   SearchRounded,
   ShoppingBagOutlined,
@@ -25,7 +27,12 @@ import {
   getAppInitialState,
   setInitialState,
 } from "../../../reducers/combineReducer";
+import {
+  setMbGenderMenuOpen,
+  setMbSearchBarOpen,
+} from "../../../reducers/guiReducer";
 import { useAppDispatch } from "../../../store/configureStore";
+import { GenderMbMenu, MobileSearchbar } from "../MobileMenu";
 import { PersonMenu } from "../PersonMenu";
 import { CartSidebar } from "../cart/CartSidebar";
 
@@ -39,6 +46,12 @@ export const Navbar = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const navigate = useNavigate();
   const location = useLocation();
+  const isGenderMenuOpen = useSelector(
+    (state: RootState) => state.gui.mbGenderMenuOpen
+  );
+  const isMbSearchbarOpen = useSelector(
+    (state: RootState) => state.gui.mbSearchBarOpen
+  );
 
   useEffect(() => {
     setSearchValue(filter.q ? filter.q : "");
@@ -55,8 +68,8 @@ export const Navbar = () => {
 
   return (
     <AppBar position="fixed" sx={{ bgcolor: "rgba(255,255,255,0.95)" }}>
-      <Container maxWidth="lg">
-        <Toolbar>
+      <Container maxWidth="lg" sx={{ position: "relative" }}>
+        <Toolbar sx={{ paddingX: { xs: 0, smartphone: "16px" } }}>
           <Stack
             width="100%"
             direction="row"
@@ -86,52 +99,95 @@ export const Navbar = () => {
                 ECOMMERCE
               </Typography>
               {permitPath && (
-                <>
-                  <Link className="nav-item" to="/men">
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  sx={{ display: { xs: "none", sm: "flex" } }}
+                >
+                  <Link
+                    className="nav-item"
+                    to="/men"
+                    onClick={() => {
+                      if (isMbSearchbarOpen) {
+                        dispatch(setMbSearchBarOpen(false));
+                      }
+                    }}
+                  >
                     <Typography color="primary">Men</Typography>
                   </Link>
-                  <Link className="nav-item" to={"/women"}>
+                  <Link
+                    className="nav-item"
+                    to={"/women"}
+                    onClick={() => {
+                      if (isMbSearchbarOpen) {
+                        dispatch(setMbSearchBarOpen(false));
+                      }
+                    }}
+                  >
                     <Typography color="primary">Women</Typography>
                   </Link>
-                </>
+                </Stack>
               )}
             </Stack>
             {permitPath && (
               <>
-                <Stack flex="1 1 0">
-                  <Box display="flex" alignItems="center" padding="8px 48px">
-                    <FormControl fullWidth>
-                      <OutlinedInput
-                        size="medium"
-                        sx={{ borderRadius: "32px" }}
-                        value={searchValue}
-                        startAdornment={
-                          <InputAdornment
-                            position="start"
-                            sx={{ cursor: "pointer" }}
-                          >
-                            <SearchRounded />
-                          </InputAdornment>
+                <Box
+                  alignItems="center"
+                  padding="8px 48px"
+                  flex="1 1 0"
+                  sx={{ display: { xs: "none", bigNav: "flex" } }}
+                >
+                  <FormControl fullWidth>
+                    <OutlinedInput
+                      size="medium"
+                      sx={{ borderRadius: "32px" }}
+                      value={searchValue}
+                      startAdornment={
+                        <InputAdornment
+                          position="start"
+                          sx={{ cursor: "pointer" }}
+                        >
+                          <SearchRounded
+                            onClick={() => {
+                              if (searchValue.length !== 0) {
+                                navigate(`/search?q=${searchValue}`);
+                              }
+                            }}
+                          />
+                        </InputAdornment>
+                      }
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                        setSearchValue(event.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && searchValue.length !== 0) {
+                          navigate(`/search?q=${searchValue}`);
                         }
-                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                          setSearchValue(event.target.value);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && searchValue.length !== 0) {
-                            navigate(`/search?q=${searchValue}`);
-                          }
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-                </Stack>
-                <Stack spacing={2} direction="row">
-                  <IconButton sx={{ display: { sm: "flex", md: "none" } }}>
-                    <SearchOutlined />
+                      }}
+                    />
+                  </FormControl>
+                </Box>
+                <Stack
+                  spacing={{ xs: 0, smartphone: 1, sm: 2 }}
+                  direction="row"
+                >
+                  <IconButton
+                    sx={{ display: { xs: "flex", bigNav: "none" } }}
+                    onClick={() => {
+                      dispatch(setMbGenderMenuOpen(false));
+                      dispatch(setMbSearchBarOpen(!isMbSearchbarOpen));
+                    }}
+                  >
+                    {isMbSearchbarOpen ? <Close /> : <SearchOutlined />}
                   </IconButton>
                   <PersonMenu />
                   <IconButton
                     onClick={() => {
+                      dispatch(setMbGenderMenuOpen(false));
+                      if (isMbSearchbarOpen) {
+                        dispatch(setMbSearchBarOpen(false));
+                      }
                       handleToggleCartDrawer(true);
                     }}
                   >
@@ -139,16 +195,29 @@ export const Navbar = () => {
                       <ShoppingBagOutlined />
                     </Badge>
                   </IconButton>
+                  <IconButton
+                    sx={{ display: { xs: "flex", sm: "none" } }}
+                    onClick={() => {
+                      if (isMbSearchbarOpen) {
+                        dispatch(setMbSearchBarOpen(false));
+                      }
+                      dispatch(setMbGenderMenuOpen(!isGenderMenuOpen));
+                    }}
+                  >
+                    {isGenderMenuOpen ? <Close /> : <Menu />}
+                  </IconButton>
                 </Stack>
               </>
             )}
           </Stack>
-          <CartSidebar
-            open={cart.open}
-            toggleDrawer={handleToggleCartDrawer}
-            totalItems={totalItems}
-          />
         </Toolbar>
+        <CartSidebar
+          open={cart.open}
+          toggleDrawer={handleToggleCartDrawer}
+          totalItems={totalItems}
+        />
+        {isMbSearchbarOpen && <MobileSearchbar />}
+        {isGenderMenuOpen && <GenderMbMenu />}
       </Container>
     </AppBar>
   );
