@@ -14,7 +14,6 @@ import {
   IUpdateCartRequest,
 } from "../model/cart";
 import { IConfirmPayment, INextActionResponse } from "../model/order";
-import { setLoading } from "../reducers/guiReducer";
 
 export const getCartAction = createAsyncThunk<ICartItem[]>(
   "get_cart",
@@ -97,11 +96,9 @@ function stockCheckWorker() {
 }
 
 export const checkoutAction = createAsyncThunk("checkout", (_, thunkApi) => {
-  thunkApi.dispatch(setLoading(true));
   return checkoutWorker()
     .then((res) => Promise.resolve(res))
-    .catch((err) => thunkApi.rejectWithValue(err))
-    .finally(() => thunkApi.dispatch(setLoading(false)));
+    .catch((err) => thunkApi.rejectWithValue(err));
 });
 
 function checkoutWorker() {

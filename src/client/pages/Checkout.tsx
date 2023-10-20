@@ -47,7 +47,6 @@ export const Checkout = () => {
         }
       })
       .finally(() => {
-        dispatch(setLoading(false));
         setFirstLoad(false);
       });
   }, []);

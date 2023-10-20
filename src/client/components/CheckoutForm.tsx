@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import { PaymentMethod } from "@stripe/stripe-js";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { confirmPayment, placeOrder, stockCheck } from "../../controllers/cart";
@@ -56,6 +56,10 @@ export const CheckoutForm = () => {
     : checkoutInfo.isNewBillingAddress
     ? billingAddress
     : checkoutInfo.addresses[checkoutInfo.selectedBillingAddressIndex];
+
+  useEffect(() => {
+    dispatch(setLoading(false));
+  }, []);
 
   const handleStepChange = (step: number) => {
     dispatch(setPlaceOrderError(false));
