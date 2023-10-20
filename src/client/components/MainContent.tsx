@@ -15,9 +15,7 @@ import { OrderFailure } from "../pages/OrderFailure";
 import { OrderSuccess } from "../pages/OrderSuccess";
 import { ProductDetail } from "../pages/ProductDetail";
 import { Search } from "../pages/Search";
-import { AppSnackbar } from "./AppSnackbar";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { LoadingBackDrop } from "./common/LoadingBackDrop";
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
 
@@ -39,7 +37,6 @@ export const MainContent = () => {
   return (
     <Box>
       <Navbar />
-      <LoadingBackDrop />
       <Container
         maxWidth="xl"
         sx={{
@@ -47,7 +44,6 @@ export const MainContent = () => {
           paddingRight: { xs: "0", md: "16px" },
         }}
       >
-        <AppSnackbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductDetail />}>

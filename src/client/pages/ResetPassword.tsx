@@ -1,7 +1,17 @@
 import { Cancel } from "@mui/icons-material";
 import { Box, Paper, Typography, colors } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  resetPassword,
+  validatePassword,
+  validateRetypePassword,
+  verifyResetPasswordToken,
+} from "../../controllers/user";
+import { useQuery } from "../../hooks/useQuery";
+import { IErrorResponse } from "../../model/common";
 import { EPasswordField } from "../components/EPasswordField";
+import { PasswordChangeSuccess } from "../components/ForgotPasswordComponent";
 import { ILoginDetails } from "../components/UserDetail";
 import { LoadingButton } from "../components/common/LoadingButton";
 import { Navbar } from "../components/navbar/Navbar";
@@ -15,6 +25,12 @@ export const ResetPassword = () => {
     password: "",
     confirmPassword: "",
   });
+  const [submitLoginDetailLoading, setSubmitLoginDetailLoading] =
+    useState<boolean>(false);
+  const [submitLoginDetailError, setSubmitLoginDetailError] =
+    useState<string>("");
+  const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
+  const navigate = useNavigate();
   const handleLoginDetailsChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -27,6 +43,62 @@ export const ResetPassword = () => {
       [event.target.name]: "",
     });
   };
+
+  let query = useQuery();
+  const token = query.get("token");
+
+  useEffect(() => {
+    if (token !== null) {
+      verifyResetPasswordToken(token).catch((err) => {
+        const errorRes = err.response?.data as IErrorResponse;
+        if (errorRes.status === 400) {
+          navigate("/forgetpassword", {
+            replace: true,
+            state: { expired: true },
+          });
+        }
+      });
+    }
+  }, []);
+
+  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const errorPassword = validatePassword(loginDetails.password);
+    const errorConfirmPassword = validateRetypePassword(
+      loginDetails.confirmPassword,
+      loginDetails.password,
+      "Confirm password is required"
+    );
+    if (errorPassword !== "" || errorConfirmPassword !== "") {
+      setLoginDetailsError({
+        password: errorPassword,
+        confirmPassword: errorConfirmPassword,
+      });
+      return;
+    }
+    setSubmitLoginDetailLoading(true);
+    resetPassword(loginDetails.password, token!)
+      .then(() => {
+        setUpdateSuccess(true);
+        setSubmitLoginDetailError("");
+      })
+      .catch((err) => {
+        const errorRes = err.response?.data as IErrorResponse;
+        if (errorRes.status === 404) {
+          setSubmitLoginDetailError(errorRes.message);
+        } else if (errorRes.status === 400) {
+          navigate("/forgetpassword", {
+            replace: true,
+            state: { expired: true },
+          });
+        } else {
+          setSubmitLoginDetailError("Something went wrong");
+        }
+      })
+      .finally(() => {
+        setSubmitLoginDetailLoading(false);
+      });
+  };
+
   return (
     <Box
       sx={{
@@ -38,7 +110,6 @@ export const ResetPassword = () => {
       }}
     >
       <Navbar />
-
       <Paper
         sx={{
           padding: { xs: "16px", sm: "2rem 3rem" },
@@ -50,61 +121,67 @@ export const ResetPassword = () => {
           minWidth: { md: "35%" },
         }}
       >
-        <Typography variant="h2" fontWeight="bold" letterSpacing="-0.6px">
-          Set New Password
-        </Typography>
-        <Typography color="GrayText" m="16px 0 24px">
-          Enter a new password below to reset your password
-        </Typography>
-        <Box
-          display="flex"
-          alignItems="center"
-          bgcolor={colors.red[100]}
-          width="100%"
-          padding={1}
-          mb={2}
-        >
-          <Cancel
-            fontSize="large"
-            sx={{
-              color: `${colors.grey[800]}`,
-            }}
-          />
-          <Box ml={1}>
-            <Typography color={colors.grey[800]}>
-              Something went wrong
+        {updateSuccess ? (
+          <PasswordChangeSuccess />
+        ) : (
+          <>
+            <Typography variant="h2" fontWeight="bold" letterSpacing="-0.6px">
+              Set New Password
             </Typography>
-            <Typography color={colors.grey[800]}>Please try again.</Typography>
-          </Box>
-        </Box>
-        <Box width="100%">
-          <EPasswordField
-            fullWidth
-            label="Password"
-            name="password"
-            value={loginDetails.password}
-            error={loginDetailsError.password}
-            onChange={handleLoginDetailsChange}
-          />
-          <EPasswordField
-            fullWidth
-            label="Confirm Password"
-            name="confirmPassword"
-            value={loginDetails.confirmPassword}
-            error={loginDetailsError.confirmPassword}
-            onChange={handleLoginDetailsChange}
-          />
-          <LoadingButton
-            fullWidth
-            loading={false}
-            title="Reset Password"
-            onClick={function (
-              event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-            ): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
-        </Box>
+            <Typography color="GrayText" m="16px 0 24px">
+              Enter a new password below to reset your password
+            </Typography>
+            {!!submitLoginDetailError && (
+              <Box
+                display="flex"
+                alignItems="center"
+                bgcolor={colors.red[100]}
+                width="100%"
+                padding={1}
+                mb={2}
+              >
+                <Cancel
+                  fontSize="large"
+                  sx={{
+                    color: `${colors.grey[800]}`,
+                  }}
+                />
+                <Box ml={1}>
+                  <Typography color={colors.grey[800]}>
+                    Something went wrong
+                  </Typography>
+                  <Typography color={colors.grey[800]}>
+                    Please try again.
+                  </Typography>
+                </Box>
+              </Box>
+            )}
+            <Box width="100%">
+              <EPasswordField
+                fullWidth
+                label="Password"
+                name="password"
+                value={loginDetails.password}
+                error={loginDetailsError.password}
+                onChange={handleLoginDetailsChange}
+              />
+              <EPasswordField
+                fullWidth
+                label="Confirm Password"
+                name="confirmPassword"
+                value={loginDetails.confirmPassword}
+                error={loginDetailsError.confirmPassword}
+                onChange={handleLoginDetailsChange}
+              />
+              <LoadingButton
+                fullWidth
+                loading={submitLoginDetailLoading}
+                title="Reset Password"
+                onClick={handleSubmit}
+              />
+            </Box>
+          </>
+        )}
       </Paper>
     </Box>
   );

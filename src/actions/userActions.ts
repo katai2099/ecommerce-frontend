@@ -12,11 +12,63 @@ import {
 } from "../model/authentication";
 import {
   IAddress,
+  IResetPasswordRequest,
   IUpdatePasswordRequest,
   IUserDetailsRequest,
 } from "../model/user";
 import { setLogin, updateUserDetails } from "../reducers/userReducer";
 import { store } from "../store/configureStore";
+
+export const resetPasswordAction = createAsyncThunk<
+  string,
+  IResetPasswordRequest
+>("reset_password", (request, thunkApi) => {
+  return resetPasswordWorker(request)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function resetPasswordWorker(request: IResetPasswordRequest) {
+  return postRequest<string>(`auth/reset-password?token=${request.token}`, {
+    password: request.password,
+  } as IUpdatePasswordRequest)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const verifyResetPasswordTokenAction = createAsyncThunk<string, string>(
+  "verify_reset_password_token",
+  (token, thunkApi) => {
+    return verifyResetPasswordTokenWorker(token)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
+
+function verifyResetPasswordTokenWorker(token: string) {
+  return getRequest<string>(`auth/verify-reset-password-token?token=${token}`)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const forgotPasswordAction = createAsyncThunk<string, string>(
+  "forgot_password",
+  (email, thunkApi) => {
+    return forgotPasswordWorker(email)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
+
+function forgotPasswordWorker(email: string) {
+  const forgotPasswordRequest = { email: email };
+  return postRequest<string>(
+    "auth/reset-password-request",
+    forgotPasswordRequest
+  )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
 
 export const updatePasswordAction = createAsyncThunk<string, string>(
   "update_password",

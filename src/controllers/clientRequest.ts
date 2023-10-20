@@ -17,8 +17,6 @@ function fillAxiosConfig(
 ): AxiosRequestConfig {
   const { auth = false, requestParams = false, formData = false } = options;
 
-  if (formData) {
-  }
   const config: AxiosRequestConfig = {
     baseURL: `http://${API_ENDPOINT}:${API_PORT}/api`,
     url,

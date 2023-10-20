@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { Admin } from "./admin/pages/Admin";
+import { AppSnackbar } from "./client/components/AppSnackbar";
 import { MainContent } from "./client/components/MainContent";
+import { LoadingBackDrop } from "./client/components/common/LoadingBackDrop";
 import { ForgotPassword } from "./client/pages/ForgotPassword";
 import { Login } from "./client/pages/Login";
 import { Register } from "./client/pages/Register";
@@ -14,6 +16,8 @@ function App() {
   const role = useSelector((state: RootState) => state.user.role);
   return (
     <div>
+      <AppSnackbar />
+      <LoadingBackDrop />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

@@ -92,3 +92,8 @@ export const initializeAddressError = (): Record<keyof IAddress, string> => {
     isDefault: "",
   };
 };
+
+export interface IResetPasswordRequest {
+  token: string;
+  password: string;
+}

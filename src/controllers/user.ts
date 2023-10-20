@@ -1,13 +1,16 @@
 import {
   addAddressAction,
   deleteAddressAction,
+  forgotPasswordAction,
   getAddressesAction,
   loginAction,
   registerAction,
+  resetPasswordAction,
   setDefaultAddressAction,
   updateAddressAction,
   updatePasswordAction,
   updateUserDetailsAction,
+  verifyResetPasswordTokenAction,
 } from "../actions/userActions";
 import {
   LoginPostData,
@@ -15,8 +18,35 @@ import {
   RegistrationPostData,
 } from "../model/authentication";
 import { IAddress, IUserDetailsRequest } from "../model/user";
+import { setLoading } from "../reducers/guiReducer";
 import { store } from "../store/configureStore";
 import { validateEmailRegex } from "./utils";
+
+export function forgetPassword(email: string) {
+  return store
+    .dispatch(forgotPasswordAction(email))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function verifyResetPasswordToken(token: string) {
+  store.dispatch(setLoading(true));
+  return store
+    .dispatch(verifyResetPasswordTokenAction(token))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err))
+    .finally(() => store.dispatch(setLoading(false)));
+}
+
+export function resetPassword(password: string, token: string) {
+  return store
+    .dispatch(resetPasswordAction({ token: token, password: btoa(password) }))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
 
 export function login(email: string, password: string) {
   const data = new LoginPostData();
