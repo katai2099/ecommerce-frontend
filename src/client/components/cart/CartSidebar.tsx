@@ -40,6 +40,7 @@ export const CartSidebar = ({
   totalItems,
 }: CartSidebarProps) => {
   const cart = useSelector((state: RootState) => state.cart);
+  const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
   const cartItems = cart.carts;
   const total = cartItems.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.product.price * currentValue.quantity;
@@ -55,6 +56,11 @@ export const CartSidebar = ({
   function handleProceedClick(
     event: React.MouseEvent<HTMLButtonElement>
   ): void {
+    if (!loggedIn) {
+      toggleDrawer(false);
+      navigate("/login");
+      return;
+    }
     setCheckStock(true);
     stockCheck()
       .then((res) => {

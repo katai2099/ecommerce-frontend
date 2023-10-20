@@ -26,6 +26,7 @@ function fillAxiosConfig(
       "Content-Type": formData ? "multipart/form-data" : "application/json",
       Authorization: `Bearer ${auth ? localStorage.getItem("jwt") : ""}`,
     },
+    withCredentials: true,
   };
 
   if (formData) {

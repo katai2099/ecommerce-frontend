@@ -86,7 +86,7 @@ export const PersonMenu = () => {
                 placement === "bottom-start" ? "left top" : "left bottom",
             }}
           >
-            <Paper sx={{ p: "12px", minWidth: "300px" }}>
+            <Paper sx={{ p: "12px", width: "300px" }}>
               <ClickAwayListener onClickAway={handleClose}>
                 <Box>
                   <Typography
@@ -97,6 +97,8 @@ export const PersonMenu = () => {
                     fontWeight="bold"
                     overflow="hidden"
                     textOverflow="ellipsis"
+                    whiteSpace="nowrap"
+                    width="100%"
                   >
                     {user.loggedIn
                       ? `Welcome ${user.firstname} ${user.lastname}`
@@ -145,7 +147,7 @@ export const PersonMenu = () => {
                         onClick={(event) => {
                           dispatch(logoutAction());
                           handleClose(event);
-                          navigate("/login");
+                          navigate("/");
                         }}
                       >
                         Log out

@@ -85,7 +85,7 @@ export const AccountSidebarMenu = () => {
         elevation={3}
         onClick={() => {
           dispatch(logoutAction());
-          navigate("/login");
+          navigate("/");
         }}
       >
         <FlexBox>

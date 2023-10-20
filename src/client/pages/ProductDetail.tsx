@@ -53,7 +53,7 @@ export const ProductDetail = () => {
 
   useEffect(() => {
     //TODO: 404 and undefined id
-    getProduct(id!);
+    getProduct(id!).catch((err) => {});
   }, [id]);
 
   useEffect(() => {

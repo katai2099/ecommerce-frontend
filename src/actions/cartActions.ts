@@ -26,7 +26,11 @@ export const getCartAction = createAsyncThunk<ICartItem[]>(
 );
 
 function getCartWorker(): Promise<ICartItem[]> {
-  return getRequest<ICartItem[]>(`/carts`, { auth: true })
+  const authenticated = window.localStorage.getItem("jwt");
+
+  return getRequest<ICartItem[]>(`/carts`, {
+    auth: authenticated ? true : false,
+  })
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }
@@ -43,8 +47,9 @@ export const addToCartAction = createAsyncThunk<number, IAddToCartRequest>(
 );
 
 function addToCartWorker(addToCartPostData: IAddToCartRequest) {
+  const authenticated = window.localStorage.getItem("jwt");
   return postRequest<number>(`/carts/add-to-cart`, addToCartPostData, {
-    auth: true,
+    auth: authenticated ? true : false,
   })
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
@@ -60,10 +65,13 @@ export const updateCartAction = createAsyncThunk<string, IUpdateCartRequest>(
 );
 
 function updateCartWorker(updateCartRequest: IUpdateCartRequest) {
+  const authenticated = window.localStorage.getItem("jwt");
   return putRequest<string>(
     `/carts/${updateCartRequest.cartItemId}`,
     updateCartRequest,
-    { auth: true }
+    {
+      auth: authenticated ? true : false,
+    }
   )
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));

@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import { logoutAction } from "../actions/userActions";
 import { AccountReduxState } from "../model/account";
+import { CartReduxState } from "../model/cart";
 import { CheckoutReduxState } from "../model/checkout";
 import { IMainState, MainState } from "../model/common";
 import { GuiReduxState } from "../model/gui";
@@ -16,6 +17,7 @@ import {
 } from "../model/product";
 import { ProductAttributesReduxState } from "../model/productAttributes";
 import { ProductListReduxState } from "../model/productList";
+import { UserReduxtState } from "../model/user";
 import { BASE_NAME } from "../store/configureStore";
 import accountReducer from "./accountReducer";
 import adminReducer from "./adminReducer";
@@ -82,6 +84,19 @@ export const getAppInitialState = () => {
   return new MainState();
 };
 
+export const getLogoutState = (state: IMainState | undefined): IMainState => {
+  if (state === undefined || state === null) {
+    return new MainState();
+  }
+  return {
+    ...state,
+    cart: new CartReduxState(),
+    user: new UserReduxtState(),
+    checkout: new CheckoutReduxState(),
+    account: new AccountReduxState(),
+  };
+};
+
 export const setInitialState = createAction<{ state: IMainState }>(
   "SET_INITIAL_STATE"
 );
@@ -94,7 +109,7 @@ export const rootReducer: Reducer<IMainState> = (
     return action.payload.state;
   }
   if (logoutAction.fulfilled.match(action)) {
-    return new MainState();
+    return getLogoutState(state);
   }
 
   return appReducer(state, action);
