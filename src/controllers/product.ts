@@ -6,27 +6,32 @@ import {
   getProductReviewsAction,
   getProductUserReviewAction,
   getProductsAction,
+  setProductFeaturedAction,
+  setProductPublishAction,
   submitReviewAction,
+  updateProductAction,
 } from "../actions/productActions";
 import { IAddToCartRequest } from "../model/cart";
 import {
   Gender,
+  INewProductError,
   INewProductRequest,
   IProduct,
   IProductFilter,
   IProductFilterParams,
+  NewProductError,
   ProductMode,
   productSort,
 } from "../model/product";
 import { INewReview } from "../model/review";
 import { addToCartState } from "../reducers/cartReducer";
+import { setLoading } from "../reducers/guiReducer";
 import {
-  setEditedProduct,
-  setProductMode,
+  setNewProductError,
   setProductSubmitData,
-  setSelectedProduct,
 } from "../reducers/productReducer";
 import { store } from "../store/configureStore";
+import { isStringEmpty } from "./utils";
 
 export function addToCart(
   product: IProduct,
@@ -100,20 +105,51 @@ export function deleteReview(reviewId: number) {
     .catch((err) => Promise.reject(err));
 }
 
+export function updateProductCont(product: IProduct, files: File[]) {
+  store.dispatch(setProductSubmitData(true));
+  const updatedProduct: INewProductRequest = {
+    productData: product,
+    files: files,
+  };
+  return store
+    .dispatch(updateProductAction(updatedProduct))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err))
+    .finally(() => store.dispatch(setProductSubmitData(false)));
+}
+
+export function setProductFeatured(featured: boolean, id: number) {
+  store.dispatch(setLoading(true));
+  return store
+    .dispatch(setProductFeaturedAction({ id, featured }))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err))
+    .finally(() => store.dispatch(setLoading(false)));
+}
+
+export function setProductPublish(publish: boolean, id: number) {
+  store.dispatch(setLoading(true));
+  return store
+    .dispatch(setProductPublishAction({ id, publish }))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err))
+    .finally(() => store.dispatch(setLoading(false)));
+}
+
 export function addNewProduct(product: IProduct, files: File[]) {
   store.dispatch(setProductSubmitData(true));
   const uploadProduct: INewProductRequest = {
     productData: product,
     files: files,
   };
-  store
+  return store
     .dispatch(addProductAction(uploadProduct))
     .unwrap()
-    .then((data) => {
-      store.dispatch(setSelectedProduct(data));
-      store.dispatch(setEditedProduct(data));
-      store.dispatch(setProductMode(ProductMode.VIEW));
-    })
+    .then(() => Promise.resolve())
+    .catch((err) => Promise.reject(err))
     .finally(() => {
       store.dispatch(setProductSubmitData(false));
     });
@@ -166,6 +202,50 @@ function processGender(genders: Gender[]): string {
 function processCategory(categories: string[]): string {
   const selectedCategories = categories.join("::");
   return selectedCategories;
+}
+
+export function validateNewProduct(
+  product: IProduct,
+  mode: ProductMode,
+  files: File[]
+): boolean {
+  let valid = true;
+  const error: INewProductError = new NewProductError();
+  if (isStringEmpty(product.name)) {
+    valid = false;
+    error.name = "Name is required";
+  }
+  if (isStringEmpty(product.description)) {
+    valid = false;
+    error.description = "Description is required";
+  }
+  if (
+    (mode === ProductMode.CREATE && files.length === 0) ||
+    (mode === ProductMode.EDIT &&
+      files.length === 0 &&
+      product.images.length === 0)
+  ) {
+    valid = false;
+    error.image = "At least one file is required";
+  }
+  if (product.price === 0) {
+    valid = false;
+    error.price = "Price must be greater than 0";
+  }
+  if (product.productSizes.length === 0) {
+    valid = false;
+    error.size = "Product must have at least one size";
+  }
+  let sizeContainZeroQty = false;
+  for (let i = 0; i < product.productSizes.length; i++) {
+    if (product.productSizes[i].stockCount === 0) {
+      sizeContainZeroQty = true;
+      error.size = "size cannot contain zero quantity";
+      break;
+    }
+  }
+  store.dispatch(setNewProductError(error));
+  return valid;
 }
 
 export function isFilterEmpty(

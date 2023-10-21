@@ -122,6 +122,7 @@ export interface INewProductRequest {
 export interface IProductReduxState {
   selectedProduct: Product;
   editedProduct: Product;
+  newProductError: INewProductError;
   mode: ProductMode;
   submitData: boolean;
 }
@@ -136,6 +137,7 @@ export class ProductReduxState implements IProductReduxState {
   constructor(
     public selectedProduct: Product = new Product(),
     public editedProduct: Product = new Product(),
+    public newProductError: INewProductError = new NewProductError(),
     public mode: ProductMode = ProductMode.CREATE,
     public submitData: boolean = false
   ) {}
@@ -170,5 +172,23 @@ export class ProductReviewReduxState implements IProductReviewReduxState {
     public isReviewsError = false,
     public ownerReview = new Review(),
     public isNoOwnerReview = true
+  ) {}
+}
+
+export interface INewProductError {
+  name: string;
+  description: string;
+  image: string;
+  price: string;
+  size: string;
+}
+
+export class NewProductError implements INewProductError {
+  constructor(
+    public name = "",
+    public description = "",
+    public image = "",
+    public price = "",
+    public size = ""
   ) {}
 }

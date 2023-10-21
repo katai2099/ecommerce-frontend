@@ -32,20 +32,30 @@ export const UploadImageSection = (props: UploadImageSectionProps) => {
   const { onImageDrop, onLocalImageDelete, onRemoteImageDelete, files, mode } =
     props;
   const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 3,
     accept: {
-      "image/*": [],
+      "image/jpeg": [],
+      "image/png": [],
     },
     onDrop(acceptedFiles) {
-      acceptedFiles.map((file) => onImageDrop(file));
+      for (
+        let i = 0;
+        i <
+        Math.min(
+          3 - (files.length + editedProduct.images.length),
+          acceptedFiles.length
+        );
+        i++
+      ) {
+        onImageDrop(acceptedFiles[i]);
+      }
     },
   });
 
   return (
     <>
       <FormControl fullWidth>
-        <FormLabel sx={{ pb: "4px" }}>
-          {mode === ProductMode.VIEW ? "Images" : "Images"}
-        </FormLabel>
+        <FormLabel sx={{ pb: "4px" }}>Images</FormLabel>
         {mode !== ProductMode.VIEW && (
           <section className="container">
             <div {...getRootProps({ className: "dropzone" })}>
@@ -68,6 +78,9 @@ export const UploadImageSection = (props: UploadImageSectionProps) => {
                 </Box>
               </Box>
             </div>
+            <Typography fontSize="12px" pt="8px" color="grayText">
+              Maximum 3 files can be uploaded
+            </Typography>
           </section>
         )}
       </FormControl>

@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  FormHelperText,
   Grid,
   IconButton,
   InputAdornment,
@@ -32,7 +33,10 @@ import {
   ProductMode,
 } from "../../../model/product";
 import { RootState } from "../../../reducers/combineReducer";
-import { setEditedProduct } from "../../../reducers/productReducer";
+import {
+  setEditedProduct,
+  setNewProductError,
+} from "../../../reducers/productReducer";
 import { useAppDispatch } from "../../../store/configureStore";
 import Title from "../Title";
 import { ProductStock } from "./ProductStock";
@@ -62,9 +66,12 @@ export const NewProductDetails = ({
   const handleUpdateProduct = (event: React.ChangeEvent<HTMLInputElement>) => {
     updateProduct(event.currentTarget.name, event.currentTarget.value);
   };
-  function hanldeLocalImageDelete(idx: number): void {
+  function handleLocalImageDelete(idx: number): void {
     onLocalImageDelete(idx);
   }
+  const newProductError = useSelector(
+    (state: RootState) => state.product.newProductError
+  );
   const onRemoteImageDeleteHandle = (idx: number) => {
     const images = editedProduct.images.filter((_, index) => index !== idx);
     const product: IProduct = { ...editedProduct, images: images };
@@ -82,25 +89,44 @@ export const NewProductDetails = ({
           <ETextField
             label="Product Name"
             name="name"
+            error={newProductError.name}
             value={editedProduct.name}
             disable={disable}
-            onChange={handleUpdateProduct}
+            onChange={(event) => {
+              if (!!newProductError.name) {
+                dispatch(setNewProductError({ ...newProductError, name: "" }));
+              }
+              handleUpdateProduct(event);
+            }}
           />
           <ETextField
             label="Description"
             name="description"
+            error={newProductError.description}
             multiline
             value={editedProduct.description}
             disable={disable}
-            onChange={handleUpdateProduct}
+            onChange={(event) => {
+              if (!!newProductError.description) {
+                dispatch(
+                  setNewProductError({ ...newProductError, description: "" })
+                );
+              }
+              handleUpdateProduct(event);
+            }}
           />
           <UploadImageSection
             onImageDrop={onImageDrop}
             files={files}
-            onLocalImageDelete={hanldeLocalImageDelete}
+            onLocalImageDelete={handleLocalImageDelete}
             onRemoteImageDelete={onRemoteImageDeleteHandle}
             mode={mode}
           />
+          {
+            <Typography color="error" fontSize="12px">
+              {newProductError.image}
+            </Typography>
+          }
         </Stack>
       </Grid>
     </Grid>
@@ -115,6 +141,10 @@ export const NewProductProperties = ({
   const adminSettings = useSelector((state: RootState) => state.admin);
   const [sizeDialogOpen, setSizeDialogOpen] = useState<boolean>(false);
   const disable = mode === ProductMode.VIEW;
+  const newProductError = useSelector(
+    (state: RootState) => state.product.newProductError
+  );
+  const dispatch = useAppDispatch();
   const handleDialogState = (state: boolean) => {
     setSizeDialogOpen(state);
   };
@@ -154,7 +184,7 @@ export const NewProductProperties = ({
             </FormControl>
           </Box>
           <Box mb="16px">
-            <FormControl fullWidth required>
+            <FormControl fullWidth required error={!!newProductError.price}>
               <InputLabel htmlFor="outlined-adornment-amount">Price</InputLabel>
               <OutlinedInput
                 disabled={disable}
@@ -169,12 +199,18 @@ export const NewProductProperties = ({
                 type="number"
                 inputProps={{ min: 0 }}
                 onChange={(event) => {
+                  if (!!newProductError.price) {
+                    dispatch(
+                      setNewProductError({ ...newProductError, price: "" })
+                    );
+                  }
                   updateProduct(
                     event.currentTarget.name,
                     Number(event.currentTarget.value)
                   );
                 }}
               />
+              <FormHelperText>{newProductError.price}</FormHelperText>
             </FormControl>
           </Box>
           <Box mb="16px">
@@ -223,6 +259,11 @@ export const NewProductProperties = ({
                 mode={mode}
               />
             ))}
+            {!!newProductError.size && (
+              <Typography color="error" fontSize="12px">
+                {newProductError.size}
+              </Typography>
+            )}
           </Box>
         </Stack>
         {sizeDialogOpen && (
@@ -253,6 +294,9 @@ const NewSizeDialog = ({
   const [quantity, setQuantity] = useState<number>(10);
   const [sizeError, setSizeError] = useState<boolean>(false);
   const [quantityError, setQuantityError] = useState<boolean>(false);
+  const newProductError = useSelector(
+    (state: RootState) => state.product.newProductError
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -292,6 +336,9 @@ const NewSizeDialog = ({
         productSizes: [...editedProduct.productSizes, productSize],
       })
     );
+    if (editedProduct.productSizes.length === 0 && !!newProductError.size) {
+      dispatch(setNewProductError({ ...newProductError, size: "" }));
+    }
     handleDialogState(false);
   };
   return (

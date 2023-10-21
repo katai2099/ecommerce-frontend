@@ -109,6 +109,62 @@ function addProductWorker(product: INewProductRequest) {
     .catch((err) => Promise.reject(err));
 }
 
+export const updateProductAction = createAsyncThunk<
+  IProduct,
+  INewProductRequest
+>("update_product", (product, thunkApi) => {
+  return updateProductWorker(product)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function updateProductWorker(product: INewProductRequest) {
+  return putRequest<IProduct>(`/products/${product.productData.id}`, product, {
+    auth: true,
+    formData: true,
+  })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const setProductPublishAction = createAsyncThunk<
+  string,
+  { id: number; publish: boolean }
+>("set_product_publish", (data, thunkApi) => {
+  return setProductPublishWorker(data)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function setProductPublishWorker(data: { id: number; publish: boolean }) {
+  return putRequest<string>(
+    `/products/${data.id}/publish`,
+    { publish: data.publish },
+    { auth: true }
+  )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const setProductFeaturedAction = createAsyncThunk<
+  string,
+  { id: number; featured: boolean }
+>("set_product_featured", (data, thunkApi) => {
+  return setProductFeaturedWorker(data)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function setProductFeaturedWorker(data: { id: number; featured: boolean }) {
+  return putRequest<string>(
+    `/products/${data.id}/featured`,
+    { featured: data.featured },
+    { auth: true }
+  )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
 export const deleteReviewAction = createAsyncThunk<string, string>(
   "delete_review",
   (reviewId, thunkApi) => {

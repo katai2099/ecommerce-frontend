@@ -58,6 +58,7 @@ export const ProductStock = ({
           >
             {adminSettings.sizes.map((size) => (
               <MenuItem
+                key={size.id}
                 disabled={
                   editedProduct.productSizes.findIndex(
                     (element) => element.size.id === size.id

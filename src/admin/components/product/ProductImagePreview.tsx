@@ -34,7 +34,7 @@ export const ProductImagePreview: React.FC<ProductImagePreviewProps> = ({
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center">
           <Typography>{isLocal ? title : `${title} ${index + 1}`}</Typography>
-          <Typography>{isLocal ? size : "Remote file"}</Typography>
+          <Typography>{isLocal ? size : "remote file"}</Typography>
         </Box>
       </Box>
       <IconButton

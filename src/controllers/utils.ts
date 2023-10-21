@@ -103,3 +103,7 @@ export function generateUUID() {
     return v.toString(16);
   });
 }
+
+export function isStringEmpty(value: string): boolean {
+  return value.trim().length === 0;
+}

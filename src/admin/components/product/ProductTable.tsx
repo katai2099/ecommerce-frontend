@@ -21,8 +21,12 @@ import TableRow from "@mui/material/TableRow";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProducts } from "../../../controllers/product";
-import { formatPrice } from "../../../controllers/utils";
+import {
+  getProducts,
+  setProductFeatured,
+  setProductPublish,
+} from "../../../controllers/product";
+import { clone, formatPrice, showSnackBar } from "../../../controllers/utils";
 import {
   Filter,
   IProduct,
@@ -235,6 +239,34 @@ export const ProductTable = () => {
     setDense(event.target.checked);
   };
 
+  const handleProductFeaturedChange = (checked: boolean, index: number) => {
+    const oldProducts = clone(products);
+    const updatedProducts = products.map((product, idx) =>
+      idx === index ? { ...product, featured: checked } : product
+    );
+    setProducts(updatedProducts);
+    setProductFeatured(checked, products[index].id)
+      .then(() => {})
+      .catch((err) => {
+        showSnackBar("something went wrong", "error");
+        setProducts(oldProducts);
+      });
+  };
+
+  const handleProductPublishChange = (checked: boolean, index: number) => {
+    const oldProducts = clone(products);
+    const updatedProducts = products.map((product, idx) =>
+      idx === index ? { ...product, publish: checked } : product
+    );
+    setProducts(updatedProducts);
+    setProductPublish(checked, products[index].id)
+      .then(() => {})
+      .catch((err) => {
+        showSnackBar("something went wrong", "error");
+        setProducts(oldProducts);
+      });
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <TableContainer component={Paper}>
@@ -254,7 +286,13 @@ export const ProductTable = () => {
                     <StockColumn product={product} />
                   </TableCell>
                   <TableCell align="left">
-                    <Switch checked={product.featured} color="info" />
+                    <Switch
+                      checked={product.featured}
+                      color="info"
+                      onChange={(_, checked) => {
+                        handleProductFeaturedChange(checked, index);
+                      }}
+                    />
                   </TableCell>
                   <TableCell align="left">
                     <Typography variant="h4">
@@ -262,7 +300,13 @@ export const ProductTable = () => {
                     </Typography>
                   </TableCell>
                   <TableCell align="left">
-                    <Switch checked={product.publish} color="success" />
+                    <Switch
+                      checked={product.publish}
+                      color="success"
+                      onChange={(_, checked) => {
+                        handleProductPublishChange(checked, index);
+                      }}
+                    />
                   </TableCell>
                   <TableCell align="left">
                     <OptionColumn product={product} />

@@ -14,12 +14,18 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingButton } from "../../client/components/common/LoadingButton";
-import { getProduct } from "../../controllers/product";
-import { IProduct, ProductMode } from "../../model/product";
+import {
+  addNewProduct,
+  getProduct,
+  updateProductCont,
+  validateNewProduct,
+} from "../../controllers/product";
+import { IProduct, NewProductError, ProductMode } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
   resetProductState,
   setEditedProduct,
+  setNewProductError,
   setProductMode,
   setSelectedProduct,
 } from "../../reducers/productReducer";
@@ -30,7 +36,6 @@ import {
 } from "../components/product/NewProductComp";
 
 export const Product = () => {
-  const adminSettings = useSelector((state: RootState) => state.admin);
   const product = useSelector((state: RootState) => state.product);
   const [files, setFiles] = useState<File[]>([]);
   const location = useLocation();
@@ -53,10 +58,13 @@ export const Product = () => {
   }, []);
 
   function handleImageDrop(file: File): void {
+    if (!!product.newProductError.image) {
+      dispatch(setNewProductError({ ...product.newProductError, image: "" }));
+    }
     setFiles((previous: File[]) => [...previous, file]);
   }
 
-  function hanldeLocalImageDelete(idx: number): void {
+  function handleLocalImageDelete(idx: number): void {
     setFiles((prevFiles) => {
       return prevFiles.filter((_, index) => index !== idx);
     });
@@ -68,12 +76,28 @@ export const Product = () => {
   };
 
   const handleSubmit = () => {
-    //TODO: validate data
-    // addNewProduct(editedProduct, files);
+    const valid = validateNewProduct(editedProduct, mode, files);
+    if (!valid) {
+      return;
+    }
+    if (mode === ProductMode.CREATE) {
+      addNewProduct(editedProduct, files)
+        .then(() => {
+          setFiles([]);
+        })
+        .catch(() => {});
+    } else {
+      updateProductCont(editedProduct, files)
+        .then(() => {
+          setFiles([]);
+        })
+        .catch(() => {});
+    }
   };
 
   const onCancelClickHandler = () => {
     dispatch(setEditedProduct(selectedProduct));
+    dispatch(setNewProductError(new NewProductError()));
     dispatch(setProductMode(ProductMode.VIEW));
   };
 
@@ -95,6 +119,7 @@ export const Product = () => {
             {mode === ProductMode.VIEW && (
               <IconButton
                 onClick={() => {
+                  // setFiles([]);
                   dispatch(setProductMode(ProductMode.EDIT));
                 }}
               >
@@ -116,7 +141,7 @@ export const Product = () => {
             editedProduct={editedProduct}
             updateProduct={updateProduct}
             mode={mode}
-            onLocalImageDelete={hanldeLocalImageDelete}
+            onLocalImageDelete={handleLocalImageDelete}
             onImageDrop={handleImageDrop}
             files={files}
           />

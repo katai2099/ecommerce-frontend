@@ -1,7 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
+  addProductAction,
+  updateProductAction,
+} from "../actions/productActions";
+import {
+  INewProductError,
   IProduct,
   IProductReduxState,
+  NewProductError,
   ProductMode,
   ProductReduxState,
 } from "../model/product";
@@ -23,9 +29,33 @@ export const productSlice = createSlice({
     setProductSubmitData(state, action: PayloadAction<boolean>) {
       return { ...state, submitData: action.payload };
     },
+    setNewProductError(state, action: PayloadAction<INewProductError>) {
+      return { ...state, newProductError: action.payload };
+    },
     resetProductState() {
       return initialState;
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(addProductAction.fulfilled, (state, payload) => {
+      const newProduct = payload.payload;
+      return {
+        ...state,
+        selectedProduct: newProduct,
+        editedProduct: newProduct,
+        mode: ProductMode.VIEW,
+        newProductError: new NewProductError(),
+      };
+    });
+    builder.addCase(updateProductAction.fulfilled, (state, payload) => {
+      return {
+        ...state,
+        selectedProduct: payload.payload,
+        editedProduct: payload.payload,
+        mode: ProductMode.VIEW,
+        NewProductError: new NewProductError(),
+      };
+    });
   },
   initialState: initialState,
 });
@@ -36,5 +66,6 @@ export const {
   setProductMode,
   setProductSubmitData,
   resetProductState,
+  setNewProductError,
 } = productSlice.actions;
 export default productSlice.reducer;
