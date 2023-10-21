@@ -1,4 +1,4 @@
-import { Close } from "@mui/icons-material";
+import { Close, Edit } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -10,11 +10,11 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingButton } from "../../client/components/common/LoadingButton";
-import { getProduct, setProductSizes } from "../../controllers/product";
+import { getProduct } from "../../controllers/product";
 import { IProduct, ProductMode } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
@@ -32,6 +32,7 @@ import {
 export const Product = () => {
   const adminSettings = useSelector((state: RootState) => state.admin);
   const product = useSelector((state: RootState) => state.product);
+  const [files, setFiles] = useState<File[]>([]);
   const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -51,6 +52,16 @@ export const Product = () => {
     }
   }, []);
 
+  function handleImageDrop(file: File): void {
+    setFiles((previous: File[]) => [...previous, file]);
+  }
+
+  function hanldeLocalImageDelete(idx: number): void {
+    setFiles((prevFiles) => {
+      return prevFiles.filter((_, index) => index !== idx);
+    });
+  }
+
   const updateProduct = (field: string, value: any) => {
     const product: IProduct = { ...editedProduct, [field]: value };
     dispatch(setEditedProduct(product));
@@ -66,17 +77,6 @@ export const Product = () => {
     dispatch(setProductMode(ProductMode.VIEW));
   };
 
-  useEffect(() => {
-    if (mode === ProductMode.CREATE) {
-      setProductSizes(adminSettings.sizes, editedProduct);
-    }
-  }, []);
-
-  const productSizes =
-    mode === ProductMode.CREATE
-      ? adminSettings.sizes
-      : selectedProduct.productSizes;
-
   return (
     <Box>
       <Paper sx={{ p: "48px" }}>
@@ -91,27 +91,76 @@ export const Product = () => {
               ? "Add New Product"
               : selectedProduct.name}
           </Typography>
-          <IconButton
-            onClick={() => {
-              dispatch(resetProductState());
-              navigate("/product", { replace: true });
-            }}
-          >
-            <Close />
-          </IconButton>
+          <Box display="flex" gap="8px">
+            {mode === ProductMode.VIEW && (
+              <IconButton
+                onClick={() => {
+                  dispatch(setProductMode(ProductMode.EDIT));
+                }}
+              >
+                <Edit />
+              </IconButton>
+            )}
+            <IconButton
+              onClick={() => {
+                dispatch(resetProductState());
+                navigate("/product", { replace: true });
+              }}
+            >
+              <Close />
+            </IconButton>
+          </Box>
         </Box>
         <Box component="form" mb="36px">
-          <NewProductDetails />
-          <NewProductProperties />
+          <NewProductDetails
+            editedProduct={editedProduct}
+            updateProduct={updateProduct}
+            mode={mode}
+            onLocalImageDelete={hanldeLocalImageDelete}
+            onImageDrop={handleImageDrop}
+            files={files}
+          />
+          <NewProductProperties
+            editedProduct={editedProduct}
+            updateProduct={updateProduct}
+            mode={mode}
+          />
           <Grid container spacing={2}>
             <Grid item md={4}></Grid>
             <Grid item md={8}>
               <Box display="flex" justifyContent="space-between">
                 <FormGroup>
-                  <FormControlLabel control={<Switch />} label="Featured" />
-                  <FormControlLabel control={<Switch />} label="Publish" />
+                  <FormControlLabel
+                    disabled={mode === ProductMode.VIEW}
+                    control={
+                      <Switch
+                        color="success"
+                        checked={editedProduct.featured}
+                        onChange={(event) => {
+                          updateProduct(
+                            "featured",
+                            event.currentTarget.checked
+                          );
+                        }}
+                      />
+                    }
+                    label="Featured"
+                  />
+                  <FormControlLabel
+                    disabled={mode === ProductMode.VIEW}
+                    control={
+                      <Switch
+                        color="success"
+                        checked={editedProduct.publish}
+                        onChange={(event) => {
+                          updateProduct("publish", event.currentTarget.checked);
+                        }}
+                      />
+                    }
+                    label="Publish"
+                  />
                 </FormGroup>
-                <Box alignSelf="flex-end">
+                <Box alignSelf="flex-end" display="flex" gap="8px">
                   {mode === ProductMode.EDIT && (
                     <Button variant="outlined" onClick={onCancelClickHandler}>
                       Cancel
@@ -120,7 +169,9 @@ export const Product = () => {
                   {mode !== ProductMode.VIEW && (
                     <LoadingButton
                       loading={product.submitData}
-                      title={"Add Product"}
+                      title={
+                        mode === ProductMode.CREATE ? "Add Product" : "Update"
+                      }
                       onClick={handleSubmit}
                     />
                   )}

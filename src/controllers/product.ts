@@ -9,14 +9,12 @@ import {
   submitReviewAction,
 } from "../actions/productActions";
 import { IAddToCartRequest } from "../model/cart";
-import { IIdName } from "../model/common";
 import {
   Gender,
   INewProductRequest,
   IProduct,
   IProductFilter,
   IProductFilterParams,
-  IProductSize,
   ProductMode,
   productSort,
 } from "../model/product";
@@ -119,18 +117,6 @@ export function addNewProduct(product: IProduct, files: File[]) {
     .finally(() => {
       store.dispatch(setProductSubmitData(false));
     });
-}
-
-export function setProductSizes(
-  productSizes: IIdName[],
-  editedProduct: IProduct
-) {
-  const sizes: IProductSize[] = [];
-  productSizes.forEach((pz) => {
-    const productSize: IProductSize = { id: 0, stockCount: 0, size: pz };
-    sizes.push(productSize);
-  });
-  store.dispatch(setEditedProduct({ ...editedProduct, productSizes: sizes }));
 }
 
 export function processProductFilter(

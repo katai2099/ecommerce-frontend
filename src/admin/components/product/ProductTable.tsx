@@ -1,6 +1,5 @@
 import { Edit, MoreVert, Visibility } from "@mui/icons-material";
 import {
-  Chip,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -110,7 +109,7 @@ const OptionColumn = ({ product }: ColumnProps) => {
   const handleProductView = () => {
     dispatch(setProductMode(ProductMode.VIEW));
     handleClose();
-    navigate("/admin/product/create", {
+    navigate("/product/create", {
       state: product.id,
     });
   };
@@ -118,7 +117,7 @@ const OptionColumn = ({ product }: ColumnProps) => {
   const handleProductEdit = () => {
     dispatch(setProductMode(ProductMode.EDIT));
     handleClose();
-    navigate("/admin/product/create", {
+    navigate("/product/create", {
       state: product.id,
     });
   };
@@ -255,10 +254,7 @@ export const ProductTable = () => {
                     <StockColumn product={product} />
                   </TableCell>
                   <TableCell align="left">
-                    <Chip
-                      label={product.featured ? "True" : "False"}
-                      color={product.featured ? "info" : "error"}
-                    />
+                    <Switch checked={product.featured} color="info" />
                   </TableCell>
                   <TableCell align="left">
                     <Typography variant="h4">
@@ -266,10 +262,7 @@ export const ProductTable = () => {
                     </Typography>
                   </TableCell>
                   <TableCell align="left">
-                    <Chip
-                      label={product.publish ? "Published" : "Drafted"}
-                      color={product.publish ? "success" : "warning"}
-                    />
+                    <Switch checked={product.publish} color="success" />
                   </TableCell>
                   <TableCell align="left">
                     <OptionColumn product={product} />

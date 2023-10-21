@@ -9,6 +9,7 @@ export interface ETextFieldProps {
   error?: string;
   fullWidth?: boolean;
   multiline?: boolean;
+  disable?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (
     event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -24,6 +25,8 @@ export const ETextField = ({
   value,
   fullWidth = true,
   multiline = false,
+  disable = false,
+
   onBlur,
 }: ETextFieldProps) => {
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +44,7 @@ export const ETextField = ({
         rows={7}
         placeholder={placeholder}
         value={value}
+        disabled={disable}
         required
         fullWidth={fullWidth}
         onChange={handleOnChange}

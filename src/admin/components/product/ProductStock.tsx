@@ -1,10 +1,18 @@
-import { Clear } from "@mui/icons-material";
-import { Box, FormControl, IconButton, OutlinedInput } from "@mui/material";
-import { clone } from "../../../controllers/utils";
-import { IProduct, IProductSize, ProductMode } from "../../../model/product";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  Typography,
+} from "@mui/material";
+import { useSelector } from "react-redux";
+import { IProduct, ProductMode } from "../../../model/product";
+import { RootState } from "../../../reducers/combineReducer";
 import { setEditedProduct } from "../../../reducers/productReducer";
 import { useAppDispatch } from "../../../store/configureStore";
-import { theme } from "../../../styles/theme";
 
 interface ProductStockProps {
   idx: number;
@@ -18,48 +26,92 @@ export const ProductStock = ({
   mode,
 }: ProductStockProps) => {
   const dispatch = useAppDispatch();
-
+  const disable = mode === ProductMode.VIEW;
   const updateProduct = (field: string, value: any) => {
     const product: IProduct = { ...editedProduct, [field]: value };
     dispatch(setEditedProduct(product));
   };
 
-  return editedProduct.productSizes.length > 0 ? (
-    <Box display="flex" alignItems="center" flexWrap="wrap" mb="8px">
-      <Box className="flex-grow">
-        <Box
-          border={`1px solid ${theme.palette.grey[400]}`}
-          padding="14px 0px 14px 14px"
-          borderRadius="4px"
-        >
-          {editedProduct.productSizes[idx].size.name}
-        </Box>
+  const adminSettings = useSelector((state: RootState) => state.admin);
+
+  return (
+    <Box display="flex" alignItems="center" my="8px" gap="8px">
+      <Box width="50%">
+        <FormControl fullWidth>
+          <InputLabel>Size</InputLabel>
+          <Select
+            label="Size"
+            value={editedProduct.productSizes[idx].size.id}
+            disabled={disable}
+            onChange={(event) => {
+              const updatedSize = adminSettings.sizes.find(
+                (size) => size.id === Number(event.target.value)
+              );
+              const updatedProductSizes = editedProduct.productSizes.map(
+                (productSize, index) =>
+                  index === idx
+                    ? { ...productSize, size: updatedSize }
+                    : productSize
+              );
+              updateProduct("productSizes", updatedProductSizes);
+            }}
+          >
+            {adminSettings.sizes.map((size) => (
+              <MenuItem
+                disabled={
+                  editedProduct.productSizes.findIndex(
+                    (element) => element.size.id === size.id
+                  ) !== -1
+                }
+                value={size.id}
+              >
+                {size.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
-      <FormControl className="flex-grow">
+      <Box display="flex" alignItems="center" gap="16px" width="50%">
+        <Typography color="GrayText">Quantity</Typography>
         <OutlinedInput
-          type="number"
-          // error
-          disabled={mode === ProductMode.VIEW}
-          required
-          inputProps={{ min: 0 }}
           value={editedProduct.productSizes[idx].stockCount}
+          fullWidth
+          type="number"
+          required
+          disabled={disable}
+          inputProps={{ min: 0 }}
           onChange={(event) => {
-            const stockCount = Number(event.currentTarget.value);
-            const tmpProductSizes: IProductSize[] = clone(
-              editedProduct.productSizes
-            );
-            tmpProductSizes[idx].stockCount = stockCount;
-            updateProduct("productSizes", tmpProductSizes);
+            const newValue = Number(event.currentTarget.value);
+            if (!isNaN(newValue)) {
+              const updatedProductSizes = editedProduct.productSizes.map(
+                (productSize, index) =>
+                  index === idx
+                    ? { ...productSize, stockCount: newValue }
+                    : productSize
+              );
+              updateProduct("productSizes", updatedProductSizes);
+            }
           }}
         />
-        {/* <FormHelperText>required</FormHelperText> */}
-      </FormControl>
-
-      {mode !== ProductMode.VIEW && (
-        <IconButton className="flex-grow">
-          <Clear />
-        </IconButton>
-      )}
+      </Box>
+      <Button
+        disabled={disable}
+        sx={{
+          textTransform: "none",
+          textDecoration: "underline",
+          ":hover": {
+            textDecoration: "underline",
+          },
+        }}
+        onClick={() => {
+          const updatedProductSizes = editedProduct.productSizes.filter(
+            (_, index) => idx !== index
+          );
+          updateProduct("productSizes", updatedProductSizes);
+        }}
+      >
+        Remove
+      </Button>
     </Box>
-  ) : null;
+  );
 };
