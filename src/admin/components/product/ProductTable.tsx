@@ -19,20 +19,27 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import { visuallyHidden } from "@mui/utils";
 import * as React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IProduct, ProductMode } from "../../../model/product";
-import { useAppDispatch } from "../../../store/configureStore";
+import { getProducts } from "../../../controllers/product";
+import { formatPrice } from "../../../controllers/utils";
+import {
+  Filter,
+  IProduct,
+  IProductFilter,
+  ProductMode,
+} from "../../../model/product";
 import { setProductMode } from "../../../reducers/productReducer";
+import { useAppDispatch } from "../../../store/configureStore";
 
 interface Data {
-  calories: number;
-  carbs: number;
-  fat: number;
+  createdAt: string;
+  stock: number;
+  featured: boolean;
   name: string;
-  protein: number;
+  price: number;
+  publish: string;
 }
 
 interface ProductTableProps {
@@ -50,7 +57,6 @@ const ProductColumn = ({ product }: ColumnProps) => {
         <img
           alt=""
           src={product.images[0].imageUrl}
-          // src="https://api-prod-minimal-v510.vercel.app/assets/images/m_product/product_11.jpg"
           width="64px"
           height="64px"
         />
@@ -67,8 +73,6 @@ const CreateAtColumn = ({ product }: ColumnProps) => {
   const date = new Date(product.createdAt);
   return (
     <Box display="flex" flexDirection="column" justifyContent="center">
-      {/* 27 Aug 2023
-      7:08 PM */}
       <Typography>{date.toDateString()}</Typography>
       <Typography>{date.toLocaleTimeString()}</Typography>
     </Box>
@@ -76,7 +80,6 @@ const CreateAtColumn = ({ product }: ColumnProps) => {
 };
 
 const StockColumn = ({ product }: ColumnProps) => {
-  // const total = product.productSizes.map((prod)=>prod.stockCount)
   let sizeCount = 0;
   const total = product.productSizes.reduce((accumulator, currentValue) => {
     sizeCount++;
@@ -84,7 +87,6 @@ const StockColumn = ({ product }: ColumnProps) => {
   }, 0);
   return (
     <Box display="flex" flexDirection="column" justifyContent="center">
-      {/* <LinearProgress value={70} color="success" variant="determinate" /> */}
       <Typography mt="4px" textAlign="center">
         {total} in stock in {sizeCount} variants
       </Typography>
@@ -149,77 +151,6 @@ const OptionColumn = ({ product }: ColumnProps) => {
   );
 };
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-): Data {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-
-const rows = [
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Donut", 452, 25.0, 51, 4.9),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Honeycomb", 408, 3.2, 87, 6.5),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Jelly Bean", 375, 0.0, 94, 0.0),
-  createData("KitKat", 518, 26.0, 65, 7.0),
-  createData("Lollipop", 392, 0.2, 98, 0.0),
-  createData("Marshmallow", 318, 0, 81, 2.0),
-  createData("Nougat", 360, 19.0, 9, 37.0),
-  createData("Oreo", 437, 18.0, 63, 4.0),
-];
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = "asc" | "desc";
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
 interface HeadCell {
   id: keyof Data;
   label: string;
@@ -232,66 +163,38 @@ const headCells: readonly HeadCell[] = [
     label: "Product",
   },
   {
-    id: "calories",
+    id: "createdAt",
 
     label: "Create at",
   },
   {
-    id: "fat",
+    id: "stock",
 
     label: "Stock",
   },
   {
-    id: "carbs",
+    id: "featured",
+    label: "Featured",
+  },
+  {
+    id: "price",
 
     label: "Price",
   },
   {
-    id: "protein",
+    id: "publish",
 
     label: "Publish",
   },
 ];
 
-interface EnhancedTableProps {
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } = props;
-  const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-
+function EnhancedTableHead() {
   return (
     <TableHead>
       <TableRow>
         {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="left"
-            padding="normal"
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
+          <TableCell key={headCell.id} align="left" padding="normal">
+            {headCell.label}
           </TableCell>
         ))}
         <TableCell size="small" />
@@ -300,21 +203,23 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-export const ProductTable = ({ products }: ProductTableProps) => {
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("calories");
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
+export const ProductTable = () => {
+  const [page, setPage] = useState(0);
+  const [filter, setFilter] = useState<IProductFilter>(new Filter());
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  useEffect(() => {
+    getProducts(filter)
+      .then((data) => {
+        setTotalPage(data.totalPage);
+        setTotalItems(data.totalItem);
+        setProducts(data.data);
+      })
+      .catch((err) => {});
+  }, []);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -331,82 +236,54 @@ export const ProductTable = ({ products }: ProductTableProps) => {
     setDense(event.target.checked);
   };
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
-  );
-
   return (
     <Box sx={{ width: "100%" }}>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 750 }} size={dense ? "small" : "medium"}>
-          <EnhancedTableHead
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            rowCount={rows.length}
-          />
+          <EnhancedTableHead />
           <TableBody>
-            {products.map((row, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
-
+            {products.map((product, index) => {
               return (
                 <TableRow hover tabIndex={-1} key={index}>
-                  <TableCell
-                    align="left"
-                    component="th"
-                    id={labelId}
-                    scope="row"
-                  >
-                    <ProductColumn product={row} />
+                  <TableCell align="left" component="th" scope="product">
+                    <ProductColumn product={product} />
                   </TableCell>
                   <TableCell align="left">
-                    <CreateAtColumn product={row} />
+                    <CreateAtColumn product={product} />
                   </TableCell>
                   <TableCell align="left">
-                    <StockColumn product={row} />
+                    <StockColumn product={product} />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Chip
+                      label={product.featured ? "True" : "False"}
+                      color={product.featured ? "info" : "error"}
+                    />
                   </TableCell>
                   <TableCell align="left">
                     <Typography variant="h4">
-                      ${Number(row.price).toPrecision(4)}
+                      {formatPrice(product.price)}
                     </Typography>
                   </TableCell>
                   <TableCell align="left">
                     <Chip
-                      label={row.publish ? "Published" : "Drafted"}
-                      color={row.publish ? "success" : "warning"}
+                      label={product.publish ? "Published" : "Drafted"}
+                      color={product.publish ? "success" : "warning"}
                     />
                   </TableCell>
                   <TableCell align="left">
-                    <OptionColumn product={row} />
+                    <OptionColumn product={product} />
                   </TableCell>
                 </TableRow>
               );
             })}
-            {emptyRows > 0 && (
-              <TableRow
-                style={{
-                  height: (dense ? 33 : 53) * emptyRows,
-                }}
-              >
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 20]}
+        rowsPerPageOptions={[20]}
         component="div"
-        count={rows.length}
+        count={12}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

@@ -34,7 +34,7 @@ function App() {
         <Route path="/forgetpassword" element={<ForgotPassword />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         {isLogin && role === Role.ADMIN && (
-          <Route path="/admin/*" element={<Admin />} />
+          <Route path="/*" element={<Admin />} />
         )}
         {role !== Role.ADMIN && <Route path="/*" element={<MainContent />} />}
       </Routes>

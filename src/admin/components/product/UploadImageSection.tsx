@@ -9,10 +9,10 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
 import { ImageSection } from "../../../client/components/productDetails/ImageSection";
+import { formatFileSize } from "../../../controllers/utils";
 import { ProductMode } from "../../../model/product";
 import { RootState } from "../../../reducers/combineReducer";
 import { ProductImagePreview } from "./ProductImagePreview";
-import { formatFileSize } from "../../../controllers/utils";
 
 interface UploadImageSectionProps {
   onImageDrop: (file: File) => void;
@@ -43,15 +43,15 @@ export const UploadImageSection = (props: UploadImageSectionProps) => {
   return (
     <>
       <FormControl fullWidth>
-        <FormLabel>
-          {mode === ProductMode.VIEW ? "Images" : "Add Images"}
+        <FormLabel sx={{ pb: "4px" }}>
+          {mode === ProductMode.VIEW ? "Images" : "Images"}
         </FormLabel>
         {mode !== ProductMode.VIEW && (
           <section className="container">
             <div {...getRootProps({ className: "dropzone" })}>
               <input {...getInputProps()} />
               <Box
-                height="340px"
+                height="250px"
                 border="2px dashed #bbbbbb"
                 display="flex"
                 flexDirection="column"

@@ -1,29 +1,13 @@
 import { Add } from "@mui/icons-material";
 import { Box, Button, Paper, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { productsLoad } from "../../actions/productActions";
-import { IProduct, ProductMode } from "../../model/product";
+import { ProductMode } from "../../model/product";
 import { setProductMode } from "../../reducers/productReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { ProductTable } from "../components/product/ProductTable";
 
 export const ProductList = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(0);
-  const [totalItems, setTotalItems] = useState<number>(0);
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(productsLoad())
-      .unwrap()
-      .then((data) => {
-        setTotalPage(data.totalPage);
-        setTotalItems(data.totalItem);
-        setProducts(data.data);
-      })
-      .catch((err) => {});
-  }, []);
   const navigate = useNavigate();
   return (
     <Box>
@@ -39,15 +23,14 @@ export const ProductList = () => {
             variant="contained"
             onClick={() => {
               dispatch(setProductMode(ProductMode.CREATE));
-              navigate("/admin/product/create");
-              console.log(products);
+              navigate("/product/create");
             }}
           >
             <Add />
             New Product
           </Button>
         </Box>
-        <ProductTable products={products} />
+        <ProductTable />
       </Paper>
     </Box>
   );

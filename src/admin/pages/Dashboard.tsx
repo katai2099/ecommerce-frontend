@@ -1,8 +1,7 @@
 import { Grid, Paper } from "@mui/material";
 import Chart from "../components/Chart";
-import Orders from "../components/Order";
 import Deposits from "../components/Deposit";
-import { useState } from "react";
+import Orders from "../components/Order";
 
 export const Dashboard = () => {
   return (

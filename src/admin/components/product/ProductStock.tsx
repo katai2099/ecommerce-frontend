@@ -1,9 +1,10 @@
 import { Clear } from "@mui/icons-material";
-import { Box, FormControl, OutlinedInput, IconButton } from "@mui/material";
+import { Box, FormControl, IconButton, OutlinedInput } from "@mui/material";
 import { clone } from "../../../controllers/utils";
-import { IProduct, ProductMode, IProductSize } from "../../../model/product";
+import { IProduct, IProductSize, ProductMode } from "../../../model/product";
 import { setEditedProduct } from "../../../reducers/productReducer";
 import { useAppDispatch } from "../../../store/configureStore";
+import { theme } from "../../../styles/theme";
 
 interface ProductStockProps {
   idx: number;
@@ -27,10 +28,9 @@ export const ProductStock = ({
     <Box display="flex" alignItems="center" flexWrap="wrap" mb="8px">
       <Box className="flex-grow">
         <Box
-          border="1px solid #1f1f1f"
+          border={`1px solid ${theme.palette.grey[400]}`}
           padding="14px 0px 14px 14px"
           borderRadius="4px"
-          // width="80%"
         >
           {editedProduct.productSizes[idx].size.name}
         </Box>

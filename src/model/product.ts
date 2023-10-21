@@ -23,7 +23,8 @@ export class Product implements IProduct {
     public totalReview: number = 0,
     public category: ICategory = new Category(),
     public productSizes: IProductSize[] = [],
-    public images: IImage[] = []
+    public images: IImage[] = [],
+    public featured: boolean = false
   ) {}
 }
 
@@ -40,6 +41,7 @@ export interface IProduct {
   category: ICategory;
   productSizes: IProductSize[];
   images: IImage[];
+  featured: boolean;
 }
 
 export const productSortName: string[] = [
