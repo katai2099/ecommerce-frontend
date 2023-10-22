@@ -76,8 +76,7 @@ export const Product = () => {
   };
 
   const handleSubmit = () => {
-    const valid = validateNewProduct(editedProduct, mode, files);
-    if (!valid) {
+    if (!validateNewProduct(editedProduct, mode, files)) {
       return;
     }
     if (mode === ProductMode.CREATE) {

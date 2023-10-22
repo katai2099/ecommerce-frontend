@@ -8,7 +8,7 @@ import {
   CategoryReduxState,
   ICategoryReduxState,
 } from "../model/admin";
-import { ICategory } from "../model/category";
+import { ICategory, INewCategoryError } from "../model/category";
 
 const initialState: ICategoryReduxState = new CategoryReduxState();
 
@@ -21,6 +21,9 @@ const categorySlice = createSlice({
     },
     setEditedCategory(state, action: PayloadAction<ICategory>) {
       return { ...state, editedCategory: action.payload };
+    },
+    setNewCategoryError(state, action: PayloadAction<INewCategoryError>) {
+      return { ...state, error: action.payload };
     },
     setCategoryMode(state, action: PayloadAction<AdminMode>) {
       return { ...state, mode: action.payload };
@@ -74,5 +77,6 @@ export const {
   setEditedCategory,
   resetCategoryState,
   setCategoryLoading,
+  setNewCategoryError,
 } = categorySlice.actions;
 export default categorySlice.reducer;

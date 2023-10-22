@@ -21,8 +21,13 @@ import {
   updateProductAction,
   updateSizeAction,
 } from "../actions/productActions";
+import { AdminMode } from "../model/admin";
 import { IAddToCartRequest } from "../model/cart";
-import { ICategory } from "../model/category";
+import {
+  ICategory,
+  INewCategoryError,
+  NewCategoryError,
+} from "../model/category";
 import {
   Gender,
   INewCategoryRequest,
@@ -38,6 +43,7 @@ import {
 import { INewReview } from "../model/review";
 import { ISize } from "../model/size";
 import { addToCartState } from "../reducers/cartReducer";
+import { setNewCategoryError } from "../reducers/categoryReducer";
 import { setLoading } from "../reducers/guiReducer";
 import { setNewProductError } from "../reducers/productReducer";
 import { store } from "../store/configureStore";
@@ -266,6 +272,30 @@ function processGender(genders: Gender[]): string {
 function processCategory(categories: string[]): string {
   const selectedCategories = categories.join("::");
   return selectedCategories;
+}
+
+export function validateNewCategory(
+  category: ICategory,
+  mode: AdminMode,
+  files: File[]
+): boolean {
+  let valid = true;
+  const error: INewCategoryError = new NewCategoryError();
+  if (isStringEmpty(category.name)) {
+    valid = false;
+    error.name = "Name is required";
+  }
+  if (
+    (mode === AdminMode.CREATE && files.length === 0) ||
+    (mode === AdminMode.EDIT &&
+      files.length === 0 &&
+      isStringEmpty(category.categoryImage))
+  ) {
+    valid = false;
+    error.image = "At least one file is required";
+  }
+  store.dispatch(setNewCategoryError(error));
+  return valid;
 }
 
 export function validateNewProduct(

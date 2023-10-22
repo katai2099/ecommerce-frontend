@@ -19,13 +19,18 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ETextField } from "../../client/components/common/ETextField";
 import { LoadingButton } from "../../client/components/common/LoadingButton";
-import { addNewCategory, updateCategoryCont } from "../../controllers/product";
+import {
+  addNewCategory,
+  updateCategoryCont,
+  validateNewCategory,
+} from "../../controllers/product";
 import { AdminMode } from "../../model/admin";
 import { ICategory } from "../../model/category";
 import {
   resetCategoryState,
   setCategoryMode,
   setEditedCategory,
+  setNewCategoryError,
 } from "../../reducers/categoryReducer";
 import { RootState } from "../../reducers/combineReducer";
 import { useAppDispatch } from "../../store/configureStore";
@@ -38,6 +43,7 @@ export const Category = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const mode = category.mode;
+  const error = category.error;
   const editedCategory = category.editedCategory;
   const selectedCategory = category.selectedCategory;
   const disable = mode === AdminMode.VIEW;
@@ -48,6 +54,9 @@ export const Category = () => {
       "image/png": [],
     },
     onDrop(acceptedFiles) {
+      if (!!error.image) {
+        dispatch(setNewCategoryError({ ...category.error, image: "" }));
+      }
       const currentFilesLentgh =
         files.length + (category.editedCategory.categoryImage !== "" ? 1 : 0);
       const acceptedFileLength = Math.min(
@@ -71,6 +80,9 @@ export const Category = () => {
   };
 
   const handleSubmit = () => {
+    if (!validateNewCategory(editedCategory, mode, files)) {
+      return;
+    }
     if (mode === AdminMode.CREATE) {
       addNewCategory(editedCategory, files)
         .then(() => {
@@ -131,7 +143,13 @@ export const Category = () => {
                   name="name"
                   value={editedCategory.name}
                   disable={disable}
+                  error={error.name}
                   onChange={(event) => {
+                    if (!!error.name) {
+                      dispatch(
+                        setNewCategoryError({ ...category.error, name: "" })
+                      );
+                    }
                     updateCategory(
                       event.currentTarget.name,
                       event.currentTarget.value
@@ -194,6 +212,11 @@ export const Category = () => {
                       : []
                   }
                 />
+                {
+                  <Typography color="error" fontSize="12px">
+                    {error.image}
+                  </Typography>
+                }
               </Stack>
             </Grid>
           </Grid>

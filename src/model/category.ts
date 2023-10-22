@@ -7,6 +7,15 @@ export interface ICategory {
   categoryImage: string;
 }
 
+export interface INewCategoryError {
+  name: string;
+  image: string;
+}
+
+export class NewCategoryError implements INewCategoryError {
+  constructor(public name = "", public image = "") {}
+}
+
 export interface CategoryProps {
   category: ICategory;
 }
