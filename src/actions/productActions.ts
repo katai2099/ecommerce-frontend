@@ -15,6 +15,7 @@ import {
   IProductFilter,
 } from "../model/product";
 import { INewReview, IReview } from "../model/review";
+import { ISize } from "../model/size";
 import { setLoading } from "../reducers/guiReducer";
 
 export const getTopCategoriesAction = createAsyncThunk<ICategory[]>(
@@ -188,6 +189,36 @@ function addProductWorker(product: INewProductRequest) {
     auth: true,
     formData: true,
   })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const addSizeAction = createAsyncThunk<ISize, ISize>(
+  "add_size",
+  (size, thunkApi) => {
+    return addSizeWorker(size)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
+
+function addSizeWorker(size: ISize) {
+  return postRequest<ISize>("/products/size", size, { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const updateSizeAction = createAsyncThunk<ISize, ISize>(
+  "update_size",
+  (size, thunkApi) => {
+    return updateSizeWorker(size)
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
+
+function updateSizeWorker(size: ISize) {
+  return putRequest<ISize>(`/products/size/${size.id}`, size, { auth: true })
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }

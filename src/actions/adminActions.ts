@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getRequest } from "../controllers/clientRequest";
 import { ICategory } from "../model/category";
-import { IIdName } from "../model/common";
+import { ISize } from "../model/size";
 import { setAdminCategories, setAdminSizes } from "../reducers/adminReducer";
 
 export const fetchAdminCategoriesAction = createAsyncThunk<ICategory[]>(
@@ -17,12 +17,12 @@ export const fetchAdminCategoriesAction = createAsyncThunk<ICategory[]>(
 );
 
 export function getAdminCategoriesWorker(): Promise<ICategory[]> {
-  return getRequest<ICategory[]>("/products/category/")
+  return getRequest<ICategory[]>("/products/category")
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }
 
-export const fetchAdminSizesAction = createAsyncThunk<IIdName[]>(
+export const fetchAdminSizesAction = createAsyncThunk<ISize[]>(
   "admin_fetch_size",
   (_, thunkApi) => {
     return getAdminSizesWorker()
@@ -34,8 +34,8 @@ export const fetchAdminSizesAction = createAsyncThunk<IIdName[]>(
   }
 );
 
-export function getAdminSizesWorker(): Promise<IIdName[]> {
-  return getRequest<IIdName[]>("/products/size/", { auth: true })
+export function getAdminSizesWorker(): Promise<ISize[]> {
+  return getRequest<ISize[]>("/products/size", { auth: true })
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }

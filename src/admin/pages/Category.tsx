@@ -93,13 +93,7 @@ export const Category = () => {
           justifyContent="space-between"
           mb="24px"
         >
-          <Typography
-            fontSize="24px"
-            fontWeight="bold"
-            onClick={() => {
-              console.log(files.length);
-            }}
-          >
+          <Typography fontSize="24px" fontWeight="bold">
             {mode === AdminMode.CREATE
               ? "Add New Category"
               : selectedCategory.name}

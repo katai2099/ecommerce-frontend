@@ -11,6 +11,7 @@ import { CategoryList } from "./CategoryList";
 import { Dashboard } from "./Dashboard";
 import { Product } from "./Product";
 import { ProductList } from "./ProductList";
+import { SizeList } from "./SizeList";
 
 export const Admin = () => {
   const dispatch = useAppDispatch();
@@ -41,6 +42,7 @@ export const Admin = () => {
             <Route path="/product/create" element={<Product />} />
             <Route path="/category" element={<CategoryList />} />
             <Route path="/category/create" element={<Category />} />
+            <Route path="/size" element={<SizeList />} />
           </Routes>
         </Container>
       </Box>

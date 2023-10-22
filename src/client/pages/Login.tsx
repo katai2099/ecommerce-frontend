@@ -73,9 +73,6 @@ export const Login = () => {
     setLoggingIn(true);
     login(loginData.email, loginData.password)
       .then((res) => {
-        if (res.role === Role.ADMIN) {
-          return navigate("/admin/", { replace: true });
-        }
         navigate("/", { replace: true });
       })
       .catch((err: AxiosError) => {

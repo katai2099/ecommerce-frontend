@@ -31,9 +31,10 @@ const FeaturedProductItem = ({ product }: ProductProps) => {
         <Link to={`/products/${product.id}`}>
           <Box width="100%" mb="4px">
             <img
+              alt=""
               width="100%"
               height="100%"
-              src={product.images[0].imageUrl}
+              src={product.images.length > 0 ? product.images[0].imageUrl : ""}
               className="img-contain img-300"
             />
           </Box>

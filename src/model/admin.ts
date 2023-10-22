@@ -1,5 +1,5 @@
 import { Category, ICategory } from "./category";
-import { IIdName } from "./common";
+import { ISize } from "./size";
 
 export enum AdminMode {
   CREATE,
@@ -9,7 +9,7 @@ export enum AdminMode {
 
 export interface IAdminReduxState {
   categories: ICategory[];
-  sizes: IIdName[];
+  sizes: ISize[];
 }
 
 export class adminReduxState implements IAdminReduxState {

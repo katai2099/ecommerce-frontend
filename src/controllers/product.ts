@@ -6,6 +6,7 @@ import { addToCartAction } from "../actions/cartActions";
 import {
   addCategoryAction,
   addProductAction,
+  addSizeAction,
   deleteReviewAction,
   getProductAction,
   getProductReviewsAction,
@@ -18,6 +19,7 @@ import {
   submitReviewAction,
   updateCategoryAction,
   updateProductAction,
+  updateSizeAction,
 } from "../actions/productActions";
 import { IAddToCartRequest } from "../model/cart";
 import { ICategory } from "../model/category";
@@ -34,6 +36,7 @@ import {
   productSort,
 } from "../model/product";
 import { INewReview } from "../model/review";
+import { ISize } from "../model/size";
 import { addToCartState } from "../reducers/cartReducer";
 import { setLoading } from "../reducers/guiReducer";
 import { setNewProductError } from "../reducers/productReducer";
@@ -153,6 +156,22 @@ export function addNewProduct(product: IProduct, files: File[]) {
     .dispatch(addProductAction(uploadProduct))
     .unwrap()
     .then(() => Promise.resolve())
+    .catch((err) => Promise.reject(err));
+}
+
+export function addNewSize(size: ISize) {
+  return store
+    .dispatch(addSizeAction(size))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function updateSize(size: ISize) {
+  return store
+    .dispatch(updateSizeAction(size))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }
 
@@ -281,10 +300,9 @@ export function validateNewProduct(
     valid = false;
     error.size = "Product must have at least one size";
   }
-  let sizeContainZeroQty = false;
   for (let i = 0; i < product.productSizes.length; i++) {
     if (product.productSizes[i].stockCount === 0) {
-      sizeContainZeroQty = true;
+      valid = false;
       error.size = "size cannot contain zero quantity";
       break;
     }

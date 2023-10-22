@@ -128,7 +128,11 @@ export const AdminDrawerComp = () => {
             </ListItemIcon>
             <ListItemText primary="Categories" />
           </ListItemButton>
-          <ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              navigate("/size");
+            }}
+          >
             <ListItemIcon>
               <Fullscreen />
             </ListItemIcon>
