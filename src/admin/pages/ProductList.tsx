@@ -1,8 +1,7 @@
 import { Add } from "@mui/icons-material";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { ProductMode } from "../../model/product";
-import { setProductMode } from "../../reducers/productReducer";
+import { resetProductState } from "../../reducers/productReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { ProductTable } from "../components/product/ProductTable";
 
@@ -22,7 +21,7 @@ export const ProductList = () => {
           <Button
             variant="contained"
             onClick={() => {
-              dispatch(setProductMode(ProductMode.CREATE));
+              dispatch(resetProductState());
               navigate("/product/create");
             }}
           >

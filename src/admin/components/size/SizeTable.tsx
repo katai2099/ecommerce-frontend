@@ -14,22 +14,13 @@ import {
 import { useSelector } from "react-redux";
 import { updateSize } from "../../../controllers/product";
 import { clone } from "../../../controllers/utils";
+import { sizeTableHeadCells } from "../../../model/product";
 import { setAdminSizes } from "../../../reducers/adminReducer";
 import { RootState } from "../../../reducers/combineReducer";
 import { setLoading } from "../../../reducers/guiReducer";
 import { useAppDispatch } from "../../../store/configureStore";
-import { EnhancedTableHead, HeadCell } from "../../style/common";
+import { EnhancedTableHead } from "../../style/common";
 import { CreateAtColumn } from "../product/ProductTable";
-
-const headCells: readonly HeadCell[] = [
-  {
-    label: "Size",
-  },
-  {
-    label: "Publish",
-  },
-  { label: "Last modified" },
-];
 
 interface SizeTableProps {
   onEdit: (index: number) => void;
@@ -55,7 +46,7 @@ export const SizeTable = ({ onEdit }: SizeTableProps) => {
     <Box sx={{ width: "100%" }}>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 750 }} size="medium">
-          <EnhancedTableHead headCells={headCells} />
+          <EnhancedTableHead headCells={sizeTableHeadCells} />
           <TableBody>
             {sizes.map((size, index) => (
               <TableRow hover tabIndex={-1} key={index}>

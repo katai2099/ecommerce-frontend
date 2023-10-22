@@ -10,7 +10,8 @@ import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
 import { ImageSection } from "../../../client/components/productDetails/ImageSection";
 import { formatFileSize } from "../../../controllers/utils";
-import { ProductMode } from "../../../model/product";
+
+import { AdminMode } from "../../../model/admin";
 import { RootState } from "../../../reducers/combineReducer";
 import { ProductImagePreview } from "./ProductImagePreview";
 
@@ -19,7 +20,7 @@ interface UploadImageSectionProps {
   onLocalImageDelete: (idx: number) => void;
   onRemoteImageDelete: (idx: number) => void;
   files: File[];
-  mode: ProductMode;
+  mode: AdminMode;
 }
 
 export const UploadImageSection = (props: UploadImageSectionProps) => {
@@ -56,7 +57,7 @@ export const UploadImageSection = (props: UploadImageSectionProps) => {
     <>
       <FormControl fullWidth>
         <FormLabel sx={{ pb: "4px" }}>Images</FormLabel>
-        {mode !== ProductMode.VIEW && (
+        {mode !== AdminMode.VIEW && (
           <section className="container">
             <div {...getRootProps({ className: "dropzone" })}>
               <input {...getInputProps()} />
@@ -85,7 +86,7 @@ export const UploadImageSection = (props: UploadImageSectionProps) => {
         )}
       </FormControl>
       <Box width="100%" mt="24px">
-        {(mode === ProductMode.CREATE || mode === ProductMode.EDIT) && (
+        {(mode === AdminMode.CREATE || mode === AdminMode.EDIT) && (
           <>
             {editedProduct.images.map((image, index) => (
               <ProductImagePreview
@@ -115,7 +116,7 @@ export const UploadImageSection = (props: UploadImageSectionProps) => {
             ))}
           </>
         )}
-        {mode === ProductMode.VIEW && (
+        {mode === AdminMode.VIEW && (
           <ImageSection images={selectedProduct.images} />
         )}
       </Box>

@@ -10,24 +10,23 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingButton } from "../../client/components/common/LoadingButton";
 import {
   addNewProduct,
-  getProduct,
   updateProductCont,
   validateNewProduct,
 } from "../../controllers/product";
-import { IProduct, NewProductError, ProductMode } from "../../model/product";
+import { AdminMode } from "../../model/admin";
+import { IProduct, NewProductError } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
 import {
   resetProductState,
   setEditedProduct,
   setNewProductError,
   setProductMode,
-  setSelectedProduct,
 } from "../../reducers/productReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import {
@@ -45,17 +44,6 @@ export const Product = () => {
   const mode = product.mode;
   const editedProduct = product.editedProduct;
   const selectedProduct = product.selectedProduct;
-
-  useEffect(() => {
-    if (location.state !== null) {
-      getProduct(location.state)
-        .then((res) => {
-          dispatch(setEditedProduct(res));
-          dispatch(setSelectedProduct(res));
-        })
-        .catch((err) => {});
-    }
-  }, []);
 
   function handleImageDrop(file: File): void {
     if (!!product.newProductError.image) {
@@ -79,7 +67,7 @@ export const Product = () => {
     if (!validateNewProduct(editedProduct, mode, files)) {
       return;
     }
-    if (mode === ProductMode.CREATE) {
+    if (mode === AdminMode.CREATE) {
       addNewProduct(editedProduct, files)
         .then(() => {
           setFiles([]);
@@ -97,7 +85,7 @@ export const Product = () => {
   const onCancelClickHandler = () => {
     dispatch(setEditedProduct(selectedProduct));
     dispatch(setNewProductError(new NewProductError()));
-    dispatch(setProductMode(ProductMode.VIEW));
+    dispatch(setProductMode(AdminMode.VIEW));
   };
 
   return (
@@ -110,16 +98,15 @@ export const Product = () => {
           mb="24px"
         >
           <Typography fontSize="24px" fontWeight="bold">
-            {mode === ProductMode.CREATE
+            {mode === AdminMode.CREATE
               ? "Add New Product"
               : selectedProduct.name}
           </Typography>
           <Box display="flex" gap="8px">
-            {mode === ProductMode.VIEW && (
+            {mode === AdminMode.VIEW && (
               <IconButton
                 onClick={() => {
-                  // setFiles([]);
-                  dispatch(setProductMode(ProductMode.EDIT));
+                  dispatch(setProductMode(AdminMode.EDIT));
                 }}
               >
                 <Edit />
@@ -155,7 +142,7 @@ export const Product = () => {
               <Box display="flex" justifyContent="space-between">
                 <FormGroup>
                   <FormControlLabel
-                    disabled={mode === ProductMode.VIEW}
+                    disabled={mode === AdminMode.VIEW}
                     control={
                       <Switch
                         color="success"
@@ -171,7 +158,7 @@ export const Product = () => {
                     label="Featured"
                   />
                   <FormControlLabel
-                    disabled={mode === ProductMode.VIEW}
+                    disabled={mode === AdminMode.VIEW}
                     control={
                       <Switch
                         color="success"
@@ -185,16 +172,16 @@ export const Product = () => {
                   />
                 </FormGroup>
                 <Box alignSelf="flex-end" display="flex" gap="8px">
-                  {mode === ProductMode.EDIT && (
+                  {mode === AdminMode.EDIT && (
                     <Button variant="outlined" onClick={onCancelClickHandler}>
                       Cancel
                     </Button>
                   )}
-                  {mode !== ProductMode.VIEW && (
+                  {mode !== AdminMode.VIEW && (
                     <LoadingButton
                       loading={product.submitData}
                       title={
-                        mode === ProductMode.CREATE ? "Add Product" : "Update"
+                        mode === AdminMode.CREATE ? "Add Product" : "Update"
                       }
                       onClick={handleSubmit}
                     />

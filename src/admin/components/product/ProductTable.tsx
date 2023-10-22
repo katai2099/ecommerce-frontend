@@ -26,15 +26,20 @@ import {
   setProductPublish,
 } from "../../../controllers/product";
 import { clone, formatPrice, showSnackBar } from "../../../controllers/utils";
+import { AdminMode } from "../../../model/admin";
 import {
   Filter,
   IProduct,
   IProductFilter,
-  ProductMode,
+  productTableHeadCells,
 } from "../../../model/product";
-import { setProductMode } from "../../../reducers/productReducer";
+import {
+  setEditedProduct,
+  setProductMode,
+  setSelectedProduct,
+} from "../../../reducers/productReducer";
 import { useAppDispatch } from "../../../store/configureStore";
-import { EnhancedTableHead, HeadCell } from "../../style/common";
+import { EnhancedTableHead } from "../../style/common";
 
 interface ColumnProps {
   product: IProduct;
@@ -96,20 +101,12 @@ const OptionColumn = ({ product }: ColumnProps) => {
     setAnchorEl(null);
   };
 
-  const handleProductView = () => {
-    dispatch(setProductMode(ProductMode.VIEW));
+  const handleProductMenuSelect = (mode: AdminMode) => {
+    dispatch(setProductMode(mode));
+    dispatch(setSelectedProduct(product));
+    dispatch(setEditedProduct(product));
     handleClose();
-    navigate("/product/create", {
-      state: product.id,
-    });
-  };
-
-  const handleProductEdit = () => {
-    dispatch(setProductMode(ProductMode.EDIT));
-    handleClose();
-    navigate("/product/create", {
-      state: product.id,
-    });
+    navigate("/product/create");
   };
 
   return (
@@ -123,13 +120,21 @@ const OptionColumn = ({ product }: ColumnProps) => {
         onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: -100 }}
       >
-        <MenuItem onClick={handleProductView}>
+        <MenuItem
+          onClick={() => {
+            handleProductMenuSelect(AdminMode.VIEW);
+          }}
+        >
           <ListItemIcon>
             <Visibility fontSize="small" />
           </ListItemIcon>
           <ListItemText>View</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleProductEdit}>
+        <MenuItem
+          onClick={() => {
+            handleProductMenuSelect(AdminMode.EDIT);
+          }}
+        >
           <ListItemIcon>
             <Edit fontSize="small" />
           </ListItemIcon>
@@ -139,27 +144,6 @@ const OptionColumn = ({ product }: ColumnProps) => {
     </div>
   );
 };
-
-const headCells: readonly HeadCell[] = [
-  {
-    label: "Product",
-  },
-  {
-    label: "Create at",
-  },
-  {
-    label: "Stock",
-  },
-  {
-    label: "Featured",
-  },
-  {
-    label: "Price",
-  },
-  {
-    label: "Publish",
-  },
-];
 
 export const ProductTable = () => {
   const [page, setPage] = useState(0);
@@ -232,7 +216,7 @@ export const ProductTable = () => {
     <Box sx={{ width: "100%" }}>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 750 }} size={dense ? "small" : "medium"}>
-          <EnhancedTableHead headCells={headCells} />
+          <EnhancedTableHead headCells={productTableHeadCells} />
           <TableBody>
             {visibleRows.map((product, index) => {
               return (

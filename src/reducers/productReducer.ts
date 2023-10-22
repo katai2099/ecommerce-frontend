@@ -3,12 +3,12 @@ import {
   addProductAction,
   updateProductAction,
 } from "../actions/productActions";
+import { AdminMode } from "../model/admin";
 import {
   INewProductError,
   IProduct,
   IProductReduxState,
   NewProductError,
-  ProductMode,
   ProductReduxState,
 } from "../model/product";
 
@@ -23,7 +23,7 @@ export const productSlice = createSlice({
     setEditedProduct(state, action: PayloadAction<IProduct>) {
       return { ...state, editedProduct: action.payload };
     },
-    setProductMode(state, action: PayloadAction<ProductMode>) {
+    setProductMode(state, action: PayloadAction<AdminMode>) {
       return { ...state, mode: action.payload };
     },
     setProductSubmitData(state, action: PayloadAction<boolean>) {
@@ -43,7 +43,7 @@ export const productSlice = createSlice({
         ...state,
         selectedProduct: newProduct,
         editedProduct: newProduct,
-        mode: ProductMode.VIEW,
+        mode: AdminMode.VIEW,
         newProductError: new NewProductError(),
         submitData: false,
       };
@@ -65,7 +65,7 @@ export const productSlice = createSlice({
         ...state,
         selectedProduct: payload.payload,
         editedProduct: payload.payload,
-        mode: ProductMode.VIEW,
+        mode: AdminMode.VIEW,
         NewProductError: new NewProductError(),
         submitData: false,
       };

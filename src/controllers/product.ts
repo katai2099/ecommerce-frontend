@@ -37,7 +37,6 @@ import {
   IProductFilter,
   IProductFilterParams,
   NewProductError,
-  ProductMode,
   productSort,
 } from "../model/product";
 import { INewReview } from "../model/review";
@@ -303,7 +302,7 @@ export function validateNewCategory(
 
 export function validateNewProduct(
   product: IProduct,
-  mode: ProductMode,
+  mode: AdminMode,
   files: File[]
 ): boolean {
   let valid = true;
@@ -317,8 +316,8 @@ export function validateNewProduct(
     error.description = "Description is required";
   }
   if (
-    (mode === ProductMode.CREATE && files.length === 0) ||
-    (mode === ProductMode.EDIT &&
+    (mode === AdminMode.CREATE && files.length === 0) ||
+    (mode === AdminMode.EDIT &&
       files.length === 0 &&
       product.images.length === 0)
   ) {

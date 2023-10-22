@@ -25,6 +25,7 @@ import {
 import { clone, showSnackBar } from "../../../controllers/utils";
 import { AdminMode } from "../../../model/admin";
 import { ICategory } from "../../../model/category";
+import { categoryTableHeadCells } from "../../../model/product";
 import { setAdminCategories } from "../../../reducers/adminReducer";
 import {
   setCategoryMode,
@@ -33,19 +34,8 @@ import {
 } from "../../../reducers/categoryReducer";
 import { RootState } from "../../../reducers/combineReducer";
 import { useAppDispatch } from "../../../store/configureStore";
-import { EnhancedTableHead, HeadCell } from "../../style/common";
+import { EnhancedTableHead } from "../../style/common";
 import { CreateAtColumn } from "../product/ProductTable";
-
-const headCells: readonly HeadCell[] = [
-  {
-    label: "Category",
-  },
-  { label: "Top category" },
-  {
-    label: "Publish",
-  },
-  { label: "Last modified" },
-];
 
 export interface OptionColumnProps<T> {
   item: T;
@@ -146,7 +136,7 @@ export const CategoryTable = () => {
     <Box sx={{ width: "100%" }}>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 750 }} size="medium">
-          <EnhancedTableHead headCells={headCells} />
+          <EnhancedTableHead headCells={categoryTableHeadCells} />
           <TableBody>
             {categories.map((category, index) => (
               <TableRow hover tabIndex={-1} key={index}>

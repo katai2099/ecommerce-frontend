@@ -25,7 +25,7 @@ import {
   validateNewCategory,
 } from "../../controllers/product";
 import { AdminMode } from "../../model/admin";
-import { ICategory } from "../../model/category";
+import { ICategory, NewCategoryError } from "../../model/category";
 import {
   resetCategoryState,
   setCategoryMode,
@@ -76,6 +76,7 @@ export const Category = () => {
 
   const onCancelClickHandler = () => {
     dispatch(setEditedCategory(selectedCategory));
+    dispatch(setNewCategoryError(new NewCategoryError()));
     dispatch(setCategoryMode(AdminMode.VIEW));
   };
 

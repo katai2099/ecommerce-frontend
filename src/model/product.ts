@@ -1,3 +1,5 @@
+import { HeadCell } from "../admin/style/common";
+import { AdminMode } from "./admin";
 import { IIdName } from "./common";
 import { IReview, Review } from "./review";
 
@@ -131,14 +133,8 @@ export interface IProductReduxState {
   selectedProduct: Product;
   editedProduct: Product;
   newProductError: INewProductError;
-  mode: ProductMode;
+  mode: AdminMode;
   submitData: boolean;
-}
-
-export enum ProductMode {
-  CREATE,
-  EDIT,
-  VIEW,
 }
 
 export class ProductReduxState implements IProductReduxState {
@@ -146,7 +142,7 @@ export class ProductReduxState implements IProductReduxState {
     public selectedProduct: Product = new Product(),
     public editedProduct: Product = new Product(),
     public newProductError: INewProductError = new NewProductError(),
-    public mode: ProductMode = ProductMode.CREATE,
+    public mode: AdminMode = AdminMode.CREATE,
     public submitData: boolean = false
   ) {}
 }
@@ -200,3 +196,45 @@ export class NewProductError implements INewProductError {
     public size = ""
   ) {}
 }
+
+export const productTableHeadCells: readonly HeadCell[] = [
+  {
+    label: "Product",
+  },
+  {
+    label: "Create at",
+  },
+  {
+    label: "Stock",
+  },
+  {
+    label: "Featured",
+  },
+  {
+    label: "Price",
+  },
+  {
+    label: "Publish",
+  },
+];
+
+export const categoryTableHeadCells: readonly HeadCell[] = [
+  {
+    label: "Category",
+  },
+  { label: "Top category" },
+  {
+    label: "Publish",
+  },
+  { label: "Last modified" },
+];
+
+export const sizeTableHeadCells: readonly HeadCell[] = [
+  {
+    label: "Size",
+  },
+  {
+    label: "Publish",
+  },
+  { label: "Last modified" },
+];

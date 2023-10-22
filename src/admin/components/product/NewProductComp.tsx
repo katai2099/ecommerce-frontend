@@ -25,13 +25,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { DialogProps } from "../../../client/components/NewAddressDialog";
 import { ETextField } from "../../../client/components/common/ETextField";
+import { AdminMode } from "../../../model/admin";
 import { IIdName } from "../../../model/common";
-import {
-  Gender,
-  IProduct,
-  IProductSize,
-  ProductMode,
-} from "../../../model/product";
+import { Gender, IProduct, IProductSize } from "../../../model/product";
 import { RootState } from "../../../reducers/combineReducer";
 import {
   setEditedProduct,
@@ -45,7 +41,7 @@ import { UploadImageSection } from "./UploadImageSection";
 interface NewProductProps {
   editedProduct: IProduct;
   updateProduct(name: string, value: any): void;
-  mode: ProductMode;
+  mode: AdminMode;
 }
 
 interface NewProductDetailProps {
@@ -77,7 +73,7 @@ export const NewProductDetails = ({
     const product: IProduct = { ...editedProduct, images: images };
     dispatch(setEditedProduct(product));
   };
-  const disable = mode === ProductMode.VIEW;
+  const disable = mode === AdminMode.VIEW;
   return (
     <Grid container spacing={2}>
       <Grid item md={4}>
@@ -140,7 +136,7 @@ export const NewProductProperties = ({
 }: NewProductProps) => {
   const adminSettings = useSelector((state: RootState) => state.admin);
   const [sizeDialogOpen, setSizeDialogOpen] = useState<boolean>(false);
-  const disable = mode === ProductMode.VIEW;
+  const disable = mode === AdminMode.VIEW;
   const newProductError = useSelector(
     (state: RootState) => state.product.newProductError
   );
@@ -303,7 +299,6 @@ const NewSizeDialog = ({
     const productSizeSizes = editedProduct.productSizes.map(
       (productSize) => productSize.size
     );
-
     const unselectedSizes = sizes.filter(
       (size) =>
         productSizeSizes.findIndex(

@@ -9,7 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import { IProduct, ProductMode } from "../../../model/product";
+import { AdminMode } from "../../../model/admin";
+import { IProduct } from "../../../model/product";
 import { RootState } from "../../../reducers/combineReducer";
 import { setEditedProduct } from "../../../reducers/productReducer";
 import { useAppDispatch } from "../../../store/configureStore";
@@ -17,7 +18,7 @@ import { useAppDispatch } from "../../../store/configureStore";
 interface ProductStockProps {
   idx: number;
   editedProduct: IProduct;
-  mode: ProductMode;
+  mode: AdminMode;
 }
 
 export const ProductStock = ({
@@ -26,7 +27,7 @@ export const ProductStock = ({
   mode,
 }: ProductStockProps) => {
   const dispatch = useAppDispatch();
-  const disable = mode === ProductMode.VIEW;
+  const disable = mode === AdminMode.VIEW;
   const updateProduct = (field: string, value: any) => {
     const product: IProduct = { ...editedProduct, [field]: value };
     dispatch(setEditedProduct(product));
