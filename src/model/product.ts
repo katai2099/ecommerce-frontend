@@ -69,6 +69,7 @@ export interface IProductFilter {
   pmax?: number;
   rating?: number;
   page?: number;
+  itemperpage?: number;
 }
 
 export interface IProductFilterParams {
@@ -82,6 +83,7 @@ export interface IProductFilterParams {
   pmax?: number;
   rating?: number;
   page?: number;
+  itemperpage?: number;
 }
 
 export class Filter implements IProductFilter {
@@ -90,7 +92,8 @@ export class Filter implements IProductFilter {
     public sort: string = productSort[0],
     public category: string[] = [],
     public gender: Gender[] = [],
-    public rating: number = 0
+    public rating: number = 0,
+    public itemperpage: number = 20
   ) {}
 }
 

@@ -261,6 +261,9 @@ export function processProductFilter(
   if (filter.page) {
     filterParams.page = filter.page;
   }
+  if (filter.itemperpage) {
+    filterParams.itemperpage = filter.itemperpage;
+  }
   return filterParams;
 }
 

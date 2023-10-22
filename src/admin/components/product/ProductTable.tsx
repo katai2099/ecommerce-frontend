@@ -15,7 +15,6 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import * as React from "react";
@@ -35,15 +34,7 @@ import {
 } from "../../../model/product";
 import { setProductMode } from "../../../reducers/productReducer";
 import { useAppDispatch } from "../../../store/configureStore";
-
-interface Data {
-  name: string;
-  createdAt: string;
-  stock: number;
-  featured: boolean;
-  price: number;
-  publish: string;
-}
+import { EnhancedTableHead, HeadCell } from "../../style/common";
 
 interface ColumnProps {
   product: IProduct;
@@ -149,57 +140,26 @@ const OptionColumn = ({ product }: ColumnProps) => {
   );
 };
 
-interface HeadCell {
-  id: keyof Data;
-  label: string;
-}
-
 const headCells: readonly HeadCell[] = [
   {
-    id: "name",
-
     label: "Product",
   },
   {
-    id: "createdAt",
-
     label: "Create at",
   },
   {
-    id: "stock",
-
     label: "Stock",
   },
   {
-    id: "featured",
     label: "Featured",
   },
   {
-    id: "price",
-
     label: "Price",
   },
   {
-    id: "publish",
-
     label: "Publish",
   },
 ];
-
-function EnhancedTableHead() {
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell key={headCell.id} align="left" padding="normal">
-            {headCell.label}
-          </TableCell>
-        ))}
-        <TableCell size="small" />
-      </TableRow>
-    </TableHead>
-  );
-}
 
 export const ProductTable = () => {
   const [page, setPage] = useState(0);
@@ -210,7 +170,8 @@ export const ProductTable = () => {
   const [totalPage, setTotalPage] = useState<number>(0);
   const [totalItems, setTotalItems] = useState<number>(0);
   useEffect(() => {
-    getProducts(filter)
+    const adminFilter: IProductFilter = { ...filter, itemperpage: 100 };
+    getProducts(adminFilter)
       .then((data) => {
         setTotalPage(data.totalPage);
         setTotalItems(data.totalItem);
@@ -262,13 +223,18 @@ export const ProductTable = () => {
       });
   };
 
+  const visibleRows = React.useMemo(
+    () => products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [page, rowsPerPage, products]
+  );
+
   return (
     <Box sx={{ width: "100%" }}>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 750 }} size={dense ? "small" : "medium"}>
-          <EnhancedTableHead />
+          <EnhancedTableHead headCells={headCells} />
           <TableBody>
-            {products.map((product, index) => {
+            {visibleRows.map((product, index) => {
               return (
                 <TableRow hover tabIndex={-1} key={index}>
                   <TableCell align="left" component="th" scope="product">
@@ -315,7 +281,7 @@ export const ProductTable = () => {
       <TablePagination
         rowsPerPageOptions={[20]}
         component="div"
-        count={12}
+        count={totalItems}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
