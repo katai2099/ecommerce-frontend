@@ -45,6 +45,19 @@ export const productSlice = createSlice({
         editedProduct: newProduct,
         mode: ProductMode.VIEW,
         newProductError: new NewProductError(),
+        submitData: false,
+      };
+    });
+    builder.addCase(addProductAction.pending, (state) => {
+      return {
+        ...state,
+        submitData: true,
+      };
+    });
+    builder.addCase(addProductAction.rejected, (state) => {
+      return {
+        ...state,
+        submitData: false,
       };
     });
     builder.addCase(updateProductAction.fulfilled, (state, payload) => {
@@ -54,6 +67,19 @@ export const productSlice = createSlice({
         editedProduct: payload.payload,
         mode: ProductMode.VIEW,
         NewProductError: new NewProductError(),
+        submitData: false,
+      };
+    });
+    builder.addCase(updateProductAction.pending, (state) => {
+      return {
+        ...state,
+        submitData: true,
+      };
+    });
+    builder.addCase(updateProductAction.rejected, (state) => {
+      return {
+        ...state,
+        submitData: false,
       };
     });
   },

@@ -1,4 +1,12 @@
-import { AppBar, AppBarProps, Drawer, styled } from "@mui/material";
+import {
+  AppBar,
+  AppBarProps,
+  Drawer,
+  TableCell,
+  TableHead,
+  TableRow,
+  styled,
+} from "@mui/material";
 
 const drawerWidth: number = 240;
 
@@ -49,3 +57,26 @@ export const AdminDrawer = styled(Drawer, {
     }),
   },
 }));
+
+export interface HeadCell {
+  label: string;
+}
+
+interface EnhancedTableHeadProps {
+  headCells: readonly HeadCell[];
+}
+
+export const EnhancedTableHead = ({ headCells }: EnhancedTableHeadProps) => {
+  return (
+    <TableHead>
+      <TableRow>
+        {headCells.map((headCell, idx) => (
+          <TableCell key={idx} align="left" padding="normal">
+            {headCell.label}
+          </TableCell>
+        ))}
+        <TableCell size="small" />
+      </TableRow>
+    </TableHead>
+  );
+};

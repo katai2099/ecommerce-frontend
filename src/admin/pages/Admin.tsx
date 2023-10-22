@@ -1,10 +1,13 @@
 import { Box, Container, Toolbar } from "@mui/material";
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import { fetchAdminSettingsAction } from "../../actions/adminActions";
+import { fetchAdminSettings } from "../../controllers/product";
+import { setLoading } from "../../reducers/guiReducer";
 import { useAppDispatch } from "../../store/configureStore";
 import { theme } from "../../styles/theme";
 import { AdminDrawerComp } from "../components/AdminDrawerComp";
+import { Category } from "./Category";
+import { CategoryList } from "./CategoryList";
 import { Dashboard } from "./Dashboard";
 import { Product } from "./Product";
 import { ProductList } from "./ProductList";
@@ -12,7 +15,10 @@ import { ProductList } from "./ProductList";
 export const Admin = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(fetchAdminSettingsAction());
+    dispatch(setLoading(true));
+    fetchAdminSettings()
+      .catch((err) => {})
+      .finally(() => dispatch(setLoading(false)));
   }, []);
 
   return (
@@ -33,6 +39,8 @@ export const Admin = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/product" element={<ProductList />} />
             <Route path="/product/create" element={<Product />} />
+            <Route path="/category" element={<CategoryList />} />
+            <Route path="/category/create" element={<Category />} />
           </Routes>
         </Container>
       </Box>

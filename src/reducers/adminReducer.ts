@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { adminReduxState, IAdminReduxState } from "../model/admin";
+import { ICategory } from "../model/category";
 import { IIdName } from "../model/common";
 
 const initialState: IAdminReduxState = new adminReduxState();
@@ -8,12 +9,10 @@ export const adminSlice = createSlice({
   initialState,
   reducers: {
     setAdminSizes(state, action: PayloadAction<IIdName[]>) {
-      state.sizes = action.payload;
-      return state;
+      return { ...state, sizes: action.payload };
     },
-    setAdminCategories(state, action: PayloadAction<IIdName[]>) {
-      state.categories = action.payload;
-      return state;
+    setAdminCategories(state, action: PayloadAction<ICategory[]>) {
+      return { ...state, categories: action.payload };
     },
   },
 });

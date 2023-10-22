@@ -37,16 +37,12 @@ import { setProductMode } from "../../../reducers/productReducer";
 import { useAppDispatch } from "../../../store/configureStore";
 
 interface Data {
+  name: string;
   createdAt: string;
   stock: number;
   featured: boolean;
-  name: string;
   price: number;
   publish: string;
-}
-
-interface ProductTableProps {
-  products: IProduct[];
 }
 
 interface ColumnProps {
@@ -56,13 +52,8 @@ interface ColumnProps {
 const ProductColumn = ({ product }: ColumnProps) => {
   return (
     <Box display="flex" alignItems="center">
-      <Box mr="16px" borderRadius="8px">
-        <img
-          alt=""
-          src={product.images[0].imageUrl}
-          width="64px"
-          height="64px"
-        />
+      <Box mr="16px" borderRadius="8px" width="64px" height="64px">
+        <img alt="" src={product.images[0].imageUrl} className="img-contain" />
       </Box>
       <Box display="flex" flexDirection="column" justifyContent="center">
         <Typography>{product.name}</Typography>
@@ -72,8 +63,12 @@ const ProductColumn = ({ product }: ColumnProps) => {
   );
 };
 
-const CreateAtColumn = ({ product }: ColumnProps) => {
-  const date = new Date(product.createdAt);
+interface CreateAtColomnProps {
+  createdAt: string;
+}
+
+export const CreateAtColumn = ({ createdAt }: CreateAtColomnProps) => {
+  const date = new Date(createdAt);
   return (
     <Box display="flex" flexDirection="column" justifyContent="center">
       <Typography>{date.toDateString()}</Typography>
@@ -280,7 +275,7 @@ export const ProductTable = () => {
                     <ProductColumn product={product} />
                   </TableCell>
                   <TableCell align="left">
-                    <CreateAtColumn product={product} />
+                    <CreateAtColumn createdAt={product.createdAt} />
                   </TableCell>
                   <TableCell align="left">
                     <StockColumn product={product} />

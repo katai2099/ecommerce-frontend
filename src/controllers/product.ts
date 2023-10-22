@@ -1,19 +1,29 @@
+import {
+  fetchAdminCategoriesAction,
+  fetchAdminSizesAction,
+} from "../actions/adminActions";
 import { addToCartAction } from "../actions/cartActions";
 import {
+  addCategoryAction,
   addProductAction,
   deleteReviewAction,
   getProductAction,
   getProductReviewsAction,
   getProductUserReviewAction,
   getProductsAction,
+  setCategoryPublishAction,
+  setCategoryTopAction,
   setProductFeaturedAction,
   setProductPublishAction,
   submitReviewAction,
+  updateCategoryAction,
   updateProductAction,
 } from "../actions/productActions";
 import { IAddToCartRequest } from "../model/cart";
+import { ICategory } from "../model/category";
 import {
   Gender,
+  INewCategoryRequest,
   INewProductError,
   INewProductRequest,
   IProduct,
@@ -26,10 +36,7 @@ import {
 import { INewReview } from "../model/review";
 import { addToCartState } from "../reducers/cartReducer";
 import { setLoading } from "../reducers/guiReducer";
-import {
-  setNewProductError,
-  setProductSubmitData,
-} from "../reducers/productReducer";
+import { setNewProductError } from "../reducers/productReducer";
 import { store } from "../store/configureStore";
 import { isStringEmpty } from "./utils";
 
@@ -106,7 +113,6 @@ export function deleteReview(reviewId: number) {
 }
 
 export function updateProductCont(product: IProduct, files: File[]) {
-  store.dispatch(setProductSubmitData(true));
   const updatedProduct: INewProductRequest = {
     productData: product,
     files: files,
@@ -115,8 +121,7 @@ export function updateProductCont(product: IProduct, files: File[]) {
     .dispatch(updateProductAction(updatedProduct))
     .unwrap()
     .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err))
-    .finally(() => store.dispatch(setProductSubmitData(false)));
+    .catch((err) => Promise.reject(err));
 }
 
 export function setProductFeatured(featured: boolean, id: number) {
@@ -140,7 +145,6 @@ export function setProductPublish(publish: boolean, id: number) {
 }
 
 export function addNewProduct(product: IProduct, files: File[]) {
-  store.dispatch(setProductSubmitData(true));
   const uploadProduct: INewProductRequest = {
     productData: product,
     files: files,
@@ -149,10 +153,51 @@ export function addNewProduct(product: IProduct, files: File[]) {
     .dispatch(addProductAction(uploadProduct))
     .unwrap()
     .then(() => Promise.resolve())
+    .catch((err) => Promise.reject(err));
+}
+
+export function updateCategoryCont(category: ICategory, files: File[]) {
+  const updateCategory: INewCategoryRequest = {
+    categoryData: category,
+    files: files,
+  };
+  return store
+    .dispatch(updateCategoryAction(updateCategory))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function setCategoryTop(isTop: boolean, id: number) {
+  store.dispatch(setLoading(true));
+  return store
+    .dispatch(setCategoryTopAction({ id, isTop }))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err))
-    .finally(() => {
-      store.dispatch(setProductSubmitData(false));
-    });
+    .finally(() => store.dispatch(setLoading(false)));
+}
+
+export function setCategoryPublish(publish: boolean, id: number) {
+  store.dispatch(setLoading(true));
+  return store
+    .dispatch(setCategoryPublishAction({ id, publish }))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err))
+    .finally(() => store.dispatch(setLoading(false)));
+}
+
+export function addNewCategory(category: ICategory, files: File[]) {
+  const updateCategory: INewCategoryRequest = {
+    categoryData: category,
+    files: files,
+  };
+  return store
+    .dispatch(addCategoryAction(updateCategory))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.resolve(err));
 }
 
 export function processProductFilter(
@@ -277,4 +322,13 @@ export function isFilterEmpty(
     return false;
   }
   return true;
+}
+
+export function fetchAdminSettings() {
+  return Promise.all([
+    store.dispatch(fetchAdminCategoriesAction()),
+    store.dispatch(fetchAdminSizesAction()),
+  ])
+    .then(() => Promise.resolve())
+    .catch((err) => Promise.reject(err));
 }

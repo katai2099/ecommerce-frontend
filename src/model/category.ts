@@ -3,6 +3,7 @@ export interface ICategory {
   name: string;
   isTop: boolean;
   publish: boolean;
+  lastModified: string;
   categoryImage: string;
 }
 
@@ -16,6 +17,7 @@ export class Category implements ICategory {
     public name = "",
     public isTop = false,
     public publish = true,
+    public lastModified = "",
     public categoryImage = ""
   ) {}
 }

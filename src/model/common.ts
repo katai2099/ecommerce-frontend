@@ -1,5 +1,10 @@
 import { AccountReduxState, IAccountReduxState } from "./account";
-import { IAdminReduxState, adminReduxState } from "./admin";
+import {
+  CategoryReduxState,
+  IAdminReduxState,
+  ICategoryReduxState,
+  adminReduxState,
+} from "./admin";
 import { CartReduxState, ICartReduxState } from "./cart";
 import { CheckoutReduxState, ICheckoutReduxState } from "./checkout";
 import { GuiReduxState, IGuiReduxState } from "./gui";
@@ -32,7 +37,8 @@ export class MainState implements IMainState {
     public productList: IProductListReduxState = new ProductListReduxState(),
     public productDetail: IProductDetailReduxState = new ProductDetailReduxState(),
     public productReview: IProductReviewReduxState = new ProductReviewReduxState(),
-    public account: IAccountReduxState = new AccountReduxState()
+    public account: IAccountReduxState = new AccountReduxState(),
+    public category: ICategoryReduxState = new CategoryReduxState()
   ) {}
 }
 
@@ -49,6 +55,7 @@ export interface IMainState {
   productDetail: IProductDetailReduxState;
   productReview: IProductReviewReduxState;
   account: IAccountReduxState;
+  category: ICategoryReduxState;
 }
 
 export interface IIdName {

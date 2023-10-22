@@ -118,7 +118,11 @@ export const AdminDrawerComp = () => {
             </ListItemIcon>
             <ListItemText primary="Products" />
           </ListItemButton>
-          <ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              navigate("/category");
+            }}
+          >
             <ListItemIcon>
               <Category />
             </ListItemIcon>

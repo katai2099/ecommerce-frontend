@@ -22,6 +22,7 @@ import { BASE_NAME } from "../store/configureStore";
 import accountReducer from "./accountReducer";
 import adminReducer from "./adminReducer";
 import cartReducer from "./cartReducer";
+import categoryReducer from "./categoryReducer";
 import checkoutReducer from "./checkoutReducer";
 import guiReducer from "./guiReducer";
 import homepageReducer from "./homepageReducer";
@@ -45,6 +46,7 @@ const appReducer = combineReducers<IMainState>({
   productDetail: productDetailReducer,
   productReview: productReviewReducer,
   account: accountReducer,
+  category: categoryReducer,
 });
 
 const initialState: IMainState = new MainState();

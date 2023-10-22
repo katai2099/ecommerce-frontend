@@ -119,6 +119,11 @@ export interface INewProductRequest {
   files: File[];
 }
 
+export interface INewCategoryRequest {
+  categoryData: ICategory;
+  files: File[];
+}
+
 export interface IProductReduxState {
   selectedProduct: Product;
   editedProduct: Product;

@@ -8,7 +8,12 @@ import {
 import { processProductFilter } from "../controllers/product";
 import { ICategory } from "../model/category";
 import { IPaginationResponse } from "../model/common";
-import { INewProductRequest, IProduct, IProductFilter } from "../model/product";
+import {
+  INewCategoryRequest,
+  INewProductRequest,
+  IProduct,
+  IProductFilter,
+} from "../model/product";
 import { INewReview, IReview } from "../model/review";
 import { setLoading } from "../reducers/guiReducer";
 
@@ -87,6 +92,84 @@ export const getProductAction = createAsyncThunk<IProduct, string>(
 
 function getProductWorker(productId: string) {
   return getRequest<IProduct>(`/products/${productId}`)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const setCategoryTopAction = createAsyncThunk<
+  string,
+  { id: number; isTop: boolean }
+>("set_category_top", (data, thunkApi) => {
+  return setCategoryTopWorker(data)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function setCategoryTopWorker(data: { id: number; isTop: boolean }) {
+  return putRequest<string>(
+    `/products/category/${data.id}/top-category`,
+    { isTop: data.isTop },
+    { auth: true }
+  )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const setCategoryPublishAction = createAsyncThunk<
+  string,
+  { id: number; publish: boolean }
+>("set_category_publish", (data, thunkApi) => {
+  return setCategoryPublishWorker(data)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function setCategoryPublishWorker(data: { id: number; publish: boolean }) {
+  return putRequest<string>(
+    `/products/category/${data.id}/publish`,
+    { publish: data.publish },
+    { auth: true }
+  )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const updateCategoryAction = createAsyncThunk<
+  ICategory,
+  INewCategoryRequest
+>("update_category", (category, thunkApi) => {
+  return updateCategoryWorker(category)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function updateCategoryWorker(category: INewCategoryRequest) {
+  return putRequest<ICategory>(
+    `/products/category/${category.categoryData.id}`,
+    category,
+    {
+      auth: true,
+      formData: true,
+    }
+  )
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const addCategoryAction = createAsyncThunk<
+  ICategory,
+  INewCategoryRequest
+>("add_category", (category, thunkApi) => {
+  return addCategoryWorker(category)
+    .then((res) => Promise.resolve(res))
+    .catch((err) => thunkApi.rejectWithValue(err));
+});
+
+function addCategoryWorker(category: INewCategoryRequest) {
+  return postRequest<ICategory>("/products/category", category, {
+    auth: true,
+    formData: true,
+  })
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }
