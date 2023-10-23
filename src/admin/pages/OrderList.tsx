@@ -2,7 +2,7 @@ import { Box, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getOrderDetails } from "../../controllers/order";
 import { IOrderDetail, IOrderFilter } from "../../model/order";
-import { OrderTable } from "../components/OrderTable";
+import { OrderTable } from "../components/order/OrderTable";
 
 export const OrderList = () => {
   const [orderDetails, setOrderDetails] = useState<IOrderDetail[]>([]);

@@ -1,42 +1,28 @@
 import { Grid, Paper } from "@mui/material";
-import Chart from "../components/Chart";
-import Deposits from "../components/Deposit";
-import Orders from "../components/Order";
+import { OrderAnalyticComp } from "../components/OrderAnalyticComp";
+import { RecentOrders } from "../components/RecentOrder";
+import { SaleAnalyticComp } from "../components/SaleAnalytic";
 
 export const Dashboard = () => {
   return (
-    <Grid container spacing={3}>
-      {/* Chart */}
-      <Grid item xs={12} md={8} lg={9}>
+    <Grid container spacing={3} alignItems="center">
+      <Grid item xs={12} md={5}>
+        <OrderAnalyticComp />
+      </Grid>
+      <Grid item xs={12} md={7}>
         <Paper
           sx={{
-            p: 2,
+            padding: 2,
             display: "flex",
             flexDirection: "column",
-            height: 240,
+            minHeight: "350px",
           }}
         >
-          <Chart />
+          <SaleAnalyticComp />
         </Paper>
       </Grid>
-      {/* Recent Deposits */}
-      <Grid item xs={12} md={4} lg={3}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            height: 240,
-          }}
-        >
-          <Deposits />
-        </Paper>
-      </Grid>
-      {/* Recent Orders */}
       <Grid item xs={12}>
-        <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Orders />
-        </Paper>
+        <RecentOrders />
       </Grid>
     </Grid>
   );

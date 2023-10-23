@@ -11,11 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { OrderStatusChip } from "../../client/components/OrderItem";
-import { formatPrice } from "../../controllers/utils";
-import { IOrderDetail, orderTableHeadCells } from "../../model/order";
-import { EnhancedTableHead } from "../style/common";
-import { CreateAtColumn } from "./product/ProductTable";
+import { OrderStatusChip } from "../../../client/components/OrderItem";
+import { formatPrice } from "../../../controllers/utils";
+import { IOrderDetail, orderTableHeadCells } from "../../../model/order";
+import { EnhancedTableHead } from "../../style/common";
+import { CreateAtColumn } from "../product/ProductTable";
 
 interface OrderTableProps {
   orderDetails: IOrderDetail[];

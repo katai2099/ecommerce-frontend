@@ -4,9 +4,11 @@ import { processOrderFilter } from "../controllers/order";
 import { IPaginationResponse } from "../model/common";
 import {
   IOrder,
+  IOrderAnalytic,
   IOrderDetail,
   IOrderFilter,
   IOrderFilterParams,
+  ISaleAnalytic,
 } from "../model/order";
 
 export const getOrdersAction = createAsyncThunk<
@@ -24,6 +26,51 @@ function getOrdersWorker(orderFilter: IOrderFilter) {
     auth: true,
     requestParams: filterParams,
   })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const getSaleAnalyticAction = createAsyncThunk<ISaleAnalytic>(
+  "get_sale_analytic",
+  () => {
+    return getSaleAnalyticWorker()
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err));
+  }
+);
+
+function getSaleAnalyticWorker() {
+  return getRequest<ISaleAnalytic>("/orders/sales-analytic", { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const getOrderAnalyticAction = createAsyncThunk<IOrderAnalytic>(
+  "get_order_analytic",
+  () => {
+    return getOrderAnalyticWorker()
+      .then((res) => Promise.resolve(res))
+      .catch((err) => Promise.reject(err));
+  }
+);
+
+function getOrderAnalyticWorker() {
+  return getRequest<IOrderAnalytic>("/orders/order-analytic", { auth: true })
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const getRecentOrdersAction = createAsyncThunk<IOrderDetail[]>(
+  "get_recent_orders",
+  (_, thunkApi) => {
+    return getRecentOrdersWorker()
+      .then((res) => Promise.resolve(res))
+      .catch((err) => thunkApi.rejectWithValue(err));
+  }
+);
+
+function getRecentOrdersWorker() {
+  return getRequest<IOrderDetail[]>("/orders/recent-order", { auth: true })
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }

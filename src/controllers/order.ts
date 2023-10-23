@@ -2,7 +2,10 @@ import { store } from "../store/configureStore";
 
 import {
   getOrderAction,
+  getOrderAnalyticAction,
   getOrdersAction,
+  getRecentOrdersAction,
+  getSaleAnalyticAction,
   getUserOrdersAction,
   updateOrderStatusAction,
 } from "../actions/orderActions";
@@ -55,6 +58,30 @@ export function getUserOrders(page: number = 1) {
 export function getOrderDetail(orderId: string) {
   return store
     .dispatch(getOrderAction(orderId))
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function getRecentOrders() {
+  return store
+    .dispatch(getRecentOrdersAction())
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function getOrderAnalytic() {
+  return store
+    .dispatch(getOrderAnalyticAction())
+    .unwrap()
+    .then((res) => Promise.resolve(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export function getSaleAnalytic() {
+  return store
+    .dispatch(getSaleAnalyticAction())
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));

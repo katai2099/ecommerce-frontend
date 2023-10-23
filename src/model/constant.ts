@@ -5,3 +5,19 @@ export const OUT_OF_STOCK_MESSAGE = "one or more products are out of stock";
 export const API_ENDPOINT =
   process.env.NODE_ENV === "production" ? "89.134.215.228" : "localhost";
 export const API_PORT = 8081;
+
+export const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];

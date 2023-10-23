@@ -81,6 +81,44 @@ export interface IOrderFilterParams {
   page?: number;
 }
 
+export interface IOrderAnalytic {
+  totalSales: number;
+  todaySales: number;
+  totalOrders: number;
+  todayOrders: number;
+  oldestOrderDate: string;
+}
+
+export class OrderAnalytic implements IOrderAnalytic {
+  constructor(
+    public totalSales = 0,
+    public todaySales = 0,
+    public totalOrders = 0,
+    public todayOrders = 0,
+    public oldestOrderDate = ""
+  ) {}
+}
+
+export interface IMonthlySaleData {
+  totalSales: number;
+  month: number;
+  year: number;
+}
+
+export interface IWeeklySaleData {
+  totalSales: number;
+  dayOfWeek: number;
+}
+
+export interface ISaleAnalytic {
+  weeklySaleData: IWeeklySaleData[];
+  monthlySaleData: IMonthlySaleData[];
+}
+
+export class SaleAnalytic implements ISaleAnalytic {
+  constructor(public weeklySaleData = [], public monthlySaleData = []) {}
+}
+
 export const orderTableHeadCells: readonly HeadCell[] = [
   {
     label: "Id",
