@@ -102,7 +102,11 @@ export const AdminDrawerComp = () => {
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItemButton>
-          <ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              navigate("/orders");
+            }}
+          >
             <ListItemIcon>
               <ShoppingCart />
             </ListItemIcon>

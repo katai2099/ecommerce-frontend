@@ -107,3 +107,8 @@ export function generateUUID() {
 export function isStringEmpty(value: string): boolean {
   return value.trim().length === 0;
 }
+
+export function processOrPredicate<T>(filter: T[]): string {
+  const orPredicate = filter.join("::");
+  return orPredicate;
+}

@@ -1,3 +1,4 @@
+import { HeadCell } from "../admin/style/common";
 import { Address, IAddress } from "./user";
 
 export interface IOrder {
@@ -41,15 +42,23 @@ class OrderDetailUser implements IOrderDetailUser {
   constructor(public firstname = "", public lastname = "", public email = "") {}
 }
 
+export interface IOrderHistory {
+  id: number;
+  actionTime: string;
+  status: string;
+}
+
 export interface IOrderDetail {
   order: IOrder;
   user: IOrderDetailUser;
+  orderHistories: IOrderHistory[];
 }
 
 export class OrderDetail implements IOrderDetail {
   constructor(
     public order = new Order(),
-    public user = new OrderDetailUser()
+    public user = new OrderDetailUser(),
+    public orderHistories = []
   ) {}
 }
 
@@ -62,7 +71,33 @@ export interface INextActionResponse {
   clientSecret: string;
 }
 
+export interface IOrderFilter {
+  status?: string[];
+  page?: number;
+}
+
 export interface IOrderFilterParams {
   status?: string;
   page?: number;
 }
+
+export const orderTableHeadCells: readonly HeadCell[] = [
+  {
+    label: "Id",
+  },
+  {
+    label: "Customer",
+  },
+  {
+    label: "Date",
+  },
+  {
+    label: "Status",
+  },
+  {
+    label: "Items",
+  },
+  {
+    label: "Price",
+  },
+];

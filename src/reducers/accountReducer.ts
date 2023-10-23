@@ -1,5 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getOrderAction, getUserOrdersAction } from "../actions/orderActions";
+import {
+  getOrderAction,
+  getUserOrdersAction,
+  updateOrderStatusAction,
+} from "../actions/orderActions";
 import {
   addAddressAction,
   deleteAddressAction,
@@ -8,6 +12,7 @@ import {
   updateAddressAction,
 } from "../actions/userActions";
 import { AccountReduxState, IAccountReduxState } from "../model/account";
+import { IOrderDetail, IOrderHistory } from "../model/order";
 import { IAddress } from "../model/user";
 
 const initialState: IAccountReduxState = new AccountReduxState();
@@ -119,6 +124,28 @@ const accountSlice = createSlice({
     });
     builder.addCase(deleteAddressAction.rejected, (state) => {
       return { ...state, addressesLoading: false };
+    });
+    builder.addCase(updateOrderStatusAction.fulfilled, (state, payload) => {
+      const decodedStatus = decodeURI(payload.meta.arg.status);
+      const updatedOrder = {
+        ...state.selectedOrder.order,
+        status: decodedStatus,
+      };
+      const newHistory: IOrderHistory = {
+        id: 0,
+        actionTime: new Date().toString(),
+        status: decodedStatus,
+      };
+      const updatedHistories = [
+        ...state.selectedOrder.orderHistories,
+        newHistory,
+      ];
+      const updatedSelectedOrder: IOrderDetail = {
+        ...state.selectedOrder,
+        orderHistories: updatedHistories,
+        order: updatedOrder,
+      };
+      return { ...state, selectedOrder: updatedSelectedOrder };
     });
   },
 });

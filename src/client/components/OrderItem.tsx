@@ -19,6 +19,33 @@ import { OrderSummaryItemProps } from "./OrderSummaryItem";
 interface OrderItemProps {
   order: IOrder;
 }
+
+interface OrderStatusChipProps {
+  status: string;
+}
+
+export const OrderStatusChip = ({ status }: OrderStatusChipProps) => {
+  return (
+    <Chip
+      label={status}
+      color={
+        status === "ORDER PLACED"
+          ? "info"
+          : status === "PROCESSING"
+          ? "primary"
+          : status === "OUT FOR DELIVERY"
+          ? "warning"
+          : "success"
+      }
+      sx={{
+        ...(status === "PROCESSING" && {
+          bgcolor: "#B2AA8F",
+        }),
+      }}
+    />
+  );
+};
+
 export const OrderItem = ({ order }: OrderItemProps) => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -38,23 +65,7 @@ export const OrderItem = ({ order }: OrderItemProps) => {
             {order.id}
           </Typography>
           <Box className="flex-grow">
-            <Chip
-              label={order.status}
-              color={
-                order.status === "ORDER PLACED"
-                  ? "info"
-                  : order.status === "PROCESSING"
-                  ? "primary"
-                  : order.status === "OUT FOR DELIVERY"
-                  ? "warning"
-                  : "success"
-              }
-              sx={{
-                ...(order.status === "PROCESSING" && {
-                  bgcolor: "#B2AA8F",
-                }),
-              }}
-            />
+            <OrderStatusChip status={order.status} />
           </Box>
           <Typography className="flex-grow">
             {new Date(order.orderDate).toDateString()}
