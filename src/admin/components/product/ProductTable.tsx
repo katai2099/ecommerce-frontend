@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -27,6 +26,7 @@ import {
 } from "../../../controllers/product";
 import { clone, formatPrice, showSnackBar } from "../../../controllers/utils";
 import { AdminMode } from "../../../model/admin";
+import { ADMIN_ITEM_PER_PAGE } from "../../../model/constant";
 import {
   Filter,
   IProduct,
@@ -49,7 +49,11 @@ const ProductColumn = ({ product }: ColumnProps) => {
   return (
     <Box display="flex" alignItems="center">
       <Box mr="16px" borderRadius="8px" width="64px" height="64px">
-        <img alt="" src={product.images[0].imageUrl} className="img-contain" />
+        <img
+          alt=""
+          src={product.images.length > 0 ? product.images[0].imageUrl : ""}
+          className="img-contain"
+        />
       </Box>
       <Box display="flex" flexDirection="column" justifyContent="center">
         <Typography>{product.name}</Typography>
@@ -146,26 +150,42 @@ const OptionColumn = ({ product }: ColumnProps) => {
 };
 
 export const ProductTable = () => {
-  const [page, setPage] = useState(0);
+  const [tablePage, setPage] = useState(0);
   const [filter, setFilter] = useState<IProductFilter>(new Filter());
-  const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [totalItems, setTotalItems] = useState<number>(0);
   useEffect(() => {
-    const adminFilter: IProductFilter = { ...filter, itemperpage: 100 };
+    const adminFilter: IProductFilter = {
+      ...filter,
+      itemperpage: ADMIN_ITEM_PER_PAGE,
+      sort: undefined,
+    };
     getProducts(adminFilter)
       .then((data) => {
-        setTotalPage(data.totalPage);
-        setTotalItems(data.totalItem);
-        setProducts(data.data);
+        if (data.currentPage === 1) {
+          setProducts(data.data);
+          setTotalPage(data.totalPage);
+          setTotalItems(data.totalItem);
+        } else {
+          setProducts((prev) => [...prev, ...data.data]);
+        }
       })
       .catch((err) => {});
-  }, []);
+  }, [filter.page]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
+    const currentElements = (newPage + 1) * rowsPerPage;
+    const currentFilterPage = filter.page ? filter.page : 1;
+    const lastTwentyElements = currentFilterPage * ADMIN_ITEM_PER_PAGE - 20;
+    if (
+      currentElements >= lastTwentyElements &&
+      currentFilterPage !== totalPage
+    ) {
+      setFilter({ ...filter, page: currentFilterPage + 1 });
+    }
   };
 
   const handleChangeRowsPerPage = (
@@ -173,10 +193,6 @@ export const ProductTable = () => {
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
   };
 
   const handleProductFeaturedChange = (checked: boolean, index: number) => {
@@ -208,14 +224,18 @@ export const ProductTable = () => {
   };
 
   const visibleRows = React.useMemo(
-    () => products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [page, rowsPerPage, products]
+    () =>
+      products.slice(
+        tablePage * rowsPerPage,
+        tablePage * rowsPerPage + rowsPerPage
+      ),
+    [tablePage, rowsPerPage, products]
   );
 
   return (
     <Box sx={{ width: "100%" }}>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 750 }} size={dense ? "small" : "medium"}>
+        <Table sx={{ minWidth: 750 }} size="medium">
           <EnhancedTableHead headCells={productTableHeadCells} />
           <TableBody>
             {visibleRows.map((product, index) => {
@@ -263,18 +283,13 @@ export const ProductTable = () => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[20]}
+        rowsPerPageOptions={[5, 10, 20]}
         component="div"
         count={totalItems}
         rowsPerPage={rowsPerPage}
-        page={page}
+        page={tablePage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
       />
     </Box>
   );

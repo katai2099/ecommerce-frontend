@@ -73,11 +73,13 @@ export function addToCart(
 }
 
 export function getProducts(filter: IProductFilter) {
+  store.dispatch(setLoading(true));
   return store
     .dispatch(getProductsAction(filter))
     .unwrap()
     .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err));
+    .catch((err) => Promise.reject(err))
+    .finally(() => store.dispatch(setLoading(false)));
 }
 
 export function getProduct(productId: string) {

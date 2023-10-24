@@ -20,7 +20,7 @@ export const ProductItem = ({ product }: ProductProps) => {
           <FlexBox bgcolor="transparent">
             <img
               className="img-contain img-300"
-              src={product.images[0].imageUrl}
+              src={product.images.length > 0 ? product.images[0].imageUrl : ""}
             />
           </FlexBox>
         </Link>

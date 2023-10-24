@@ -18,7 +18,11 @@ export const OrderDetailProduct = ({ cartItem }: OrderDetailProductProps) => {
             width={matchSm ? "80px" : "96px"}
             height={matchSm ? "80px" : "96px"}
             alt=""
-            src={cartItem.product.images[0].imageUrl}
+            src={
+              cartItem.product.images.length > 0
+                ? cartItem.product.images[0].imageUrl
+                : ""
+            }
           />
         </Box>
         <Box width="70%">

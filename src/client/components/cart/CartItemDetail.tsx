@@ -50,7 +50,11 @@ export const CartItemDetail = ({
               width={matchSm ? "80px" : "120px"}
               height={matchSm ? "80px" : "120px"}
               alt=""
-              src={cartItem.product.images[0].imageUrl}
+              src={
+                cartItem.product.images.length > 0
+                  ? cartItem.product.images[0].imageUrl
+                  : ""
+              }
             />
           </Box>
         </Link>

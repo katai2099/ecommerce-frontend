@@ -1,4 +1,4 @@
-import { Box, MenuItem, Select } from "@mui/material";
+import { Box, CircularProgress, MenuItem, Select } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -55,18 +55,19 @@ export const SaleAnalyticComp = () => {
   const [saleAnalytic, setSaleAnalytic] = useState<ISaleAnalytic>(
     new SaleAnalytic()
   );
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const theme = useTheme();
   const [mode, setMode] = useState<number>(0);
   const last7daysData = generateLast7DaysData(saleAnalytic.weeklySaleData);
   const last12monthsData = generateLast12monthsdata(
     saleAnalytic.monthlySaleData
   );
-  console.log(last12monthsData);
 
   useEffect(() => {
     getSaleAnalytic()
       .then((res) => setSaleAnalytic(res))
-      .catch((err) => {});
+      .catch((err) => {})
+      .finally(() => setFirstLoad(false));
   }, []);
 
   return (
@@ -87,45 +88,51 @@ export const SaleAnalyticComp = () => {
         </Select>
       </Box>
       <ResponsiveContainer minHeight={300}>
-        <LineChart
-          data={mode === 0 ? last7daysData : last12monthsData}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24,
-          }}
-        >
-          <XAxis
-            dataKey="time"
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-          />
-          <YAxis
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
+        {firstLoad ? (
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <LineChart
+            data={mode === 0 ? last7daysData : last12monthsData}
+            margin={{
+              top: 16,
+              right: 16,
+              bottom: 0,
+              left: 24,
+            }}
           >
-            <Label
-              angle={270}
-              position="left"
-              style={{
-                textAnchor: "middle",
-                fill: theme.palette.text.primary,
-                ...theme.typography.body1,
-              }}
+            <XAxis
+              dataKey="time"
+              stroke={theme.palette.text.secondary}
+              style={theme.typography.body2}
+            />
+            <YAxis
+              stroke={theme.palette.text.secondary}
+              style={theme.typography.body2}
             >
-              Sales ($)
-            </Label>
-          </YAxis>
-          <Tooltip />
-          <Line
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="amount"
-            stroke={theme.palette.primary.main}
-            dot={false}
-          />
-        </LineChart>
+              <Label
+                angle={270}
+                position="left"
+                style={{
+                  textAnchor: "middle",
+                  fill: theme.palette.text.primary,
+                  ...theme.typography.body1,
+                }}
+              >
+                Sales ($)
+              </Label>
+            </YAxis>
+            <Tooltip />
+            <Line
+              isAnimationActive={false}
+              type="monotone"
+              dataKey="amount"
+              stroke={theme.palette.primary.main}
+              dot={false}
+            />
+          </LineChart>
+        )}
       </ResponsiveContainer>
     </React.Fragment>
   );
