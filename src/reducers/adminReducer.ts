@@ -1,4 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  addCategoryAction,
+  updateCategoryAction,
+} from "../actions/productActions";
 import { adminReduxState, IAdminReduxState } from "../model/admin";
 import { ICategory } from "../model/category";
 import { ISize } from "../model/size";
@@ -17,6 +21,17 @@ export const adminSlice = createSlice({
     addAdminSizes(state, action: PayloadAction<ISize>) {
       return { ...state, sizes: [...state.sizes, action.payload] };
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(addCategoryAction.fulfilled, (state, payload) => {
+      return { ...state, categories: [...state.categories, payload.payload] };
+    });
+    builder.addCase(updateCategoryAction.fulfilled, (state, payload) => {
+      const updatedCategories = state.categories.map((category) =>
+        category.id === payload.payload.id ? payload.payload : category
+      );
+      return { ...state, categories: updatedCategories };
+    });
   },
 });
 

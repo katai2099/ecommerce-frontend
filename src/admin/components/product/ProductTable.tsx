@@ -33,6 +33,7 @@ import {
   IProductFilter,
   productTableHeadCells,
 } from "../../../model/product";
+import { setLoading } from "../../../reducers/guiReducer";
 import {
   setEditedProduct,
   setProductMode,
@@ -156,12 +157,14 @@ export const ProductTable = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const dispatch = useAppDispatch();
   useEffect(() => {
     const adminFilter: IProductFilter = {
       ...filter,
       itemperpage: ADMIN_ITEM_PER_PAGE,
       sort: undefined,
     };
+    dispatch(setLoading(true));
     getProducts(adminFilter)
       .then((data) => {
         if (data.currentPage === 1) {
@@ -172,7 +175,8 @@ export const ProductTable = () => {
           setProducts((prev) => [...prev, ...data.data]);
         }
       })
-      .catch((err) => {});
+      .catch((err) => {})
+      .finally(() => dispatch(setLoading(false)));
   }, [filter.page]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -231,6 +235,10 @@ export const ProductTable = () => {
       ),
     [tablePage, rowsPerPage, products]
   );
+
+  if (products.length === 0) {
+    return <Typography variant="h2">No products</Typography>;
+  }
 
   return (
     <Box sx={{ width: "100%" }}>

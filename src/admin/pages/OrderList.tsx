@@ -31,13 +31,19 @@ export const OrderList = () => {
         <Box>
           <Typography variant="h3">List</Typography>
         </Box>
-        <OrderTable
-          orderDetails={orderDetails}
-          totalPage={totalPage}
-          totalItems={totalItems}
-          filterPage={orderFilter.page ? orderFilter.page : 1}
-          updateFilterPage={handleFilterPageChange}
-        />
+        {orderDetails.length > 0 ? (
+          <OrderTable
+            orderDetails={orderDetails}
+            totalPage={totalPage}
+            totalItems={totalItems}
+            filterPage={orderFilter.page ? orderFilter.page : 1}
+            updateFilterPage={handleFilterPageChange}
+          />
+        ) : (
+          <Typography variant="h2" mt="24px">
+            No orders
+          </Typography>
+        )}
       </Paper>
     </Box>
   );

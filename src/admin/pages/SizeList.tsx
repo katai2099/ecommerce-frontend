@@ -194,7 +194,11 @@ export const SizeList = () => {
             New Size
           </Button>
         </Box>
-        <SizeTable onEdit={handleSizeEdit} />
+        {adminSizes.length > 0 ? (
+          <SizeTable onEdit={handleSizeEdit} />
+        ) : (
+          <Typography variant="h2">No Sizes</Typography>
+        )}
       </Paper>
       <NewSizeDialog
         loading={submit}

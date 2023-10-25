@@ -3,22 +3,36 @@ import { IAddress } from "../../model/user";
 
 interface AddressDetailsProps {
   address: IAddress;
+  gray?: boolean;
 }
 
-export const AddressDetails = ({ address }: AddressDetailsProps) => {
+export const AddressDetails = ({
+  address,
+  gray = false,
+}: AddressDetailsProps) => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between">
-        <Typography>{`${address.firstname} ${address.lastname}`}</Typography>
+        <Typography
+          color={gray ? "GrayText" : "primary"}
+        >{`${address.firstname} ${address.lastname}`}</Typography>
       </Box>
       <Box display="flex">
-        <Typography>{`${address.street} ${address.houseNumber}`}</Typography>
+        <Typography
+          color={gray ? "GrayText" : "primary"}
+        >{`${address.street} ${address.houseNumber}`}</Typography>
       </Box>
       <Box display="flex">
-        <Typography>{`${address.zipCode} ${address.city}`}</Typography>
+        <Typography
+          color={gray ? "GrayText" : "primary"}
+        >{`${address.zipCode} ${address.city}`}</Typography>
       </Box>
-      <Typography>{`${address.country}`}</Typography>
-      <Typography mt="8px">Phone: {address.phoneNumber}</Typography>
+      <Typography
+        color={gray ? "GrayText" : "primary"}
+      >{`${address.country}`}</Typography>
+      <Typography mt="8px" color={gray ? "GrayText" : "primary"}>
+        Phone: {address.phoneNumber}
+      </Typography>
     </Box>
   );
 };

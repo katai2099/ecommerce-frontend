@@ -73,13 +73,11 @@ export function addToCart(
 }
 
 export function getProducts(filter: IProductFilter) {
-  store.dispatch(setLoading(true));
   return store
     .dispatch(getProductsAction(filter))
     .unwrap()
     .then((res) => Promise.resolve(res))
-    .catch((err) => Promise.reject(err))
-    .finally(() => store.dispatch(setLoading(false)));
+    .catch((err) => Promise.reject(err));
 }
 
 export function getProduct(productId: string) {
@@ -296,7 +294,7 @@ export function validateNewCategory(
       isStringEmpty(category.categoryImage))
   ) {
     valid = false;
-    error.image = "At least one file is required";
+    error.image = "At least one image is required";
   }
   store.dispatch(setNewCategoryError(error));
   return valid;
@@ -324,7 +322,7 @@ export function validateNewProduct(
       product.images.length === 0)
   ) {
     valid = false;
-    error.image = "At least one file is required";
+    error.image = "At least one image is required";
   }
   if (product.price === 0) {
     valid = false;

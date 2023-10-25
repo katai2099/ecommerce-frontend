@@ -40,7 +40,7 @@ export const ForgotPassword = () => {
     forgetPassword(email)
       .then(() => {
         setSubmitError("");
-        showSnackBar("send reset link success", "success");
+        showSnackBar("Reset link sent", "success");
       })
       .catch((err: AxiosError) => {
         const errorRes = err.response?.data as IErrorResponse;

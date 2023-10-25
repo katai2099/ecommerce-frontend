@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { CheckCircleOutline } from "@mui/icons-material";
-import { Box, Button, Skeleton, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -49,13 +49,13 @@ export const OrderSuccess = () => {
       >
         <CheckCircleOutline sx={{ fontSize: "86px", color: "green" }} />
         <Typography variant="h3">Thanks for your order!</Typography>
-        <Typography color="GrayText">
+        {/* <Typography color="GrayText">
           {orderDetailLoading ? (
             <Skeleton />
           ) : (
             `The order confirmation will be sent to ${orderDetail.user.email}`
           )}
-        </Typography>
+        </Typography> */}
       </Box>
       <Box mt="48px">
         <OrderReview orderDetail={orderDetail} />

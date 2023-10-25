@@ -52,13 +52,19 @@ export const OrderReview = ({ orderDetail }: OrderReviewProps) => {
             <Grid item xs={12} sm={6}>
               <Box mb="8px">
                 <SubHeader>Delivery Address</SubHeader>
-                <AddressDetails address={orderDetail.order.deliveryAddress} />
+                <AddressDetails
+                  gray={true}
+                  address={orderDetail.order.deliveryAddress}
+                />
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Box>
                 <SubHeader>Billing Address</SubHeader>
-                <AddressDetails address={orderDetail.order.billingAddress} />
+                <AddressDetails
+                  gray={true}
+                  address={orderDetail.order.billingAddress}
+                />
               </Box>
             </Grid>
           </Grid>
