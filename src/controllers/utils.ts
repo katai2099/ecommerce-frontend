@@ -1,4 +1,6 @@
 import { AlertColor } from "@mui/material";
+import { AxiosError } from "axios";
+import { IErrorResponse } from "../model/common";
 import { setSnackbarState } from "../reducers/guiReducer";
 import { store } from "../store/configureStore";
 
@@ -111,4 +113,13 @@ export function isStringEmpty(value: string): boolean {
 export function processOrPredicate<T>(filter: T[]): string {
   const orPredicate = filter.join("::");
   return orPredicate;
+}
+
+export function handleNetworkErr(err: AxiosError) {
+  const errorData = err.response?.data as IErrorResponse;
+  if (errorData && errorData.status !== 500) {
+    showSnackBar(errorData.message, "error");
+  } else {
+    showSnackBar("Something went wrong", "error");
+  }
 }

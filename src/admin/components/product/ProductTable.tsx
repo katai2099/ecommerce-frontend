@@ -24,7 +24,11 @@ import {
   setProductFeatured,
   setProductPublish,
 } from "../../../controllers/product";
-import { clone, formatPrice, showSnackBar } from "../../../controllers/utils";
+import {
+  clone,
+  formatPrice,
+  handleNetworkErr,
+} from "../../../controllers/utils";
 import { AdminMode } from "../../../model/admin";
 import { ADMIN_ITEM_PER_PAGE } from "../../../model/constant";
 import {
@@ -199,30 +203,40 @@ export const ProductTable = () => {
     setPage(0);
   };
 
-  const handleProductFeaturedChange = (checked: boolean, index: number) => {
+  const handleProductFeaturedChange = (
+    checked: boolean,
+    selectedProduct: IProduct
+  ) => {
     const oldProducts = clone(products);
-    const updatedProducts = products.map((product, idx) =>
-      idx === index ? { ...product, featured: checked } : product
+    const updatedProducts = products.map((product) =>
+      product.id === selectedProduct.id
+        ? { ...product, featured: checked }
+        : product
     );
     setProducts(updatedProducts);
-    setProductFeatured(checked, products[index].id)
+    setProductFeatured(checked, selectedProduct.id)
       .then(() => {})
       .catch((err) => {
-        showSnackBar("something went wrong", "error");
+        handleNetworkErr(err);
         setProducts(oldProducts);
       });
   };
 
-  const handleProductPublishChange = (checked: boolean, index: number) => {
+  const handleProductPublishChange = (
+    checked: boolean,
+    selectedProduct: IProduct
+  ) => {
     const oldProducts = clone(products);
     const updatedProducts = products.map((product, idx) =>
-      idx === index ? { ...product, publish: checked } : product
+      product.id === selectedProduct.id
+        ? { ...product, publish: checked }
+        : product
     );
     setProducts(updatedProducts);
-    setProductPublish(checked, products[index].id)
+    setProductPublish(checked, selectedProduct.id)
       .then(() => {})
       .catch((err) => {
-        showSnackBar("something went wrong", "error");
+        handleNetworkErr(err);
         setProducts(oldProducts);
       });
   };
@@ -263,7 +277,7 @@ export const ProductTable = () => {
                       checked={product.featured}
                       color="info"
                       onChange={(_, checked) => {
-                        handleProductFeaturedChange(checked, index);
+                        handleProductFeaturedChange(checked, product);
                       }}
                     />
                   </TableCell>
@@ -277,7 +291,7 @@ export const ProductTable = () => {
                       checked={product.publish}
                       color="success"
                       onChange={(_, checked) => {
-                        handleProductPublishChange(checked, index);
+                        handleProductPublishChange(checked, product);
                       }}
                     />
                   </TableCell>
