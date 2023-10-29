@@ -91,7 +91,7 @@ export class PaginationFilterData implements IPaginationFilterData {
 }
 
 export interface IErrorResponse {
-  message: string;
+  error: string;
   path: string;
   status: number;
   timestamp: string;
@@ -99,7 +99,7 @@ export interface IErrorResponse {
 
 export class ErrorResponse implements IErrorResponse {
   constructor(
-    public message = "",
+    public error = "",
     public path = "",
     public status = 0,
     public timestamp = ""

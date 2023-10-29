@@ -9,7 +9,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { AxiosError } from "axios";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -19,9 +18,12 @@ import {
   getProductReviews,
   getProductUserReview,
 } from "../../controllers/product";
-import { formatPrice, showSnackBar } from "../../controllers/utils";
 import {
-  IErrorResponse,
+  formatPrice,
+  handleNetworkErr,
+  showSnackBar,
+} from "../../controllers/utils";
+import {
   IPaginationFilterData,
   PaginationFilterData,
 } from "../../model/common";
@@ -68,15 +70,8 @@ export const ProductDetail = () => {
       .then(() => {
         showSnackBar("Added to Cart", "success");
       })
-      .catch((err: AxiosError) => {
-        if (err.response?.status !== 500) {
-          showSnackBar(
-            (err.response?.data! as IErrorResponse).message,
-            "error"
-          );
-        } else {
-          showSnackBar("Something went wrong", "error");
-        }
+      .catch((err) => {
+        handleNetworkErr(err);
       })
       .finally(() => {
         setIsAddToCart(false);

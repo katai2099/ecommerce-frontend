@@ -84,7 +84,7 @@ export const ResetPassword = () => {
       .catch((err) => {
         const errorRes = err.response?.data as IErrorResponse;
         if (errorRes.status === 404) {
-          setSubmitLoginDetailError(errorRes.message);
+          setSubmitLoginDetailError(errorRes.error);
         } else if (errorRes.status === 400) {
           navigate("/forgetpassword", {
             replace: true,

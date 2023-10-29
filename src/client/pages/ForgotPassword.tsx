@@ -45,7 +45,7 @@ export const ForgotPassword = () => {
       .catch((err: AxiosError) => {
         const errorRes = err.response?.data as IErrorResponse;
         if (errorRes.status === 404) {
-          setSubmitError(errorRes.message);
+          setSubmitError(errorRes.error);
         } else {
           setSubmitError("Something went wrong");
         }

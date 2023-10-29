@@ -27,6 +27,7 @@ function fillAxiosConfig(
       Authorization: `Bearer ${auth ? localStorage.getItem("jwt") : ""}`,
     },
     withCredentials: true,
+    timeout: 10000,
   };
 
   if (formData) {

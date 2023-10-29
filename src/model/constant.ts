@@ -3,8 +3,10 @@ export const STRIPE_PUBLISHABLE_KEY =
 
 export const OUT_OF_STOCK_MESSAGE = "one or more products are out of stock";
 export const API_ENDPOINT =
-  process.env.NODE_ENV === "production" ? "89.134.215.228" : "localhost";
-export const API_PORT = 8081;
+  process.env.NODE_ENV === "production"
+    ? "ec2-16-170-227-116.eu-north-1.compute.amazonaws.com"
+    : "localhost";
+export const API_PORT = process.env.NODE_ENV === "production" ? 5000 : 8081;
 
 export const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export const months = [

@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     if (!cookies.deviceId) {
       const uuid = generateUUID();
-      setCookie("deviceId", uuid);
+      setCookie("deviceId", uuid, { path: "/" });
     }
   }, [cookies]);
   return (

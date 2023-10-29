@@ -118,7 +118,7 @@ export function processOrPredicate<T>(filter: T[]): string {
 export function handleNetworkErr(err: AxiosError) {
   const errorData = err.response?.data as IErrorResponse;
   if (errorData && errorData.status !== 500) {
-    showSnackBar(errorData.message, "error");
+    showSnackBar(errorData.error, "error");
   } else {
     showSnackBar("Something went wrong", "error");
   }
