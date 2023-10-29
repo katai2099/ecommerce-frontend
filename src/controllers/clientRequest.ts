@@ -18,7 +18,9 @@ function fillAxiosConfig(
   const { auth = false, requestParams = false, formData = false } = options;
 
   const config: AxiosRequestConfig = {
-    baseURL: `http://${API_ENDPOINT}:${API_PORT}/api`,
+    baseURL: `${
+      process.env.NODE_ENV === "production" ? "https" : "http"
+    }://${API_ENDPOINT}:${API_PORT}/api`,
     url,
     params: requestParams,
     method: requestType,

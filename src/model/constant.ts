@@ -6,7 +6,7 @@ export const API_ENDPOINT =
   process.env.NODE_ENV === "production"
     ? "ec2-16-170-227-116.eu-north-1.compute.amazonaws.com"
     : "localhost";
-export const API_PORT = process.env.NODE_ENV === "production" ? 5000 : 8081;
+export const API_PORT = process.env.NODE_ENV === "production" ? 443 : 8081;
 
 export const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export const months = [
