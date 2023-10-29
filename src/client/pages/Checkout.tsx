@@ -41,6 +41,7 @@ export const Checkout = () => {
       .then((addresses) => dispatch(setAddresses(addresses)))
       .catch((err) => {
         setError(true);
+        dispatch(setLoading(false));
         if (axios.isAxiosError(err) && err.response?.status === 400) {
           showSnackBar(OUT_OF_STOCK_MESSAGE, "error");
           navigate("/cart", { replace: true });
