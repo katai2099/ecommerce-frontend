@@ -26,8 +26,8 @@ export const getCartAction = createAsyncThunk<ICartItem[]>(
 
 function getCartWorker(): Promise<ICartItem[]> {
   const authenticated = window.localStorage.getItem("jwt");
-
-  return getRequest<ICartItem[]>(`/carts`, {
+  const deviceId = window.localStorage.getItem("deviceId");
+  return getRequest<ICartItem[]>(`/carts?deviceId=${deviceId}`, {
     auth: authenticated ? true : false,
   })
     .then((res) => Promise.resolve(res))
@@ -47,9 +47,14 @@ export const addToCartAction = createAsyncThunk<number, IAddToCartRequest>(
 
 function addToCartWorker(addToCartPostData: IAddToCartRequest) {
   const authenticated = window.localStorage.getItem("jwt");
-  return postRequest<number>(`/carts/add-to-cart`, addToCartPostData, {
-    auth: authenticated ? true : false,
-  })
+  const deviceId = window.localStorage.getItem("deviceId");
+  return postRequest<number>(
+    `/carts/add-to-cart?deviceId=${deviceId}`,
+    addToCartPostData,
+    {
+      auth: authenticated ? true : false,
+    }
+  )
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }

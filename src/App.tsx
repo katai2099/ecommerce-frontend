@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { Admin } from "./admin/pages/Admin";
@@ -17,13 +16,13 @@ import { RootState } from "./reducers/combineReducer";
 function App() {
   const isLogin = useSelector((state: RootState) => state.user.loggedIn);
   const role = useSelector((state: RootState) => state.user.role);
-  const [cookies, setCookie] = useCookies(["deviceId"]);
+  const deviceId = localStorage.getItem("deviceId");
   useEffect(() => {
-    if (!cookies.deviceId) {
+    if (!deviceId) {
       const uuid = generateUUID();
-      setCookie("deviceId", uuid, { path: "/" });
+      localStorage.setItem("deviceId", uuid);
     }
-  }, [cookies]);
+  }, [deviceId]);
   return (
     <div>
       <AppSnackbar />

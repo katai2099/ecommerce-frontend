@@ -4,6 +4,16 @@ export interface IJWTToken {
   token: string;
 }
 
+export interface ILoginRequest {
+  signInData: LoginPostData;
+  deviceId: string;
+}
+
+export interface IRegistrationRequest {
+  signUpData: RegistrationPostData;
+  deviceId: string;
+}
+
 export class LoginPostData {
   public email = "";
   public password = "";

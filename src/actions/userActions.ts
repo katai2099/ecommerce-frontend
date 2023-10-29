@@ -7,8 +7,8 @@ import {
 } from "../controllers/clientRequest";
 import {
   IAuthenticationResponse,
-  LoginPostData,
-  RegistrationPostData,
+  ILoginRequest,
+  IRegistrationRequest,
 } from "../model/authentication";
 import {
   IAddress,
@@ -187,7 +187,7 @@ function deleteAddressWorker(addressId: number): Promise<string> {
 
 export const registerAction = createAsyncThunk<
   IAuthenticationResponse,
-  RegistrationPostData
+  IRegistrationRequest
 >("auth/register", (data, thunkApi) => {
   return registerWorker(data)
     .then((res) => {
@@ -198,7 +198,7 @@ export const registerAction = createAsyncThunk<
 });
 
 function registerWorker(
-  signUpData: RegistrationPostData
+  signUpData: IRegistrationRequest
 ): Promise<IAuthenticationResponse> {
   return postRequest<IAuthenticationResponse>("/auth/register", signUpData)
     .then((res) => Promise.resolve(res))
@@ -207,7 +207,7 @@ function registerWorker(
 
 export const loginAction = createAsyncThunk<
   IAuthenticationResponse,
-  LoginPostData
+  ILoginRequest
 >("auth/login", (data, thunkApi) => {
   return loginWorker(data)
     .then((res) => {
@@ -218,7 +218,7 @@ export const loginAction = createAsyncThunk<
 });
 
 function loginWorker(
-  loginData: LoginPostData
+  loginData: ILoginRequest
 ): Promise<IAuthenticationResponse> {
   return postRequest<IAuthenticationResponse>("/auth/login", loginData)
     .then((res) => Promise.resolve(res))

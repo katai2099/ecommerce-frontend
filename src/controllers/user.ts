@@ -52,8 +52,10 @@ export function login(email: string, password: string) {
   const data = new LoginPostData();
   data.password = btoa(password.trim());
   data.email = btoa(email.trim());
+  const deviceId = localStorage.getItem("deviceId");
+
   return store
-    .dispatch(loginAction(data))
+    .dispatch(loginAction({ signInData: data, deviceId: deviceId! }))
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
@@ -89,8 +91,9 @@ export function register(registrationForm: RegistrationForm) {
   data.firstname = registrationForm.firstname;
   data.lastname = registrationForm.lastname;
   data.password = btoa(registrationForm.password);
+  const deviceId = localStorage.getItem("deviceId");
   return store
-    .dispatch(registerAction(data))
+    .dispatch(registerAction({ signUpData: data, deviceId: deviceId! }))
     .unwrap()
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
