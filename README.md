@@ -1,3 +1,4 @@
+<a name="readme-top" id="readme-top"></a>
 <div align="center">
 <h3 align="center">An Ecommerce Webapp Project</h3>
   <p align="center">
@@ -15,8 +16,6 @@
 
 The ECommerce project is a comprehensive e-commerce platform designed to provide users with a seamless online shopping experience. It offers a wide range of products from various categories and aims to simplify the process of browsing, selecting, and purchasing items through an intuitive and user-friendly interface.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Key Features
 
 * <strong>Product Category:</strong> ECommerce features a vast product, users can explore a wide array of products, each with detailed descriptions and images.
@@ -29,8 +28,6 @@ The ECommerce project is a comprehensive e-commerce platform designed to provide
 * <strong>Admin Dashboard:</strong> Administrators can manage product, product category, view orders, and update order status.
 * <strong>Responsive Design:</strong> ECommerce is designed with a responsive and mobile-friendly interface, ensuring an enjoyable shopping experience across various devices.
 
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Technology stack
 
@@ -47,19 +44,21 @@ The ECommerce project is a comprehensive e-commerce platform designed to provide
 Here are some screenshots of the project
 
 <h3>Home Page</h3>
-![homepage](https://github.com/katai2099/ecommerce-frontend/assets/33759748/dcbc231f-ff52-4090-a790-f46ae311fe0f)
+<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/33759748/278906986-dcbc231f-ff52-4090-a790-f46ae311fe0f.png" alt=""/>
 <h3>Searched Products</h3>
-![search](https://github.com/katai2099/ecommerce-frontend/assets/33759748/133ba36e-548a-42cb-af4d-951e21d326ed)
+<img src="https://github.com/katai2099/ecommerce-frontend/assets/33759748/133ba36e-548a-42cb-af4d-951e21d326ed" alt=""/>
 <h3>Product Details</h3>
-![product details](https://github.com/katai2099/ecommerce-frontend/assets/33759748/0e2901aa-c349-4cb3-9515-be6b183c8ae6)
+<img src="https://github.com/katai2099/ecommerce-frontend/assets/33759748/0e2901aa-c349-4cb3-9515-be6b183c8ae6" alt=""/>
 <h3>Cart</h3>
-![cart](https://github.com/katai2099/ecommerce-frontend/assets/33759748/2213c05b-6aa8-4461-83b6-a01653d647d2)
+<img src="https://github.com/katai2099/ecommerce-frontend/assets/33759748/2213c05b-6aa8-4461-83b6-a01653d647d2" alt=""/>
 <h3>Checkout</h3>
-![checkout](https://github.com/katai2099/ecommerce-frontend/assets/33759748/3ee798d5-b76d-4360-86f0-267bc63f1bc0)
+<img src="https://github.com/katai2099/ecommerce-frontend/assets/33759748/3ee798d5-b76d-4360-86f0-267bc63f1bc0" alt=""/>
 <h3>Admin Dashboard</h3>
-![admin dashboard](https://github.com/katai2099/ecommerce-frontend/assets/33759748/f4989b2f-5c58-442f-8c4a-f4d577eca7c9)
+<img src="https://github.com/katai2099/ecommerce-frontend/assets/33759748/f4989b2f-5c58-442f-8c4a-f4d577eca7c9" alt=""/>
 <h3>Product Management</h3>
-![product management](https://github.com/katai2099/ecommerce-frontend/assets/33759748/3e42af70-ef55-401d-a896-6ce18e4f1c2c)
+<img src="https://github.com/katai2099/ecommerce-frontend/assets/33759748/3e42af70-ef55-401d-a896-6ce18e4f1c2c" alt=""/>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
 
