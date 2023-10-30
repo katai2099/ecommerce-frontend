@@ -4,7 +4,7 @@ export const STRIPE_PUBLISHABLE_KEY =
 export const OUT_OF_STOCK_MESSAGE = "one or more products are out of stock";
 export const API_ENDPOINT =
   process.env.NODE_ENV === "production"
-    ? "ec2-16-170-227-116.eu-north-1.compute.amazonaws.com"
+    ? "phommaeduhub.com"
     : "localhost";
 export const API_PORT = process.env.NODE_ENV === "production" ? 443 : 8081;
 
