@@ -99,7 +99,7 @@ export interface IErrorResponse {
 
 export class ErrorResponse implements IErrorResponse {
   constructor(
-    public error = "",
+    public error = "something went wrong",
     public path = "",
     public status = 0,
     public timestamp = ""

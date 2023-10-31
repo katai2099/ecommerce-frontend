@@ -1,3 +1,4 @@
+import { Report } from "@mui/icons-material";
 import { Box, FormLabel, Paper, TextField, Typography } from "@mui/material";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { ChangeEvent, useEffect } from "react";
@@ -50,6 +51,18 @@ export const CheckoutPayment = () => {
           error={!!nameOnCardError}
           helperText={nameOnCardError}
         />
+        <Box
+          sx={{ my: "8px", padding: "16px", borderRadius: "4px" }}
+          bgcolor="#b2ebf2"
+          display="flex"
+          gap="8px"
+        >
+          <Report sx={{ color: "#00B8D9" }} />
+          <Typography>
+            use <strong>4242 4242 4242 4242</strong> and any{" "}
+            <strong>CVC</strong> for demo
+          </Typography>
+        </Box>
         <form id="payment-form">
           <PaymentElement options={{ layout: "tabs" }} />
         </form>

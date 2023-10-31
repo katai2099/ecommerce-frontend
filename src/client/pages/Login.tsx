@@ -1,4 +1,4 @@
-import { Cancel, ShoppingBagOutlined } from "@mui/icons-material";
+import { Cancel, Report, ShoppingBagOutlined } from "@mui/icons-material";
 import { Avatar, Box, Paper, Typography, colors } from "@mui/material";
 import { AxiosError } from "axios";
 import { ChangeEvent, MouseEvent, useState } from "react";
@@ -76,7 +76,11 @@ export const Login = () => {
         navigate("/", { replace: true });
       })
       .catch((err: AxiosError) => {
-        setErrorResponse(err.response?.data! as IErrorResponse);
+        setErrorResponse(
+          err.response
+            ? (err.response.data as IErrorResponse)
+            : new ErrorResponse()
+        );
       })
       .finally(() => setLoggingIn(false));
   };
@@ -113,9 +117,28 @@ export const Login = () => {
         <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <ShoppingBagOutlined />
         </Avatar>
-        <Typography variant="h5" component="h1" sx={{ mb: "36px" }}>
+        <Typography variant="h5" component="h1">
           Welcome To Ecommerce
         </Typography>
+        <Box
+          sx={{ mb: "36px", mt: "8px", padding: "16px", borderRadius: "4px" }}
+          bgcolor="#b2ebf2"
+          display="flex"
+          gap="8px"
+          alignItems="center"
+        >
+          <Report sx={{ color: "#00B8D9" }} />
+          <Box>
+            <Typography>
+              Demo admin: <strong>admin@admin.com</strong> / password:{" "}
+              <strong>admin</strong>
+            </Typography>
+            <Typography>
+              Demo user: <strong>demo@demo.com</strong> / password:{" "}
+              <strong>demo</strong>
+            </Typography>
+          </Box>
+        </Box>
         {errorResponse.status !== 0 && (
           <Box
             display="flex"

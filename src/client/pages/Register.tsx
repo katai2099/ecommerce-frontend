@@ -87,7 +87,11 @@ export const Register = () => {
         navigate("/", { replace: true });
       })
       .catch((err: AxiosError) => {
-        setErrorResponse(err.response?.data as IErrorResponse);
+        setErrorResponse(
+          err.response
+            ? (err.response.data as IErrorResponse)
+            : new ErrorResponse()
+        );
       })
       .finally(() => setRegistering(false));
   };
