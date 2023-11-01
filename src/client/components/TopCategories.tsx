@@ -18,7 +18,11 @@ const TopCategoryItem = ({ category }: CategoryProps) => {
         width="100%"
         bgcolor="rgba(64,64,64,0.1)"
       >
-        <img className="img-300 img-contain" src={category.categoryImage} />
+        <img
+          alt=""
+          className="img-300 img-contain"
+          src={category.categoryImage}
+        />
         <Box
           alignSelf="center"
           position="absolute"

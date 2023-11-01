@@ -48,7 +48,7 @@ export const Search = () => {
     if (category && category !== "") {
       dispatch(startNewFilter({ key: "category", value: [category] }));
     }
-  }, []);
+  }, [category]);
 
   useEffect(() => {
     if (q && q !== "") {

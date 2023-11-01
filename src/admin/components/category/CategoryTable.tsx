@@ -22,7 +22,7 @@ import {
   setCategoryPublish,
   setCategoryTop,
 } from "../../../controllers/product";
-import { clone, showSnackBar } from "../../../controllers/utils";
+import { clone, handleNetworkErr } from "../../../controllers/utils";
 import { AdminMode } from "../../../model/admin";
 import { ICategory } from "../../../model/category";
 import { categoryTableHeadCells } from "../../../model/product";
@@ -113,7 +113,7 @@ export const CategoryTable = () => {
     setCategoryTop(checked, categories[index].id)
       .then(() => {})
       .catch((err) => {
-        showSnackBar("something went wrong", "error");
+        handleNetworkErr(err);
         dispatch(setAdminCategories(oldCategories));
       });
   }
@@ -127,7 +127,7 @@ export const CategoryTable = () => {
     setCategoryPublish(checked, categories[index].id)
       .then(() => {})
       .catch((err) => {
-        showSnackBar("something went wrong", "error");
+        handleNetworkErr(err);
         dispatch(setAdminCategories(oldCategories));
       });
   }

@@ -46,7 +46,7 @@ export const OrderDetailComp = () => {
           navigate("/404", { replace: true });
         }
       });
-  }, []);
+  }, [id]);
   const handleStatusUpdate = (status: string) => {
     updateOrderStatus(orderDetail.order.id, status)
       .then(() => {})

@@ -12,13 +12,14 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "../../client/components/common/LoadingButton";
 import {
   addNewProduct,
   updateProductCont,
   validateNewProduct,
 } from "../../controllers/product";
+import { handleNetworkErr } from "../../controllers/utils";
 import { AdminMode } from "../../model/admin";
 import { IProduct, NewProductError } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
@@ -37,7 +38,6 @@ import {
 export const Product = () => {
   const product = useSelector((state: RootState) => state.product);
   const [files, setFiles] = useState<File[]>([]);
-  const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -72,13 +72,17 @@ export const Product = () => {
         .then(() => {
           setFiles([]);
         })
-        .catch(() => {});
+        .catch((err) => {
+          handleNetworkErr(err);
+        });
     } else {
       updateProductCont(editedProduct, files)
         .then(() => {
           setFiles([]);
         })
-        .catch(() => {});
+        .catch((err) => {
+          handleNetworkErr(err);
+        });
     }
   };
 

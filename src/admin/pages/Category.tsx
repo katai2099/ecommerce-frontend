@@ -24,6 +24,7 @@ import {
   updateCategoryCont,
   validateNewCategory,
 } from "../../controllers/product";
+import { handleNetworkErr } from "../../controllers/utils";
 import { AdminMode } from "../../model/admin";
 import { ICategory, NewCategoryError } from "../../model/category";
 import {
@@ -89,11 +90,15 @@ export const Category = () => {
         .then(() => {
           setFiles([]);
         })
-        .catch(() => {});
+        .catch((err) => {
+          handleNetworkErr(err);
+        });
     } else if (mode === AdminMode.EDIT) {
       updateCategoryCont(editedCategory, files)
         .then(() => setFiles([]))
-        .catch(() => {});
+        .catch((err) => {
+          handleNetworkErr(err);
+        });
     }
   };
 
