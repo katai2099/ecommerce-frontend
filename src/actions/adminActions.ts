@@ -7,7 +7,7 @@ import { setAdminCategories, setAdminSizes } from "../reducers/adminReducer";
 export const fetchAdminCategoriesAction = createAsyncThunk<ICategory[]>(
   "admin_fetch_category",
   (_, thunkApi) => {
-    return getAdminCategoriesWorker()
+    return getAdminCategoriesWorker(true)
       .then((res) => {
         thunkApi.dispatch(setAdminCategories(res));
         return Promise.resolve(res);
@@ -16,8 +16,12 @@ export const fetchAdminCategoriesAction = createAsyncThunk<ICategory[]>(
   }
 );
 
-export function getAdminCategoriesWorker(): Promise<ICategory[]> {
-  return getRequest<ICategory[]>("/products/category")
+export function getAdminCategoriesWorker(
+  isAdmin: boolean = false
+): Promise<ICategory[]> {
+  return getRequest<ICategory[]>(
+    `/products/category${isAdmin ? "?isAdmin=true" : ""}`
+  )
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }
@@ -35,7 +39,7 @@ export const fetchAdminSizesAction = createAsyncThunk<ISize[]>(
 );
 
 export function getAdminSizesWorker(): Promise<ISize[]> {
-  return getRequest<ISize[]>("/products/size", { auth: true })
+  return getRequest<ISize[]>("/products/size?admin=true", { auth: true })
     .then((res) => Promise.resolve(res))
     .catch((err) => Promise.reject(err));
 }

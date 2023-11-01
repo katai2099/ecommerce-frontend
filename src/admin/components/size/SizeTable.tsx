@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { updateSize } from "../../../controllers/product";
-import { clone } from "../../../controllers/utils";
+import { clone, showSnackBar } from "../../../controllers/utils";
 import { sizeTableHeadCells } from "../../../model/product";
 import { setAdminSizes } from "../../../reducers/adminReducer";
 import { RootState } from "../../../reducers/combineReducer";
@@ -38,7 +38,10 @@ export const SizeTable = ({ onEdit }: SizeTableProps) => {
     dispatch(setLoading(true));
     updateSize(updatedSizes[index])
       .then(() => {})
-      .catch(() => dispatch(setAdminSizes(oldSizes)))
+      .catch(() => {
+        showSnackBar("Update size failed", "error");
+        dispatch(setAdminSizes(oldSizes));
+      })
       .finally(() => dispatch(setLoading(false)));
   };
 
