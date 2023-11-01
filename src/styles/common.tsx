@@ -13,6 +13,7 @@ import {
   Paper,
   StepConnector,
   StepIconProps,
+  Typography,
   styled as materialStyle,
   stepConnectorClasses,
 } from "@mui/material";
@@ -209,3 +210,13 @@ export function ColorlibStepIcon(props: StepIconProps) {
     </ColorlibStepIconRoot>
   );
 }
+
+export const SomethingWentWrong = () => {
+  return (
+    <Box width="100%">
+      <Typography variant="h1" textAlign="center" letterSpacing="-1.5px">
+        Something went wrong
+      </Typography>
+    </Box>
+  );
+};

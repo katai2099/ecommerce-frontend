@@ -9,6 +9,7 @@ import {
   PaginationFilterData,
 } from "../../model/common";
 import { RootState } from "../../reducers/combineReducer";
+import { SomethingWentWrong } from "../../styles/common";
 import { PageNumberSection } from "./PageNumberSection";
 
 export const OrderHistory = () => {
@@ -17,13 +18,13 @@ export const OrderHistory = () => {
     useState<IPaginationFilterData>(new PaginationFilterData());
   const accountData = useSelector((state: RootState) => state.account);
   const orders = accountData.orders;
+  const isError = accountData.orderError;
   const ordersLoading = accountData.orderLoading;
   const [filterPage, setFilterPage] = useState<number>(1);
 
   useEffect(() => {
     getUserOrders(filterPage)
       .then((res) => {
-        setFirstLoad(false);
         const updatedPaginationData: IPaginationFilterData = {
           page: res.currentPage,
           totalPage: res.totalPage,
@@ -32,7 +33,10 @@ export const OrderHistory = () => {
         };
         setPaginationFilterData(updatedPaginationData);
       })
-      .catch((err) => {});
+      .catch((err) => {})
+      .finally(() => {
+        setFirstLoad(false);
+      });
   }, [filterPage]);
 
   const handleLoadMoreClick = () => {
@@ -49,7 +53,7 @@ export const OrderHistory = () => {
           <OrdersSkeletonLoading amount={10} />
         </Box>
       )}
-      {!firstLoad && !ordersLoading && orders.length > 0 && (
+      {!firstLoad && !isError && !ordersLoading && orders.length > 0 && (
         <>
           <Box
             sx={{ display: { xs: "none", sm: "flex" } }}
@@ -74,6 +78,7 @@ export const OrderHistory = () => {
             <OrderItem key={order.id} order={order} />
           ))}
           <PageNumberSection
+            error={isError}
             showbar={false}
             currentPageTotalItem={paginationFilterData.currentPageTotalItem}
             totalPage={paginationFilterData.totalPage}
@@ -86,14 +91,14 @@ export const OrderHistory = () => {
           />
         </>
       )}
-
-      {!firstLoad && !ordersLoading && orders.length === 0 && (
+      {!firstLoad && !isError && !ordersLoading && orders.length === 0 && (
         <Box>
           <Typography variant="h2" mt="36px">
             No orders for this account
           </Typography>
         </Box>
       )}
+      {!firstLoad && isError && <SomethingWentWrong />}
     </Paper>
   );
 };

@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CategoryProps } from "../../model/category";
 import { RootState } from "../../reducers/combineReducer";
+import { SomethingWentWrong } from "../../styles/common";
 import { TopCategoriesSkeletonLoading } from "./SkeletonLoading";
 
 const TopCategoryItem = ({ category }: CategoryProps) => {
@@ -80,11 +81,7 @@ export const TopCategories = () => {
           </Typography>
         </Box>
       )}
-      {error && !loading && (
-        <Typography variant="h1" textAlign="center" letterSpacing="-1.5px">
-          Something went wrong
-        </Typography>
-      )}
+      {error && !loading && <SomethingWentWrong />}
     </Box>
   );
 };

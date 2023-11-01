@@ -24,6 +24,7 @@ export const GenderSection = () => {
     (state: RootState) => state.productList.products
   );
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
   const filter = useSelector((state: RootState) => state.productList.filter);
   const loading = useSelector(
     (state: RootState) => state.productList.isLoading
@@ -71,13 +72,17 @@ export const GenderSection = () => {
       }
       getProducts(filter)
         .then((res) => {
-          setFirstLoad(false);
           setPage(res.currentPage);
           setTotalPage(res.totalPage);
           SetTotalItem(res.totalItem);
           setCurrentPageTotalItem(res.data.length);
         })
-        .catch((err) => {});
+        .catch(() => {
+          setError(true);
+        })
+        .finally(() => {
+          setFirstLoad(false);
+        });
     }
   }, [
     filter.page,
@@ -114,11 +119,13 @@ export const GenderSection = () => {
         </Grid>
         <Grid item xs={12} sm={12} md={9} lg={9.5}>
           <ProductList
+            error={error}
             products={products}
             firstLoad={firstLoad}
             totalItem={totalItem}
           />
           <PageNumberSection
+            error={error}
             currentPageTotalItem={currentPageTotalItem}
             totalPage={totalPage}
             totalItem={totalItem}

@@ -11,10 +11,14 @@ import {
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { getOrderDetail, updateOrderStatus } from "../../controllers/order";
+import { showSnackBar } from "../../controllers/utils";
+import { IErrorResponse } from "../../model/common";
 import { IOrderHistory } from "../../model/order";
 import { Role } from "../../model/user";
 import { RootState } from "../../reducers/combineReducer";
+import { SomethingWentWrong } from "../../styles/common";
 import { OrderReview } from "./OrderReview";
 import { OrderStatusProgress } from "./OrderStatusProgress";
 
@@ -26,27 +30,46 @@ export const OrderDetailComp = () => {
   const isAdmin = useSelector(
     (state: RootState) => state.user.role === Role.ADMIN
   );
+  const isError = useSelector(
+    (state: RootState) => state.account.selectedOrderError
+  );
+  const navigate = useNavigate();
   useEffect(() => {
     getOrderDetail(id!)
       .then((res) => {})
-      .catch((err) => {});
+      .catch((err) => {
+        if (
+          (err.response &&
+            (err.response.data as IErrorResponse).status === 404) ||
+          (err.response.data as IErrorResponse).status === 400
+        ) {
+          navigate("/404", { replace: true });
+        }
+      });
   }, []);
   const handleStatusUpdate = (status: string) => {
     updateOrderStatus(orderDetail.order.id, status)
       .then(() => {})
-      .catch(() => {});
+      .catch(() => {
+        showSnackBar("Something went wrong", "error");
+      });
   };
   return (
     <Box display="flex" flexDirection="column" gap="32px">
-      <OrderStatusProgress
-        isAdmin={isAdmin}
-        status={orderDetail.order.status}
-        onStatusUpdate={handleStatusUpdate}
-      />
-      <OrderReview orderDetail={orderDetail} />
-      {isAdmin && (
-        <OrderStatusHistory orderHistories={orderDetail.orderHistories} />
+      {!isError && (
+        <>
+          <OrderStatusProgress
+            isAdmin={isAdmin}
+            status={orderDetail.order.status}
+            onStatusUpdate={handleStatusUpdate}
+          />
+          <OrderReview orderDetail={orderDetail} />
+          {isAdmin && (
+            <OrderStatusHistory orderHistories={orderDetail.orderHistories} />
+          )}
+        </>
       )}
+      {isError && <SomethingWentWrong />}
     </Box>
   );
 };

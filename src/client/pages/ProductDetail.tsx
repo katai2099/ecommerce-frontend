@@ -9,9 +9,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { AxiosError } from "axios";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   addToCart,
   getProduct,
@@ -24,11 +25,12 @@ import {
   showSnackBar,
 } from "../../controllers/utils";
 import {
+  IErrorResponse,
   IPaginationFilterData,
   PaginationFilterData,
 } from "../../model/common";
 import { RootState } from "../../reducers/combineReducer";
-import { AppBox, TabPanel } from "../../styles/common";
+import { AppBox, SomethingWentWrong, TabPanel } from "../../styles/common";
 import { ProductDetailSkeletonLoading } from "../components/SkeletonLoading";
 import { LoadingButton } from "../components/common/LoadingButton";
 import { Description } from "../components/productDetails/Description";
@@ -40,6 +42,8 @@ export const ProductDetail = () => {
   const [isAddTocart, setIsAddToCart] = useState<boolean>(false);
   const productDetail = useSelector((state: RootState) => state.productDetail);
   const product = productDetail.product;
+  const isError = productDetail.isError;
+  const navigate = useNavigate();
   const loading = productDetail.isLoading;
   const [selectedSizeIndex, setSelectedSizeIndex] = useState<number>(0);
   const user = useSelector((state: RootState) => state.user);
@@ -52,10 +56,15 @@ export const ProductDetail = () => {
     useState<IPaginationFilterData>(new PaginationFilterData());
   const [filterPage, setFilterPage] = useState<number>(1);
   const { id } = useParams();
-
   useEffect(() => {
-    //TODO: 404 and undefined id
-    getProduct(id!).catch((err) => {});
+    getProduct(id!).catch((err: AxiosError) => {
+      if (
+        err.response &&
+        (err.response.data as IErrorResponse).status === 404
+      ) {
+        navigate("/404", { replace: true });
+      }
+    });
   }, [id]);
 
   useEffect(() => {
@@ -81,7 +90,6 @@ export const ProductDetail = () => {
   useEffect(() => {
     getProductReviews(Number(id!), filterPage)
       .then((res) => {
-        setFirstLoad(false);
         const updatedPaginationData: IPaginationFilterData = {
           page: res.currentPage,
           totalPage: res.totalPage,
@@ -90,7 +98,10 @@ export const ProductDetail = () => {
         };
         setPaginationFilterData(updatedPaginationData);
       })
-      .catch((err) => {});
+      .catch((err) => {})
+      .finally(() => {
+        setFirstLoad(false);
+      });
   }, [filterPage]);
 
   const handleLoadMoreClick = () => {
@@ -103,7 +114,7 @@ export const ProductDetail = () => {
     <AppBox>
       <Grid container spacing={3}>
         {loading && <ProductDetailSkeletonLoading />}
-        {!loading && (
+        {!loading && !isError && (
           <>
             <Grid
               item
@@ -191,6 +202,7 @@ export const ProductDetail = () => {
             </Grid>
           </>
         )}
+        {!loading && isError && <SomethingWentWrong />}
       </Grid>
 
       <Box mt="72px">

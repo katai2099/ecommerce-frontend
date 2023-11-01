@@ -29,6 +29,7 @@ export const PageNumberSection = ({
   buttonTitle = "Load more",
   handleLoadMoreClick,
   children = null,
+  error = false,
 }: PageNumberSectionProps & ListLoadProps) => {
   const currentPageItem =
     currentPageTotalItem < 20 && page === totalPage
@@ -46,7 +47,7 @@ export const PageNumberSection = ({
       gap="16px"
     >
       {!firstLoad && itemsLoading && children}
-      {!itemsLoading && (
+      {!itemsLoading && !error && (
         <>
           {showbar && (
             <Box>

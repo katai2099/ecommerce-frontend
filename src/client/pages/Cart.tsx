@@ -8,7 +8,7 @@ import { formatPrice, showSnackBar } from "../../controllers/utils";
 import { IStockCountCheck } from "../../model/cart";
 import { OUT_OF_STOCK_MESSAGE } from "../../model/constant";
 import { RootState } from "../../reducers/combineReducer";
-import { AppBox } from "../../styles/common";
+import { AppBox, SomethingWentWrong } from "../../styles/common";
 import {
   CartSkeletonLoading,
   CartTotalSkeletonLoading,
@@ -19,6 +19,7 @@ import { LoadingButton } from "../components/common/LoadingButton";
 export const Cart = () => {
   const cartData = useSelector((state: RootState) => state.cart);
   const carts = cartData.carts;
+  const cartError = cartData.cartError;
   const cartLoading = cartData.cartLoading;
   let totalItems = 0;
   const totalPrice = carts.reduce((accumulator, currentValue) => {
@@ -78,6 +79,7 @@ export const Cart = () => {
               </Typography>
             </Box>
             {!cartLoading &&
+              !cartError &&
               carts.map((cartItem, idx) => (
                 <CartItemDetail
                   key={idx}
@@ -87,7 +89,7 @@ export const Cart = () => {
                 />
               ))}
             {cartLoading && <CartSkeletonLoading amount={4} />}
-            {!cartLoading && carts.length === 0 && (
+            {!cartLoading && !cartError && carts.length === 0 && (
               <Box textAlign="center">
                 <ShoppingBagOutlined
                   sx={{ fontSize: "96px", color: "grayText", opacity: "0.7" }}
@@ -100,6 +102,7 @@ export const Cart = () => {
                 </Typography>
               </Box>
             )}
+            {!cartLoading && cartError && <SomethingWentWrong />}
           </Paper>
         </Grid>
 
@@ -131,7 +134,7 @@ export const Cart = () => {
                 <LoadingButton
                   title={"Proceed to checkout"}
                   fullWidth={true}
-                  disabled={carts.length === 0}
+                  disabled={carts.length === 0 || cartError || cartLoading}
                   onClick={handleProceedClick}
                   loading={checkStock}
                 />

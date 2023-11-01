@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { formatPrice } from "../../controllers/utils";
 import { IProduct, ProductProps } from "../../model/product";
 import { RootState } from "../../reducers/combineReducer";
+import { SomethingWentWrong } from "../../styles/common";
 import { FeaturedProductSkeletonLoading } from "./SkeletonLoading";
 
 const mdItemsPerPage = 4;
@@ -221,11 +222,7 @@ export const FeaturedProducts = () => {
           </Typography>
         </Box>
       )}
-      {error && !loading && (
-        <Typography variant="h1" textAlign="center" letterSpacing="-1.5px">
-          Something went wrong
-        </Typography>
-      )}
+      {error && !loading && <SomethingWentWrong />}
     </Box>
   );
 };

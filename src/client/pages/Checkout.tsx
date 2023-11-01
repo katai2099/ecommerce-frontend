@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
@@ -15,7 +14,7 @@ import {
 import { setAddresses } from "../../reducers/checkoutReducer";
 import { setLoading } from "../../reducers/guiReducer";
 import { useAppDispatch } from "../../store/configureStore";
-import { AppBox } from "../../styles/common";
+import { AppBox, SomethingWentWrong } from "../../styles/common";
 import { CheckoutForm } from "../components/CheckoutForm";
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
@@ -67,11 +66,7 @@ export const Checkout = () => {
           <CheckoutForm />
         </Elements>
       )}
-      {error && (
-        <Typography variant="h2" textAlign="center">
-          Something went wrong
-        </Typography>
-      )}
+      {error && <SomethingWentWrong />}
     </AppBox>
   );
 };

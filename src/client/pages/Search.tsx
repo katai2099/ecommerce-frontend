@@ -27,6 +27,7 @@ export const Search = () => {
   const dispatch = useAppDispatch();
 
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [currentPageTotalItem, setCurrentPageTotalItem] = useState<number>(0);
   const [totalItem, SetTotalItem] = useState<number>(0);
@@ -66,13 +67,17 @@ export const Search = () => {
       }
       getProducts(filter)
         .then((res) => {
-          setFirstLoad(false);
           setPage(res.currentPage);
           setTotalPage(res.totalPage);
           SetTotalItem(res.totalItem);
           setCurrentPageTotalItem(res.data.length);
         })
-        .catch((err) => {});
+        .catch(() => {
+          setError(true);
+        })
+        .finally(() => {
+          setFirstLoad(false);
+        });
     }
   }, [
     filter.page,
@@ -90,13 +95,17 @@ export const Search = () => {
       }
       getProducts(filter)
         .then((res) => {
-          setFirstLoad(false);
           setPage(res.currentPage);
           setTotalPage(res.totalPage);
           SetTotalItem(res.totalItem);
           setCurrentPageTotalItem(res.data.length);
         })
-        .catch((err) => {});
+        .catch(() => {
+          setError(true);
+        })
+        .finally(() => {
+          setFirstLoad(false);
+        });
     }
   }, [
     filter.page,
@@ -139,11 +148,13 @@ export const Search = () => {
         </Grid>
         <Grid item xs={12} sm={12} md={9} lg={9.5}>
           <ProductList
+            error={error}
             products={products}
             firstLoad={firstLoad}
             totalItem={totalItem}
           />
           <PageNumberSection
+            error={error}
             currentPageTotalItem={currentPageTotalItem}
             totalPage={totalPage}
             totalItem={totalItem}
