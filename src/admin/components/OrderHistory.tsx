@@ -41,7 +41,7 @@ export const OrderHistory = () => {
 
   return (
     <Paper sx={{ padding: { xs: "16px 0px 32px", sm: "16px 32px 32px" } }}>
-      <Typography variant="h3" mb="24px">
+      <Typography variant="h3" mb="24px" sx={{ ml: { xs: "32px", sm: "0" } }}>
         Orders
       </Typography>
       {firstLoad && ordersLoading && (

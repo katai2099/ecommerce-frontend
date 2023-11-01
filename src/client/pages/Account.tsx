@@ -10,6 +10,7 @@ import { AccountSidebarMenu } from "../components/AccountSidebarMenu";
 import { AddressBook } from "../components/AddressBook";
 import { OrderDetailComp } from "../components/OrderDetailComp";
 import { UserDetail } from "../components/UserDetail";
+import { NotFoundRedirect } from "./NotFound";
 
 export const Account = () => {
   const location = useLocation();
@@ -52,6 +53,7 @@ export const Account = () => {
             </Route>
             <Route path="/details" element={<UserDetail />} />
             <Route path="/address" element={<AddressBook />} />
+            <Route path="*" element={<NotFoundRedirect />} />
           </Routes>
         </Grid>
       </Grid>

@@ -11,6 +11,7 @@ import { Cart } from "../pages/Cart";
 import { Checkout } from "../pages/Checkout";
 import { GenderSection } from "../pages/GenderSection";
 import { Home } from "../pages/Home";
+import { NotFoundRedirect } from "../pages/NotFound";
 import { OrderFailure } from "../pages/OrderFailure";
 import { OrderSuccess } from "../pages/OrderSuccess";
 import { ProductDetail } from "../pages/ProductDetail";
@@ -46,12 +47,11 @@ export const MainContent = () => {
       >
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/products" element={<ProductDetail />}>
+          <Route path="/products">
             <Route path="/products/:id" element={<ProductDetail />} />
-            <Route path="" element={<ProductDetail />} />
+            <Route path="" element={<NotFoundRedirect />} />
           </Route>
           <Route path="/search" element={<Search />} />
-
           <Route path="/:gender" element={<GenderSection />} />
           <Route path="/cart" element={<Cart />} />
           <Route
@@ -64,6 +64,7 @@ export const MainContent = () => {
           />
           <Route path="/orders/complete" element={<OrderSuccess />} />
           <Route path="/orders/failure" element={<OrderFailure />} />
+          <Route path="*" element={<NotFoundRedirect />} />
         </Routes>
       </Container>
       <Footer />

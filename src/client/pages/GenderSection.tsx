@@ -1,7 +1,7 @@
 import { Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchProductAttributesCategoriesAction } from "../../actions/productSettingsActions";
 import { PageNumberSection } from "../../admin/components/PageNumberSection";
 import { getProducts } from "../../controllers/product";
@@ -33,6 +33,7 @@ export const GenderSection = () => {
   const [totalItem, SetTotalItem] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { gender } = useParams();
   const theme = useTheme();
   const matchMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -55,7 +56,7 @@ export const GenderSection = () => {
     if (genderEnum) {
       dispatch(startNewFilter({ key: "gender", value: [genderEnum] }));
     } else {
-      //TODO: not found page
+      navigate("/404", { replace: true });
     }
   }, [gender]);
 

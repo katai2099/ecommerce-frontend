@@ -7,6 +7,7 @@ import { MainContent } from "./client/components/MainContent";
 import { LoadingBackDrop } from "./client/components/common/LoadingBackDrop";
 import { ForgotPassword } from "./client/pages/ForgotPassword";
 import { Login } from "./client/pages/Login";
+import { NotFound } from "./client/pages/NotFound";
 import { Register } from "./client/pages/Register";
 import { ResetPassword } from "./client/pages/ResetPassword";
 import { generateUUID } from "./controllers/utils";
@@ -36,6 +37,7 @@ function App() {
           <Route path="/*" element={<Admin />} />
         )}
         {role !== Role.ADMIN && <Route path="/*" element={<MainContent />} />}
+        <Route path="/404" element={<NotFound />} />
       </Routes>
     </div>
   );

@@ -2,6 +2,7 @@ import { Box, Container, Toolbar } from "@mui/material";
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { OrderDetailComp } from "../../client/components/OrderDetailComp";
+import { NotFoundRedirect } from "../../client/pages/NotFound";
 import { fetchAdminSettings } from "../../controllers/product";
 import { setLoading } from "../../reducers/guiReducer";
 import { useAppDispatch } from "../../store/configureStore";
@@ -47,6 +48,7 @@ export const Admin = () => {
             <Route path="/size" element={<SizeList />} />
             <Route path="/orders" element={<OrderList />} />
             <Route path="/orders/:id" element={<OrderDetailComp />} />
+            <Route path="*" element={<NotFoundRedirect />} />
           </Routes>
         </Container>
       </Box>

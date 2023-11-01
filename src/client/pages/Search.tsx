@@ -60,7 +60,7 @@ export const Search = () => {
   }, []);
 
   useEffect(() => {
-    if (category && category !== "") {
+    if (filter.category.length > 0 && filter.category[0] !== "") {
       if (filter.page && filter.page === 1) {
         setFirstLoad(true);
       }
